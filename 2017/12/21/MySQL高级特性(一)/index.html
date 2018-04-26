@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="MySQL高级特性(一)"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/21/MySQL高级特性(一)/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> MySQL高级特性(一) - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          MySQL高级特性(一)
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-21
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#视图"><span class="toc-text">视图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外键约束"><span class="toc-text">外键约束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#触发器"><span class="toc-text">触发器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#语法"><span class="toc-text">语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#例子"><span class="toc-text">例子</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游标"><span class="toc-text">游标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绑定变量"><span class="toc-text">绑定变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用户自定义函数"><span class="toc-text">用户自定义函数</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><p>在 SQL 中，视图是基于 SQL 语句的结果集的可视化的表。</p>
+<p>视图包含行和列，就像一个真实的表。视图中的字段就是来自一个或多个数据库中的真实的表中的字段。我们可以向视图添加 SQL 函数、WHERE 以及 JOIN 语句，我们也可以提交数据，就像这些来自于某个单一的表。</p>
+<p>视图本身是一个虚拟表,不存放任何数据,在使用sql语句访问视图的时候,它返回的数据是MySQL从其他表中生成的,视图和表是在同一个命名空间,MySQL在很多地方对于视图和表是同样对待的,视图和表也有不同,比如不能对视图创建触发器,也不能用DROP TABLE 命令删除视图</p>
+<a id="more"></a>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//创建一个视图</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> OCeania <span class="keyword">As</span> <span class="keyword">SELECT</span> * <span class="keyword">from</span> Country <span class="keyword">where</span> continent=<span class="string">"OCea"</span></span><br></pre></td></tr></table></figure>
+<p>实现视图最简单的方法就是将select语句的结果存放到临时表中,当需要访问视图的时候, 直接访问这个临时表就可以了.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 查询</span><br><span class="line"><span class="keyword">select</span> code ,<span class="keyword">name</span> <span class="keyword">from</span> OCeania <span class="keyword">where</span> <span class="keyword">name</span> =<span class="string">"Australia"</span></span><br></pre></td></tr></table></figure>
+<p>可更新视图指的是可以通过更新这个视图来更新视图涉及的相关表,只要指定了合适的条件,就可以更新,删除 甚至向视图中写入数据</p>
+<p>在某些情况下,视图还可以提升性能</p>
+<p>MySQL的视图还不支持物化视图,也就是将视图结果数据存放在一个可以查看的表中.</p>
+<p>MySQL也不支持在视图中创建索引</p>
+<h3 id="外键约束"><a href="#外键约束" class="headerlink" title="外键约束"></a>外键约束</h3><p>InnoDB是MySQL目前唯一支持外键的内置存储引擎</p>
+<p>使用外键是有成本的,比如外键通常要求每次在修改数据时都要在另外一张表中多执行一个查找操作,虽然InnoDB强制外键使用索引,但是还是无法消除这种约束检查的开销,如果外键列的选择性很低,则会导致一个非常大且选择性很低的索引</p>
+<p>不过,在某些场景下,外键还是会提升一些性能的.如果要确保两个相关表始终有一致的数据,那么使用外键比在应用程序中检查一致性的性能要高的多,外键在相关数据的删除和更新上,也比在应用中维护要更高效</p>
+<p>外键约束使得查询需要访问额外的表,也就意味着额外的锁,如果向子表中写入一条记录,外键约束会让InnoDB检查对应的父表的记录,也就需要对父表对应记录进行加锁,这会导致额外的锁等待,甚至会导致死锁,因为没有直接访问,所以难以排查</p>
+<p>有时.,可以用触发器来代替外键,对于相关数据的同时更新,外键好,但是如果外键只是作为数值约束,那么触发器或者显示限制取值会更好</p>
+<h3 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h3><p>触发器是种特殊的存储过程,它的执行不是由程序调用,也不需要手动操作,它是由事件来触发的,就像按钮的click事件,网页的load事件等,触发器的事件是由对表进行增删改操作所触发的,当对一个数据库或表进行增删改(insert delete update)时就会激活触发器.</p>
+<p>常见的触发器有两种after(for) instead of </p>
+<p>after(for) 表示执行代码后,执行触发器</p>
+<p>instead of 表示执行代码前,用已经写好的触发器代替你的操作</p>
+<h5 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h5><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> 触发器的名字   <span class="keyword">on</span> 操作表</span><br><span class="line"><span class="keyword">for</span>|<span class="keyword">after</span>         instead <span class="keyword">of</span></span><br><span class="line"><span class="keyword">update</span>|<span class="keyword">insert</span>|<span class="keyword">delete</span>   <span class="keyword">as</span>     <span class="keyword">SQL</span>语句</span><br></pre></td></tr></table></figure>
+<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><p>删除谁就让谁的账户加上10元</p>
+<p>create trigger tr_dalete on bank  instead of　　delete　　as</p>
+<p>update bank balance=balance+10 where cid=(select cid from deleted)</p>
+<p>生成这个触发器之后，当用户输入delete语句后，对应的那个id不但没有被删除掉，而且他的账户增加了10元 </p>
+<p>如：delete from bank where cid=’0002’,执行完这句话后，编号为0002的账户会增加10元.</p>
+<h3 id="游标"><a href="#游标" class="headerlink" title="游标"></a>游标</h3><p>在操作mysql的时候我们知道MySQL检索操作返回一组称为结果集的行。这组返回的行都是与 SQL语句相匹配的行（零行或多行）。使用简单的 SELECT语句，例如，没有办法得到第一行、下一行或前 10行，也不存在每次一行地处理所有行的简单方法（相对于成批地处理它们）。有时，需要在检索出来的行中前进或后退一行或多行。这就是使用游标的原因。游标（ cursor）是一个存储在MySQL服务器上的数据库查询，它不是一条 SELECT语句，而是被该语句检索出来的结果集。在存储了游标之后，应用程序可以根据需要滚动或浏览其中的数据。游标主要用于交互式应用，其中用户需要滚动屏幕上的数据，并对数据进行浏览或做出更改。</p>
+<p>注意：只能用于存储过程。不像多数 DBMS，MySQL 游标只能用于存储过程（和函数）。</p>
+<p>MySQL在服务器端提供只读的,单向的游标,而且只能在存储过程(<strong>存储在服务器中的一套SQL语句。一旦它被存储了，客户端不需要再重新发布单独的语句，而是可以引用存储程序来替代</strong>)或者更底层的客户端API,因为MySQL游标中指向的对象都是存储在临时表中而不是实际查询到的数据,所以MySQL游标总是只读的,它可以逐行指向查询结果,然后让程序做进一步的处理,在一个存储过程中,可以有多个游标,也可以在循环中嵌套的使用游标</p>
+<p>当打开一个游标的时候,需要执行整个查询.</p>
+<h3 id="绑定变量"><a href="#绑定变量" class="headerlink" title="绑定变量"></a>绑定变量</h3><p>MySQL支持服务器端的绑定变量,这大大提高了客户端和服务器端数据传输的效率,</p>
+<p>当创建一个绑定变量SQL时,客户端向服务器发送了一个SQL语句的原型,服务器端收到这个SQL语句框架后,解析并存储这个SQL语句的部分执行计划,返回给客户端一个SQL语句处理句柄,以后每次执行此类查询,客户端都指定使用这个句柄</p>
+<h3 id="用户自定义函数"><a href="#用户自定义函数" class="headerlink" title="用户自定义函数"></a>用户自定义函数</h3><p>MySQL支持用户自定义函数,存储过程只能用SQL来编写,而UDF(用户自定义函数)没有这个限制,你可以使用支持C语句调用约定的任何编程语言来实现</p>
+<p>UDF必须事先编译好并动态链接到服务器上.这种平台相关性使得UDF在很多方面都很强大,UDF速度非常块,而且可以访问大量操作系统的功能,还可以使用库函数,使用SQL实现的存储函数在实现一些简单操作上很有优势,但是如果操作涉及到网络交互,就只能使用UDF了,同样,如果需要一个MySQL不支持的统计聚合函数,而且无法使用SQL编写的存储函数来实现的话,通常使用UDF很容易实现</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/21/MySQL高级特性(一)/">https://corn1ng.github.io/2017/12/21/MySQL高级特性(一)/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/22/MySQL高级特性(二)/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MySQL高级特性(二)</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/20/leetcode76/">
+        <span class="next-text nav-default">76. Minimum Window Substring</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

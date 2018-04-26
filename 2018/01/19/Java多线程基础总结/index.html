@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="JAVA多线程基础总结"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/19/Java多线程基础总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> JAVA多线程基础总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JAVA多线程基础总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-19
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/多线程/">多线程</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何创建并运行Java线程"><span class="toc-text">如何创建并运行Java线程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注意"><span class="toc-text">注意</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程的状态"><span class="toc-text">线程的状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程类中的方法"><span class="toc-text">线程类中的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#静态方法"><span class="toc-text">静态方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#currentThread"><span class="toc-text">currentThread()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sleep-方法-线程的休眠"><span class="toc-text">sleep() 方法 线程的休眠</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#yield-方法-线程的礼让"><span class="toc-text">yield()方法 线程的礼让</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象方法"><span class="toc-text">对象方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Object类方法"><span class="toc-text">Object类方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#停止线程"><span class="toc-text">停止线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#中断线程"><span class="toc-text">中断线程</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="如何创建并运行Java线程"><a href="#如何创建并运行Java线程" class="headerlink" title="如何创建并运行Java线程"></a>如何创建并运行Java线程</h2><p>Java线程类也是一个Object类，它的实例都继承自Java.lang.Thread 或者其子类。可以用如下方式在Java中创建一个线程<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Thread thread = <span class="keyword">new</span> Thread();</span><br><span class="line">thread.start();<span class="comment">// 执行该线程</span></span><br></pre></td></tr></table></figure></p>
+<p>编写线程运行的代码分为两种方式，一种是创建Thread子类的一个实例并且重写run()方法，第二种是创建类的时候实现Runnable 接口。</p>
+<a id="more"></a>
+<ol>
+<li>创建子类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Thread子类的一个实例并重写run方法，run方法会在调用start()方法之后被执行。</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    	System.out.println(<span class="string">"running"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">MyThread t1= <span class="keyword">new</span> MyThread();</span><br><span class="line">t1.start();</span><br></pre></td></tr></table></figure>
+<p>一旦线程启动后start()方法就会立即返回，而不会等待到run()方法执行完毕后才返回，就好像run()方法是在另外一个CPU上执行一样，当run方法执行后，将会打印出字符running。</p>
+<ol start="2">
+<li>实现runnable接口</li>
+</ol>
+<p>runnable的中文意思即为任务，顾名思义，通过实现runnable接口，我们定义了一个子任务，然后将子任务交给Thread去执行。这种方式必须将runnable作为Thread类的参数。</p>
+<p>新建一个实现了Java.lang.Runnable接口的类的实例，实例中的方法可以被线程调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"running"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了使线程可以执行run()方法，需要在Thread类的构造函数中传入MyRunnable 的实例对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Thread thread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> MyRunnable());</span><br><span class="line">thread.start();<span class="comment">// 当线程运行时，会调用实现了Runnable 接口的run方法。</span></span><br></pre></td></tr></table></figure>
+<p>Thread  类中有方法 getName 来得到当前线程的名字</p>
+<p>但是实现runnable接口的子类并不是Thread的子类。所以没有getName方法。</p>
+<p>通用做法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String name =  Thread.currentThread().getName();</span><br></pre></td></tr></table></figure>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p><em>1 因为线程操作的不确定性，所以主线程有可能最先执行完，那么此时其他线程不会受到任何影响，并不会随着主线程的结束而结束。 但是主线程一般还是最后完成，因为执行各种关闭动作。</em></p>
+<p><em>2 一个Java程序启动至少会启动两个线程，每当使用Java命令执行一个类时，都会启动一个jvm，每一个jvm实际都是在OS中启动了一个线程，再加上垃圾收集线程，所以Java程序运行时，至少会启动两个线程，一个是主线程，一个是垃圾收集线程。</em></p>
+<h2 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h2><ul>
+<li><p>创建（new）状态: 准备好了一个多线程的对象</p>
+</li>
+<li><p>就绪（runnable）状态: 调用了<code>start()</code>方法, 等待CPU进行调度</p>
+</li>
+<li><p>运行（running）状态: 执行<code>run()</code>方法</p>
+</li>
+<li><p>阻塞（blocked）状态: 暂时停止执行, 可能将资源交给其它线程使用</p>
+</li>
+<li><p>终止（dead）状态: 线程销毁</p>
+<p>创建一个进程后，并不会立即进入就绪状态，因为线程的运行需要一些条件（比如内存资源等）只有线程运行的条件都满足了，才进入就绪状态。进入就绪状态也不代表获得了CPU的执行时间，因此只有等到获得了CPU的执行时间，线程才真正的进入运行状态。</p>
+</li>
+</ul>
+<h2 id="线程类中的方法"><a href="#线程类中的方法" class="headerlink" title="线程类中的方法"></a><em>线程类中的方法</em></h2><p><img src="http://blog-1252095801.cosgz.myqcloud.com/1731516027150_.pic_hd.jpg" width="50%"></p>
+<h3 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h3><h5 id="currentThread"><a href="#currentThread" class="headerlink" title="currentThread()"></a>currentThread()</h5><p>方法返回代码段正在被哪个线程调用的信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Run1</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main（String[] args）</span><br><span class="line">    &#123; System.out.println(Thread.currentThread.getName());&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="sleep-方法-线程的休眠"><a href="#sleep-方法-线程的休眠" class="headerlink" title="sleep() 方法 线程的休眠"></a>sleep() 方法 线程的休眠</h5><p>sleep()方法作用实在指定的毫秒数内让当前正在执行的线程休眠，这个正在执行的线程就是this.currentThread()返回的线程。</p>
+<p>sleep 相当于让线程睡眠，交出CPU，让CPU执行其他任务，但是<em>sleep()方法不会释放锁，如果当前线程持有某个对象的锁，即使调用sleep，其他线程也无法访问这个对象</em></p>
+<p>如果调用了sleep方法，必须捕获InterruptedException 异常或者向上抛出。当线程睡眠时间满后，不一样会立即得到执行，因此此时可能CPU正在执行其他任务。所以相当于让线程<strong>阻塞</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sleep(<span class="keyword">long</span> millis) <span class="comment">//毫秒</span></span><br><span class="line">sleep(<span class="keyword">long</span> millis,<span class="keyword">int</span> nanoseconds) <span class="comment">//毫秒 纳秒</span></span><br></pre></td></tr></table></figure>
+<h5 id="yield-方法-线程的礼让"><a href="#yield-方法-线程的礼让" class="headerlink" title="yield()方法 线程的礼让"></a>yield()方法 线程的礼让</h5><p>调用yield会让当前线程交出CPU权限，让CPU执行其他的线程，跟sleep一样，也不释放锁，但是yield不能控制具体的交出CPU的时间，另外，yield只能让相同优先级的线程获取CPU执行时间的机会。调用yield不会让线程阻塞，只会重新回到就绪状态。</p>
+<h3 id="对象方法"><a href="#对象方法" class="headerlink" title="对象方法"></a>对象方法</h3><p><strong>start()方法</strong> start用来启动一个线程，当调用start方法后，系统才会开启一个新的线程来执行用户定义的子任务，在这个过程中，会为相应的线程分配需要的资源。</p>
+<p><strong>run()方法</strong> run()方法是不需要用户来调用的，当通过start方法启动一个线程之后，当线程获得了CPU执行时间，便进入run方法体去执行具体的任务。</p>
+<p><strong>getId()方法</strong>获取线程的唯一标识</p>
+<p><strong>isAlive()方法</strong> 判断当前线程是否处在活动状态。</p>
+<p><strong>join()方法</strong> 很多情况下，主线程创建并启动了线程，如果子线程要进行大量的耗时运算，主线程往往早于子线程结束前结束，这时，如果主线程想等待子线程执行完成后再结束，就是对子线程用join方法，让他进行强制执行，作用就是等待线程对象销毁。用法为对象.join()，然后这个对象就先执行，执行完后再执行其他进程。</p>
+<p>在线程操作中，可以使用join方法让一个线程强制执行，线程强制执行期间，其他线程无法运行，必须等待此线程完成以后才可以继续执行。</p>
+<p>join把指定的线程加入到当前线程，可以将两个交替执行的线程合并为顺序执行的线程，比如在线程b中调用了a的join方法，直到线程a执行完毕后，才会继续执行线程b.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mythread</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">  	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">50</span>;i++)</span><br><span class="line">  	&#123;</span><br><span class="line">    	System.out.println(Thread.currentThread.getName()+i)</span><br><span class="line">  	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      	Mythread mt = <span class="keyword">new</span> Mythread();</span><br><span class="line">        Thread t =<span class="keyword">new</span> Thread(t);</span><br><span class="line">      	t.start();</span><br><span class="line">      	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">50</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&gt;<span class="number">10</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                t.join();   <span class="comment">// exception</span></span><br><span class="line">            &#125;</span><br><span class="line">          System.out.println(main运行 +i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">结果：</span><br><span class="line">main <span class="number">0</span></span><br><span class="line">main <span class="number">1</span></span><br><span class="line">...</span><br><span class="line">main <span class="number">9</span></span><br><span class="line">main <span class="number">10</span></span><br><span class="line">线程 <span class="number">0</span></span><br><span class="line">线程 <span class="number">1</span></span><br><span class="line">线程 <span class="number">2</span></span><br><span class="line">...</span><br><span class="line">线程 <span class="number">50</span></span><br><span class="line">main <span class="number">11</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="Object类方法"><a href="#Object类方法" class="headerlink" title="Object类方法"></a>Object类方法</h3><p><strong>wait()方法</strong>导致线程进入等待状态，直到它被其他线程通过notify()或者notifyAll唤醒。该方法只能在<strong>同步方法</strong>中调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。</p>
+<p><strong>notify()方法</strong> 选择一个在该对象上调用wait方法的线程，解除其等待状态。该方法只能在同步方法或同步块内部调用。如果当前线程不是锁的持有者，该方法抛出一个IllegalMonitorStateException异常。</p>
+<p><strong>任何对象都可以调用这两个方法,当在一个对象实例上调用wait()方法后,当前线程就会在这个对象上等待,比如,在线程A中,调用了obj.wait()方法,那么线程A就会停止继续运行,而转为等待状态,等待到何时结束呢,线程A会一直等待到其他线程调用了obj.notify()方法为止</strong></p>
+<p>object.wait()方法并不是随时可以调用的,它必须包含在对应的Synchronized语句中,wait和notify都需要先获得目标对象的一个监视器.</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-15%2022-30-20.png" width="40%"></p>
+<p><strong>Thread类的sleep()方法和对象的wait()方法都可以让线程暂停执行，它们有什么区别?</strong></p>
+<p>答：sleep()方法（休眠）是线程类（Thread）的静态方法，调用此方法会让当前线程暂停执行指定的时间，将执行机会（CPU）让给其他线程，但是对象的锁依然保持，因此休眠时间结束后会自动恢复。wait()是Object类的方法，调用对象的wait()方法导致当前线程放弃对象的锁（线程暂停执行），进入对象的等待池（wait pool），只有调用对象的notify()方法（或notifyAll()方法）时才能唤醒等待池中的线程进入等锁池（lock pool），如果线程重新获得对象的锁就可以进入就绪状态。 wait()会释放锁,sleep不释放任何资源</p>
+<h3 id="停止线程"><a href="#停止线程" class="headerlink" title="停止线程"></a>停止线程</h3><p>三种方式。</p>
+<ul>
+<li>使用退出标志，使线程正常退出，也就是当run方法完成后线程终止</li>
+<li>使用stop方法强行终止线程，但是不推荐使用这个方法，因为stop和suspend及resume一样，都是作废过期的方法，使用他们可能产生不可预料的结果。</li>
+<li>使用interrupt方法中断线程，但这个不会终止一个正在运行的线程，还需要加入一个判断才可以完成线程的停止。</li>
+</ul>
+<h3 id="中断线程"><a href="#中断线程" class="headerlink" title="中断线程"></a>中断线程</h3><p>线程中断不会使线程立即退出,而是给线程发送一个通知,告知目标线程,有人希望你退出,至于目标线程接到通知后如何处理,则完全由目标线程自行决定.</p>
+<p>当一个线程运行时，另外一个线程可以直接通过interrupt()方法中断其运行状态。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/19/Java多线程基础总结/">https://corn1ng.github.io/2018/01/19/Java多线程基础总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/19/Java多线程等待通知机制/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java多线程之通知等待机制</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/19/多线程基础/">
+        <span class="next-text nav-default">多线程基础</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

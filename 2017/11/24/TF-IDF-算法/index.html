@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="TF-IDF 算法"/>
+
+
+
+
+  <meta name="keywords" content="算法, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/11/24/TF-IDF-算法/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> TF-IDF 算法 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          TF-IDF 算法
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-11-24
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/计算机基础/">计算机基础</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#算法细节"><span class="toc-text">算法细节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用TF-IDF-计算文章相似度"><span class="toc-text">使用TF-IDF 计算文章相似度</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <blockquote>
+<p><a href="http://www.ruanyifeng.com/blog/2013/03/tf-idf.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2013/03/tf-idf.html</a></p>
+</blockquote>
+<p>有一篇很长的文章，我要用计算机提取它的关键词（Automatic Keyphrase extraction），完全不加以人工干预，请问怎样才能正确做到？</p>
+<p>下面从一个实例说起</p>
+<p>假定现在有一篇长文《中国的蜜蜂养殖》，我们准备用计算机提取它的关键词。</p>
+<p>一个容易想到的思路，就是找到出现次数最多的词。如果某个词很重要，它应该在这篇文章中多次出现。于是，我们进行”词频”（Term Frequency，缩写为TF）统计。</p>
+<p>结果你肯定猜到了，出现次数最多的词是—-“的”、”是”、”在”—-这一类最常用的词。它们叫做<a href="http://baike.baidu.com/view/3784680.htm" target="_blank" rel="noopener">“停用词”</a>（stop words），表示对找到结果毫无帮助、必须过滤掉的词。</p>
+<a id="more"></a>
+<p>假设我们把它们都过滤掉了，只考虑剩下的有实际意义的词。这样又会遇到了另一个问题，我们可能发现”中国”、”蜜蜂”、”养殖”这三个词的出现次数一样多。这是不是意味着，作为关键词，它们的重要性是一样的？</p>
+<p>显然不是这样。因为”中国”是很常见的词，”蜜蜂”和”养殖”不那么常见。如果这三个词在一篇文章的出现次数一样多，有理由认为，”蜜蜂”和”养殖”的重要程度要大于”中国”，也就是说，在关键词排序上面，”蜜蜂”和”养殖”应该排在”中国”的前面。</p>
+<p>所以，我们需要一个重要性调整系数，衡量一个词是不是常见词。<strong>如果某个词比较少见，但是它在这篇文章中多次出现，那么它很可能就反映了这篇文章的特性，正是我们所需要的关键词。</strong></p>
+<p>用统计学语言表达，就是在词频的基础上，要对每个词分配一个”重要性”权重。最常见的词（”的”、”是”、”在”）给予最小的权重，较常见的词（”中国”）给予较小的权重，较少见的词（”蜜蜂”、”养殖”）给予较大的权重。这个权重叫做”逆文档频率”（Inverse Document Frequency，缩写为IDF），它的大小与一个词的常见程度成反比。</p>
+<p><strong>知道了”词频”（TF）和”逆文档频率”（IDF）以后，将这两个值相乘，就得到了一个词的TF-IDF值。某个词对文章的重要性越高，它的TF-IDF值就越大。所以，排在最前面的几个词，就是这篇文章的关键词</strong>。</p>
+<h3 id="算法细节"><a href="#算法细节" class="headerlink" title="算法细节"></a>算法细节</h3><p><strong>第一步，计算词频。</strong></p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013031503.png" alt="img"></p>
+<p>考虑到文章有长短之分，为了便于不同文章的比较，进行”词频”标准化。</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013031504.png" alt="img"></p>
+<p><strong>第二步，计算逆文档频率。</strong></p>
+<p>这时，需要一个语料库（corpus），用来模拟语言的使用环境。</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013031506.png" alt="img"></p>
+<p>如果一个词越常见，那么分母就越大，逆文档频率就越小越接近0。分母之所以要加1，是为了避免分母为0（即所有文档都不包含该词）。log表示对得到的值取对数。</p>
+<p><strong>第三步，计算TF-IDF。</strong></p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013031507.png" alt="img"></p>
+<p><strong>可以看到，TF-IDF与一个词在文档中的出现次数成正比，与该词在整个语言中的出现次数成反比。</strong>所以，自动提取关键词的算法就很清楚了，就是计算出文档的每个词的TF-IDF值，然后按降序排列，取排在最前面的几个词。</p>
+<h3 id="使用TF-IDF-计算文章相似度"><a href="#使用TF-IDF-计算文章相似度" class="headerlink" title="使用TF-IDF 计算文章相似度"></a>使用TF-IDF 计算文章相似度</h3><p>为了找出相似的文章，需要用到<a href="http://en.wikipedia.org/wiki/Cosine_similarity" target="_blank" rel="noopener">“余弦相似性”</a>（cosine similiarity）。下面，我举一个例子来说明，什么是”余弦相似性”。</p>
+<p>为了简单起见，我们先从句子着手。</p>
+<blockquote>
+<p>　　句子A：我喜欢看电视，不喜欢看电影。</p>
+<p>　　句子B：我不喜欢看电视，也不喜欢看电影。</p>
+</blockquote>
+<p>请问怎样才能计算上面两句话的相似程度？</p>
+<p>基本思路是：如果这两句话的用词越相似，它们的内容就应该越相似。因此，可以从词频入手，计算它们的相似程度。</p>
+<p><strong>第一步，分词。</strong></p>
+<blockquote>
+<p>　　句子A：我/喜欢/看/电视，不/喜欢/看/电影。</p>
+<p>　　句子B：我/不/喜欢/看/电视，也/不/喜欢/看/电影。</p>
+</blockquote>
+<p><strong>第二步，列出所有的词。</strong></p>
+<blockquote>
+<p>　　我，喜欢，看，电视，电影，不，也。</p>
+</blockquote>
+<p><strong>第三步，计算词频。</strong></p>
+<blockquote>
+<p>　　句子A：我 1，喜欢 2，看 2，电视 1，电影 1，不 1，也 0。</p>
+<p>　　句子B：我 1，喜欢 2，看 2，电视 1，电影 1，不 2，也 1。</p>
+</blockquote>
+<p><strong>第四步，写出词频向量。</strong></p>
+<blockquote>
+<p>　　句子A：[1, 2, 2, 1, 1, 1, 0]</p>
+<p>　　句子B：[1, 2, 2, 1, 1, 2, 1]</p>
+</blockquote>
+<p>到这里，问题就变成了如何计算这两个向量的相似程度。</p>
+<p>我们可以把它们想象成空间中的两条线段，都是从原点（[0, 0, …]）出发，指向不同的方向。两条线段之间形成一个夹角，如果夹角为0度，意味着方向相同、线段重合；如果夹角为90度，意味着形成直角，方向完全不相似；如果夹角为180度，意味着方向正好相反。<strong>因此，我们可以通过夹角的大小，来判断向量的相似程度。夹角越小，就代表越相似。</strong></p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032002.png" alt="img"></p>
+<p>以二维空间为例，上图的a和b是两个向量，我们要计算它们的夹角θ。<a href="http://zh.wikipedia.org/zh-cn/%E9%A4%98%E5%BC%A6%E5%AE%9A%E7%90%86" target="_blank" rel="noopener">余弦定理</a>告诉我们，可以用下面的公式求得：</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032004.png" alt="img"></p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032003.png" alt="img"></p>
+<p>假定a向量是[x1, y1]，b向量是[x2, y2]，那么可以将余弦定理改写成下面的形式：</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032006.png" alt="img"></p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032005.png" alt="img"></p>
+<p>数学家已经证明，余弦的这种计算方法对n维向量也成立。假定A和B是两个n维向量，A是 [A1, A2, …, An] ，B是 [B1, B2, …, Bn] ，则A与B的夹角θ的余弦等于：</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032007.png" alt="img"></p>
+<p>使用这个公式，我们就可以得到，句子A与句子B的夹角的余弦。</p>
+<p><img src="http://www.ruanyifeng.com/blogimg/asset/201303/bg2013032008.png" alt="img"></p>
+<p><strong>余弦值越接近1，就表明夹角越接近0度，也就是两个向量越相似，这就叫”余弦相似性”。</strong>所以，上面的句子A和句子B是很相似的，事实上它们的夹角大约为20.3度。</p>
+<p>由此，我们就得到了”找出相似文章”的一种算法：</p>
+<blockquote>
+<p>　　（1）使用TF-IDF算法，找出两篇文章的关键词；</p>
+<p>　　（2）每篇文章各取出若干个关键词（比如20个），合并成一个集合，计算每篇文章对于这个集合中的词的词频（为了避免文章长度的差异，可以使用相对词频）；</p>
+<p>　　（3）生成两篇文章各自的词频向量；</p>
+<p>　　（4）计算两个向量的余弦相似度，值越大就表示越相似。</p>
+</blockquote>
+<p>“余弦相似度”是一种非常有用的算法，只要是计算两个向量的相似程度，都可以采用它。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/11/24/TF-IDF-算法/">https://corn1ng.github.io/2017/11/24/TF-IDF-算法/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/算法/">算法</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/11/24/SpringMVC-@RequestBody-接收Json-对象字符串/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">SpringMVC @RequestBody 接收Json 对象字符串</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/11/22/适配器模式/">
+        <span class="next-text nav-default">适配器模式</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

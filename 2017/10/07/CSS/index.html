@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="CSS总结"/>
+
+
+
+
+  <meta name="keywords" content="CSS, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/07/CSS/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> CSS总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          CSS总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-07
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/前端/">前端</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择器"><span class="toc-text">选择器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#样式的创建"><span class="toc-text">样式的创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#属性"><span class="toc-text">属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#盒子模型"><span class="toc-text">盒子模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#块与内联元素"><span class="toc-text">块与内联元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定位"><span class="toc-text">定位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浮动"><span class="toc-text">浮动</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p>css 规则通常由两个主要部分组成，选择器，以及一条或者多条声明。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span>&#123;<span class="attribute">color</span>:red ;<span class="attribute">text-align</span>:center;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a>选择器</h2><p>id选择器和class选择器</p>
+<p>id选择器用#来定义，class选择器用. 来定义</p>
+<a id="more"></a>
+<h3 id="样式的创建"><a href="#样式的创建" class="headerlink" title="样式的创建"></a>样式的创建</h3><p>外部样式表、内部样式表、内联样式</p>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">background-ccolor</span> 背景颜色</span><br><span class="line"><span class="selector-tag">background-image</span><span class="selector-pseudo">:url("")</span> 背景图像</span><br><span class="line"><span class="selector-tag">background-repeat</span><span class="selector-pseudo">:no-repeat</span> 设置图片不进行平铺</span><br><span class="line"><span class="selector-tag">background-position</span><span class="selector-pseudo">:right</span> <span class="selector-tag">top</span> 图片起始位置</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center(right</span> <span class="selector-tag">justify</span>) 文本对齐方式</span><br><span class="line"><span class="selector-tag">text-decoration</span><span class="selector-pseudo">:none</span>:设置删除文本的装饰 如 删除下划线 加一条上线 中间划线</span><br><span class="line"><span class="selector-tag">text-indent</span> <span class="selector-pseudo">:50px</span> 指定文本第一行的缩进。</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">font-family</span><span class="selector-pseudo">:"Times"</span> 设置字体</span><br><span class="line"><span class="selector-tag">font-style</span><span class="selector-pseudo">:normal(italic</span>倾斜)</span><br><span class="line"><span class="selector-tag">font-size</span><span class="selector-pseudo">:40px</span> 字体大小</span><br><span class="line"><span class="selector-tag">font-weight</span>:字体粗细</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:link</span> &#123;<span class="attribute">color</span>:<span class="number">#000000</span>; <span class="attribute">text-decoration</span>:none;&#125;      <span class="comment">/* 未访问链接*/</span></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:visited</span> &#123;<span class="attribute">color</span>:<span class="number">#00FF00</span>; <span class="attribute">text-decoration</span>:none&#125;  <span class="comment">/* 已访问链接 */</span></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123;<span class="attribute">color</span>:<span class="number">#FF00FF</span>;<span class="attribute">text-decoration</span>:underline&#125;  <span class="comment">/* 鼠标移动链接上*/</span></span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:active</span> &#123;<span class="attribute">color</span>:<span class="number">#0000FF</span>;&#125;  <span class="comment">/* 鼠标点击时 */</span></span><br><span class="line"></span><br><span class="line">ul.a &#123;list-style-type: circle;&#125;//list-style-type</span><br><span class="line">ul.b &#123;list-style-type: square;&#125;//属性指定列表项标记的</span><br><span class="line">ol.c &#123;list-style-type: upper-roman;&#125;//类型</span><br><span class="line"><span class="selector-tag">ol</span><span class="selector-class">.d</span> &#123;<span class="attribute">list-style-type</span>: lower-alpha;&#125;</span><br><span class="line"><span class="selector-tag">border-collapse</span>：表格边框</span><br><span class="line">border-collapse:collapse; //表格的边框设置成单一的</span><br><span class="line"></span><br><span class="line">h1.hidden&#123;visibility:hidden;&#125;// 隐藏某个元素，但占据空间</span><br><span class="line">h1.hidden&#123;display:none;&#125;//隐藏且不占用空间</span><br></pre></td></tr></table></figure>
+<h3 id="盒子模型"><a href="#盒子模型" class="headerlink" title="盒子模型"></a>盒子模型</h3><p><img src="http://blog-1252095801.cosgz.myqcloud.com/1008.png" alt="hezi"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">border-style:none//边框样式</span><br><span class="line">//dotted点线边框 dashed 虚线边框 solid 实线边框 double两个边框 </span><br><span class="line">border-width:5px//边框宽度</span><br><span class="line">border-color:red //边框颜色</span><br><span class="line">单	<span class="selector-tag">border-top-style</span><span class="selector-pseudo">:dotted</span>; </span><br><span class="line">独	<span class="selector-tag">border-right-style</span><span class="selector-pseudo">:solid</span>;</span><br><span class="line">设	<span class="selector-tag">border-bottom-style</span><span class="selector-pseudo">:dotted</span>;</span><br><span class="line">置	<span class="selector-tag">border-left-style</span><span class="selector-pseudo">:solid</span>;</span><br><span class="line">轮廓（<span class="selector-tag">outline</span>）是绘制于元素周围的一条线，位于边框边缘的外围，可起到突出元素的作用。<span class="selector-tag">outline</span> 属性规定元素轮廓的样式、颜色和宽度。</span><br></pre></td></tr></table></figure>
+<h3 id="块与内联元素"><a href="#块与内联元素" class="headerlink" title="块与内联元素"></a>块与内联元素</h3><p>块元素 h1 p div</p>
+<p>内联元素  span a </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">li &#123;display:inline;&#125; // 列表项变为内联元素。</span><br><span class="line">span &#123;display:block;&#125;// span元素作为块元素。</span><br></pre></td></tr></table></figure>
+<h3 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h3><p>position 属性指定了元素的定位类型。</p>
+<p>position：static relative fixed absolute</p>
+<p>static 是html 默认值，即没有定位，元素出现在正常的流中。静态定位的元素不会受到top,bottom,left,right 影响。</p>
+<p>fixed 定位是相对于浏览器窗口的固定位置，即使窗口滚动也不移动。fixed定位的元素与文档流无关，因此不占据空间。会与其他元素重叠。</p>
+<p>relative 定位是相对其正常的位置。与绝对定位不同的是，相对定位不会把该元素从原文档删除掉，而是在原文档的位置的基础上，移动一定的距离</p>
+<p>absolute 定位是相对于最近的已定位父元素，若没有，就相对于html.设置了绝对定位的元素，相当于该元素被从原文档中删除了。</p>
+<p>通过绝对定位可以把一个元素放在另一个元素上，这样位置就重复了。重复了，就存在一个谁掩盖谁的问题。 这个时候就可以使用z-index属性， 当z-index的值越大，就表示放上面，z-index:越小就表示放下面。</p>
+<h3 id="浮动"><a href="#浮动" class="headerlink" title="浮动"></a>浮动</h3><p>浮动会使元素向左或者向右浮动，周围元素也会重新排列。一个浮动元素会尽量向左或向右移动，直到它的外边缘碰到包含框或另一个浮动框的边框为止。浮动元素之后的元素将围绕它。浮动元素之前的元素将不会受到影响。</p>
+<p>浮动后，原来的坑就让出来了。</p>
+<p>文字向左浮动 首先，向左浮动后，会把“坑”让出来，这个时候”正常的文字4“ 就会过来试图占这个坑，但是，发现 “浮动的文字”并没有走，结果，就只好排在它后面了</p>
+<p>默认的div排列是会换行的 如果使用float就可以达到水平排列的效果，通常会用在菜单，导航栏等地方 。如果超出了父容器，还会有自动换行的效果。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/07/CSS/">https://corn1ng.github.io/2017/10/07/CSS/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/CSS/">CSS</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/07/jQuery/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">jQuery</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/07/AJAX/">
+        <span class="next-text nav-default">AJAX</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

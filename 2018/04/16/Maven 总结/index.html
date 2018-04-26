@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Maven 总结"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Maven, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/16/Maven 总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Maven 总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Maven 总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-16
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven-总结"><span class="toc-text">Maven 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven-是什么？"><span class="toc-text">Maven 是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pom"><span class="toc-text">pom</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构建生命周期"><span class="toc-text">构建生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#仓库"><span class="toc-text">仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#本地仓库"><span class="toc-text">本地仓库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#中央仓库"><span class="toc-text">中央仓库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#远程仓库"><span class="toc-text">远程仓库</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven的搜索顺序"><span class="toc-text">Maven的搜索顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven插件"><span class="toc-text">Maven插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven创建工程"><span class="toc-text">Maven创建工程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven构建-amp-测试工程"><span class="toc-text">Maven构建&amp;测试工程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#编译工程"><span class="toc-text">编译工程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven中添加外部依赖"><span class="toc-text">Maven中添加外部依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven工程文档"><span class="toc-text">Maven工程文档</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven工程模板"><span class="toc-text">Maven工程模板</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven-工程模板"><span class="toc-text">Maven - 工程模板</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mvn-compile与mvn-install、mvn-deploy的区别"><span class="toc-text">mvn compile与mvn install、mvn deploy的区别</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Maven-总结"><a href="#Maven-总结" class="headerlink" title="Maven 总结"></a>Maven 总结</h2><h4 id="Maven-是什么？"><a href="#Maven-是什么？" class="headerlink" title="Maven 是什么？"></a>Maven 是什么？</h4><p>Maven 是一个项目管理和整合工具。Maven 为开发者提供了一套完整的构建生命周期框架。开发团队几乎不用花多少时间就能够自动完成工程的基础构建配置，因为 Maven 使用了一个标准的目录结构和一个默认的构建生命周期。</p>
+<p>在有多个开发团队环境的情况下，Maven 能够在很短的时间内使得每项工作都按照标准进行。因为大部分的工程配置操作都非常简单并且可复用，在创建报告、检查、构建和测试自动配置时，Maven 可以让开发者的工作变得更简单。</p>
+<p>Maven 能够帮助开发者完成以下工作：构建，文档生成，报告，依赖，SCMs，发布，分发，邮件列表。</p>
+<p>总的来说，Maven 简化了工程的构建过程，并对其标准化。它无缝衔接了编译、发布、文档生成、团队合作和其他任务。Maven 提高了重用性，负责了大部分构建相关的任务。</p>
+<h4 id="pom"><a href="#pom" class="headerlink" title="pom"></a>pom</h4><p>POM 代表工程对象模型。它是使用 Maven 工作时的基本组建，是一个 xml 文件。它被放在工程根目录下，文件命名为 pom.xml。POM 包含了关于工程和各种配置细节的信息，Maven 使用这些信息构建工程。所有的 POM 文件需要 <strong>project</strong> 元素和三个必须的字段：<strong>groupId, artifactId,version</strong>。在仓库中的工程标识为 <strong>groupId:artifactId:version</strong></p>
+<p>groupid代表工程组的标识，一个组织中唯一。artifactid是工程的标识，通常是工程的名称。version 是工程的版本号。</p>
+<h4 id="构建生命周期"><a href="#构建生命周期" class="headerlink" title="构建生命周期"></a>构建生命周期</h4><p>构建生命周期是一组阶段的序列（sequence of phases），每个阶段定义了目标被执行的顺序。这里的阶段是生命周期的一部分。举例说明，一个典型的 Maven 构建生命周期是由以下几个阶段的序列组成的。</p>
+<ul>
+<li><strong>验证（validate）</strong> - 验证项目是否正确，所有必要的信息可用</li>
+<li><strong>编译（compile）</strong> - 编译项目的源代码</li>
+<li><strong>测试（test）</strong> - 使用合适的单元测试框架测试编译的源代码。这些测试不应该要求代码被打包或部署</li>
+<li><strong>打包（package）</strong> - 采用编译的代码，并以其可分配格式（如JAR）进行打包。</li>
+<li><strong>验证（verify）</strong> - 对集成测试的结果执行任何检查，以确保满足质量标准</li>
+<li><strong>安装（install）</strong> - 将软件包安装到本地存储库中，用作本地其他项目的依赖项</li>
+<li><strong>部署（deploy）</strong> - 在构建环境中完成，将最终的包复制到远程存储库以与其他开发人员和项目共享。</li>
+</ul>
+<h4 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h4><p>在 Maven 的术语中，仓库是一个位置（place），例如目录，可以存储所有的工程 jar 文件、library jar 文件、插件或任何其他的工程指定的文件。Maven 仓库有三种类型：本地(local),中央(central),远程(remote)</p>
+<h5 id="本地仓库"><a href="#本地仓库" class="headerlink" title="本地仓库"></a>本地仓库</h5><p>Maven 本地仓库是机器上的一个文件夹。它在你第一次运行任何 maven 命令的时候创建。</p>
+<p>Maven 本地仓库保存你的工程的所有依赖（library jar、plugin jar 等）。当你运行一次 Maven 构建，Maven 会自动下载所有依赖的 jar 文件到本地仓库中。它避免了每次构建时都引用存放在远程机器上的依赖文件。Maven 本地仓库默认被创建在 %USER_HOME% 目录下。要修改默认位置，在 %M2_HOME%\conf 目录中的 Maven 的 settings.xml 文件中定义另一个路径。</p>
+<h5 id="中央仓库"><a href="#中央仓库" class="headerlink" title="中央仓库"></a>中央仓库</h5><p>Maven 中央仓库是由 Maven 社区提供的仓库，其中包含了大量常用的库。中央仓库的关键概念：这个仓库由 Maven 社区管理。不需要配置。需要通过网络才能访问。</p>
+<h5 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h5><p>如果 Maven 在中央仓库中也找不到依赖的库文件，它会停止构建过程并输出错误信息到控制台。为避免这种情况，Maven 提供了远程仓库的概念，它是开发人员自己定制仓库，包含了所需要的代码库或者其他工程中用到的 jar 文件。</p>
+<h4 id="Maven的搜索顺序"><a href="#Maven的搜索顺序" class="headerlink" title="Maven的搜索顺序"></a>Maven的搜索顺序</h4><p>当我们执行 Maven 构建命令时，Maven 开始按照以下顺序查找依赖的库：</p>
+<ul>
+<li><strong>步骤 1</strong> － 在本地仓库中搜索，如果找不到，执行步骤 2，如果找到了则执行其他操作。</li>
+<li><strong>步骤 2</strong> － 在中央仓库中搜索，如果找不到，并且有一个或多个远程仓库已经设置，则执行步骤 4，如果找到了则下载到本地仓库中已被将来引用。</li>
+<li><strong>步骤 3</strong> － 如果远程仓库没有被设置，Maven 将简单的停滞处理并抛出错误（无法找到依赖的文件）。</li>
+<li><strong>步骤 4</strong> － 在一个或多个远程仓库中搜索依赖的文件，如果找到则下载到本地仓库已被将来引用，否则 Maven 将停止处理并抛出错误（无法找到依赖的文件）。</li>
+</ul>
+<h4 id="Maven插件"><a href="#Maven插件" class="headerlink" title="Maven插件"></a>Maven插件</h4><p>Maven 实际上是一个依赖插件执行的框架，每个任务实际上是由插件完成。Maven 插件通常被用来：</p>
+<ul>
+<li>创建 jar 文件</li>
+<li>创建 war 文件</li>
+<li>编译代码文件</li>
+<li>代码单元测试</li>
+<li>创建工程文档</li>
+<li>创建工程报告</li>
+</ul>
+<p>插件通常提供了一个目标的集合，并且可以使用下面的语法执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mvn [plugin-name]:[goal-name]</span><br><span class="line"><span class="meta">#</span> 执行“plugin-name”插件的“goal-name”目标（或者称为动作）</span><br><span class="line"><span class="meta">#</span>用户可以通过两种方式调用Maven插件目标。</span><br><span class="line"><span class="meta">#</span>第一种方式是将插件目标与生命周期阶段（lifecycle phase）绑定，这样用户在命令行只是输入生命周期阶段而已，例如Maven默认将maven-compiler-plugin的compile目标与compile生命周期阶段绑定，因此命令mvn compile实际上是先定位到compile这一生命周期阶段，然后再根据绑定关系调用maven-compiler-plugin的compile目标。</span><br><span class="line"><span class="meta">#</span>第二种方式是直接在命令行指定要执行的插件目标，例如mvnarchetype:generate 就表示调用maven-archetype-plugin的generate目标，这种带冒号的调用方式与生命周期无关。</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clean</td>
+<td>构建之后清理目标文件。删除目标目录。</td>
+</tr>
+<tr>
+<td>compiler</td>
+<td>编译 Java 源文件。</td>
+</tr>
+<tr>
+<td>surefile</td>
+<td>运行 JUnit 单元测试。创建测试报告。</td>
+</tr>
+<tr>
+<td>jar(package)</td>
+<td>从当前工程中构建 JAR 文件。</td>
+</tr>
+<tr>
+<td>war</td>
+<td>从当前工程中构建 WAR 文件。</td>
+</tr>
+<tr>
+<td>javadoc</td>
+<td>为工程生成 Javadoc。</td>
+</tr>
+<tr>
+<td>antrun</td>
+<td>从构建过程的任意一个阶段中运行一个 ant 任务的集合。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>Maven命令列表</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>mvn –version</strong></td>
+<td>显示版本信息</td>
+</tr>
+<tr>
+<td><strong>mvn clean</strong></td>
+<td>清理项目生产的临时文件,一般是模块下的target目录</td>
+</tr>
+<tr>
+<td><strong>mvn compile</strong></td>
+<td>编译源代码，一般编译模块下的src/main/java目录</td>
+</tr>
+<tr>
+<td><strong>mvn package</strong></td>
+<td>项目打包工具,会在模块下的target目录生成jar或war等文件</td>
+</tr>
+<tr>
+<td><strong>mvn test</strong></td>
+<td>测试命令,或执行src/test/java/下junit的测试用例.</td>
+</tr>
+<tr>
+<td><strong>mvn install</strong></td>
+<td>将打包的jar/war文件复制到你的本地仓库中,供其他模块使用</td>
+</tr>
+<tr>
+<td><strong>mvn deploy</strong></td>
+<td>将打包的文件发布到远程参考,提供其他人员进行下载依赖</td>
+</tr>
+<tr>
+<td><strong>mvn site</strong></td>
+<td>生成项目相关信息的网站</td>
+</tr>
+<tr>
+<td><strong>mvn eclipse:eclipse</strong></td>
+<td>将项目转化为Eclipse项目</td>
+</tr>
+<tr>
+<td><strong>mvn dependency:tree</strong></td>
+<td>打印出项目的整个依赖树</td>
+</tr>
+<tr>
+<td><strong>mvn archetype:generate</strong></td>
+<td>创建Maven的普通java项目</td>
+</tr>
+<tr>
+<td><strong>mvn tomcat:run</strong></td>
+<td>在tomcat容器中运行web应用</td>
+</tr>
+<tr>
+<td><strong>mvn jetty:run</strong></td>
+<td>调用 Jetty 插件的 Run 目标在 Jetty Servlet 容器中启动 web 应用</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Maven创建工程"><a href="#Maven创建工程" class="headerlink" title="Maven创建工程"></a>Maven创建工程</h4><p>Maven 使用<strong>原型（archetype）</strong>插件创建工程。要创建一个简单的 Java 应用，我们将使用 maven-archetype-quickstart 插件。在下面的例子中，将在 \MVN 文件夹下创建一个基于 maven 的 java 应用工程。打开命令控制台，跳转到 \MVN 目录，并执行下面的 <strong>mvn</strong> 命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> \MVN&gt;mvn archetype:generate</span><br><span class="line">-DgroupId=com.companyname.bank </span><br><span class="line">-DartifactId=consumerBanking </span><br><span class="line">-DarchetypeArtifactId=maven-archetype-quickstart </span><br><span class="line">-DinteractiveMode=false</span><br></pre></td></tr></table></figure>
+<h4 id="Maven构建-amp-测试工程"><a href="#Maven构建-amp-测试工程" class="headerlink" title="Maven构建&amp;测试工程"></a>Maven构建&amp;测试工程</h4><p>打开命令控制台，跳转到 \MVN\consumerBanking 目录下，并执行以下 <strong>mvn</strong> 命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\MVN\consumerBanking&gt;mvn clean package #package的作用是打包</span><br></pre></td></tr></table></figure>
+<p>Maven 将开始构建工程。</p>
+<p>已经构建了你的工程并创建了最终的 jar 文件，下面是要学习的关键概念：</p>
+<ul>
+<li>我们给了 maven 两个目标，首先清理目标目录（clean），然后打包工程构建的输出为 jar（package）文件。</li>
+<li>打包好的 jar 文件可以在 <code>demo\target</code>中获得，名称为 demo-1.0-SNAPSHOT.jar。</li>
+<li>测试报告存放在 demo\target\surefire-reports 文件夹中。</li>
+<li>Maven 编译源码文件，以及测试源码文件。</li>
+<li>接着 Maven 运行测试用例。</li>
+<li>最后Maven创建工程包。</li>
+</ul>
+<h4 id="编译工程"><a href="#编译工程" class="headerlink" title="编译工程"></a>编译工程</h4><p>当添加了一个文件后，可以输入下面的命令重新编译文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean compile</span><br></pre></td></tr></table></figure>
+<h4 id="Maven中添加外部依赖"><a href="#Maven中添加外部依赖" class="headerlink" title="Maven中添加外部依赖"></a>Maven中添加外部依赖</h4><p>当远程仓库和中央仓库中都没有相关依赖时，可以手动添加jar包。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>ldapjdk<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ldapjdk<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">scope</span>&gt;</span>system<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">systemPath</span>&gt;</span>$&#123;basedir&#125;\src\lib\ldapjdk.jar<span class="tag">&lt;/<span class="name">systemPath</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="Maven工程文档"><a href="#Maven工程文档" class="headerlink" title="Maven工程文档"></a>Maven工程文档</h4><p>在Demo项目目录下执行<code>mvn site</code>生成工程文档，打开 \demo\target\site 文件夹。点击 index.html 就可以看到文档了。</p>
+<h4 id="Maven工程模板"><a href="#Maven工程模板" class="headerlink" title="Maven工程模板"></a>Maven工程模板</h4><h2 id="Maven-工程模板"><a href="#Maven-工程模板" class="headerlink" title="Maven - 工程模板"></a>Maven - 工程模板</h2><p>Maven 使用原型（Archetype）概念为用户提供了大量不同类型的工程模版（614 个）。Maven 使用下面的命令帮助用户快速创建 java 项目。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn archetype:generate</span><br></pre></td></tr></table></figure>
+<p>原型是一个 Maven 插件，它的任务是根据模板创建一个项目结构。我们将使用 quickstart 原型插件创建一个简单的 java 应用程序。</p>
+<p>打开命令控制台，跳转到 <strong>\ MVN</strong> 目录并执行以下 <strong>mvn</strong> 命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\MVN&gt;mvn archetype:generate</span><br></pre></td></tr></table></figure>
+<p>Maven 将开始处理，并要求选择所需的原型</p>
+<h3 id="mvn-compile与mvn-install、mvn-deploy的区别"><a href="#mvn-compile与mvn-install、mvn-deploy的区别" class="headerlink" title="mvn compile与mvn install、mvn deploy的区别"></a>mvn compile与mvn install、mvn deploy的区别</h3><ol>
+<li>mvn compile，编译类文件</li>
+<li>mvn install，包含mvn compile，mvn package，然后上传到本地仓库</li>
+<li>mvn deploy,包含mvn install,然后，上传到本地仓库</li>
+</ol>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/04/16/Maven 总结/">https://corn1ng.github.io/2018/04/16/Maven 总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+              <a href="/tags/Maven/">Maven</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/17/缓存穿透与缓存雪崩/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">缓存穿透与缓存雪崩</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/04/11/Docker 网络和存储管理/">
+        <span class="next-text nav-default">Docker 网络和存储管理</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

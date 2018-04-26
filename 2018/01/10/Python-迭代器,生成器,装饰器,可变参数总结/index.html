@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Python 迭代器,生成器,装饰器,可变参数总结"/>
+
+
+
+
+  <meta name="keywords" content="Python基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/10/Python-迭代器,生成器,装饰器,可变参数总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Python 迭代器,生成器,装饰器,可变参数总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Python 迭代器,生成器,装饰器,可变参数总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-10
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Python/">Python</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数中的可变参数列表"><span class="toc-text">函数中的可变参数列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器"><span class="toc-text">迭代器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成器"><span class="toc-text">生成器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#args-和-kw"><span class="toc-text">*args 和 ** kw</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#args"><span class="toc-text">*args</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#kw"><span class="toc-text">**kw</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#装饰器"><span class="toc-text">装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#带参数的装饰器"><span class="toc-text">带参数的装饰器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类装饰器"><span class="toc-text">类装饰器</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="函数中的可变参数列表"><a href="#函数中的可变参数列表" class="headerlink" title="函数中的可变参数列表"></a>函数中的可变参数列表</h3><p>当函数调用可变个数的参数时,这些可变参数被包装进一个元组,在可变参数前,可以有0到多个普通的参数,多个参数用*作为前缀.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_multiple_items</span><span class="params">(file, separator, *args)</span>:</span></span><br><span class="line">    file.write(separator.join(args))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">concat</span><span class="params">(*args, sep=<span class="string">"/"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sep.join(args)</span><br><span class="line"></span><br><span class="line">concat(<span class="string">"earth"</span>, <span class="string">"mars"</span>, <span class="string">"venus"</span>)</span><br><span class="line"><span class="string">'earth/mars/venus'</span></span><br><span class="line">concat(<span class="string">"earth"</span>, <span class="string">"mars"</span>, <span class="string">"venus"</span>, sep=<span class="string">"."</span>)</span><br><span class="line"><span class="string">'earth.mars.venus'</span></span><br></pre></td></tr></table></figure>
+<p>相反的情况</p>
+<a id="more"></a>
+<p>要传递的参数已经是一个列表,但是调用的函数却接手分开一个个的参数值,这时候就要把已有的列表拆开,,可以在调用函数时加一个<code>*</code>操作符来自动把参数列表拆开</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">list(range(<span class="number">3</span>, <span class="number">6</span>))</span><br><span class="line">[<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">args = [<span class="number">3</span>,<span class="number">6</span>]</span><br><span class="line">list(range(*args)) <span class="comment"># 和第一行的效果相同</span></span><br><span class="line">[<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<p>以同样的方式,可以用**操作符拆关键字参数为字典</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">def</span> <span class="title">parrot</span><span class="params">(voltage, state=<span class="string">'a stiff'</span>, action=<span class="string">'voom'</span>)</span>:</span></span><br><span class="line">     print(<span class="string">"-- This parrot wouldn't"</span>, action, end=<span class="string">' '</span>)</span><br><span class="line">     print(<span class="string">"if you put"</span>, voltage, <span class="string">"volts through it."</span>, end=<span class="string">' '</span>)</span><br><span class="line">     print(<span class="string">"E's"</span>, state, <span class="string">"!"</span>)</span><br><span class="line"></span><br><span class="line">d = &#123;<span class="string">"voltage"</span>: <span class="string">"four million"</span>, <span class="string">"state"</span>: <span class="string">"bleedin' demised"</span>, <span class="string">"action"</span>: <span class="string">"VOOM"</span>&#125;</span><br><span class="line">parrot(**d)</span><br><span class="line">--This parrot wouldn<span class="string">'t VOOM if you put four million volts through it. E'</span>s bleedin<span class="string">' demised !</span></span><br></pre></td></tr></table></figure>
+<h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><p>大部分容器对象都可以用for循环</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]:</span><br><span class="line">    print(element)</span><br><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>):</span><br><span class="line">    print(element)</span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> &#123;<span class="string">'one'</span>:<span class="number">1</span>, <span class="string">'two'</span>:<span class="number">2</span>&#125;:</span><br><span class="line">    print(key)</span><br><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> <span class="string">"123"</span>:</span><br><span class="line">    print(char)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> open(<span class="string">"myfile.txt"</span>):</span><br><span class="line">    print(line, end=<span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+<p>这种形式的访问清晰、简洁、方便。迭代器的用法在 Python 中普遍而且统一。在后台， for语句在容器对象中调用 iter() 。该函数返回一个定义了 <code>__next__()</code>方法的迭代器对象，它在容器中逐一访问元素。没有后续的元素时， <code>__next__()</code> 抛出一个 <code>StopIteration</code> 异常通知 <code>for</code>语句循环结束。你可以是用内建的 <code>next()</code>函数调用 <code>__next__()</code> 方法；以下是其工作原理的示例:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'abc'</span></span><br><span class="line">it = iter(s)</span><br><span class="line">it</span><br><span class="line">&lt;iterator object at <span class="number">0x00A1DB50</span>&gt;</span><br><span class="line">next(it)</span><br><span class="line"><span class="string">'a'</span></span><br><span class="line">next(it)</span><br><span class="line"><span class="string">'b'</span></span><br><span class="line">next(it)</span><br><span class="line"><span class="string">'c'</span></span><br><span class="line">next(it)</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File "&lt;stdin&gt;", line 1, in ?</span><br><span class="line">    next(it)</span><br><span class="line">StopIteration</span><br></pre></td></tr></table></figure>
+<p>了解了迭代器协议的后台机制,就可以给自己的类添加迭代器行为,定义一个<code>__iter__()</code>方法,使其返回一个带有<code>__next__()</code>方法的对象,如果这个类已经定义了<code>__next__()</code>,那么<code>__iter__()</code>只需要返回self.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Reverse</span>:</span></span><br><span class="line">    <span class="string">"""Iterator for looping over a sequence backwards."""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        self.data = data</span><br><span class="line">        self.index = len(data)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self</span><br><span class="line">      <span class="comment"># __next__()自定义迭代方法.</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__next__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.index == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">raise</span> StopIteration</span><br><span class="line">        self.index = self.index - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> self.data[self.index]</span><br></pre></td></tr></table></figure>
+<p>测试上面的类</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rev = Reverse(<span class="string">'spam'</span>)</span><br><span class="line">iter(rev)</span><br><span class="line">&lt;__main__.Reverse object at <span class="number">0x00A1DB50</span>&gt;</span><br><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> rev:</span><br><span class="line">     print(char)</span><br><span class="line"></span><br><span class="line">m</span><br><span class="line">a</span><br><span class="line">p</span><br><span class="line">s</span><br></pre></td></tr></table></figure>
+<h3 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h3><p>在Python中，这种一边循环一边计算的机制，称为生成器：generator。</p>
+<p>创建一个generator，有很多种方法。第一种方法很简单，只要把一个列表生成式的<code>[]</code>改成<code>()</code>，就创建了一个generator.</p>
+<p>第二种:如果一个函数定义中包含<code>yield</code>关键字，那么这个函数就不再是一个普通函数，而是一个generator.</p>
+<p>在执行过程中，遇到<code>yield</code>就中断，下次又继续执行。</p>
+<p>生成器Generator是创建迭代器简单而强大的工具,需要返回数据的时候使用yield语句,每次next()被调用时,生成器回复它脱离的位置.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reverse</span><span class="params">(data)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> range(len(data)<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">-1</span>):</span><br><span class="line">        <span class="keyword">yield</span> data[index]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> reverse(<span class="string">'golf'</span>):</span><br><span class="line">  print(char)</span><br><span class="line">f</span><br><span class="line">l</span><br><span class="line">o</span><br><span class="line">g</span><br></pre></td></tr></table></figure>
+<p>前一节中描述了基于类的迭代器，它能作的每一件事生成器也能作到。因为自动创建了 <a href="https://docs.python.org/3/reference/datamodel.html#object.__iter__" target="_blank" rel="noopener"><strong>iter</strong>()</a> 和 <a href="https://docs.python.org/3/reference/expressions.html#generator.__next__" target="_blank" rel="noopener"><strong>next</strong>()</a> 方法，生成器显得如此简洁。</p>
+<h3 id="args-和-kw"><a href="#args-和-kw" class="headerlink" title="*args 和 ** kw"></a>*args 和 ** kw</h3><p>补充 *args 代表多个参数,但是没有key值,**kw代表有多个参数的key值.</p>
+<h5 id="args"><a href="#args" class="headerlink" title="*args"></a>*args</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun</span><span class="params">(f1, *args)</span>:</span>  </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"arg:"</span>, f1  </span><br><span class="line">    <span class="keyword">for</span> value <span class="keyword">in</span> args:  </span><br><span class="line">        <span class="keyword">print</span> <span class="string">"another arg:"</span>, value  </span><br><span class="line">fun(<span class="number">1</span>, <span class="string">"two"</span>, <span class="number">3</span>) <span class="comment"># *args可以当作可容纳多个变量组成的list</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arg: <span class="number">1</span>  </span><br><span class="line">another arg: two  </span><br><span class="line">another arg: <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h5 id="kw"><a href="#kw" class="headerlink" title="**kw"></a>**kw</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun</span><span class="params">(*args,**kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> a1 <span class="keyword">in</span> args:</span><br><span class="line">        print(a1)</span><br><span class="line">    <span class="keyword">for</span> k1 <span class="keyword">in</span> kwargs:</span><br><span class="line">        print(k1,kwargs[k1])</span><br><span class="line">fun(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>,d=<span class="number">1</span>,ff=<span class="number">2</span>,v=<span class="number">34</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line">ff <span class="number">2</span></span><br><span class="line">d <span class="number">1</span></span><br><span class="line">v <span class="number">34</span></span><br></pre></td></tr></table></figure>
+<h3 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h3><p>由于函数也是一个对象，而且函数对象可以被赋值给变量，所以，通过变量也能调用该函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">now</span><span class="params">()</span>:</span></span><br><span class="line">  print(<span class="string">"2018"</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f = now</span><br><span class="line">&gt;&gt;&gt;f()</span><br><span class="line"><span class="number">2018</span></span><br></pre></td></tr></table></figure>
+<p>函数对象有一个<code>__name__</code>属性,可以拿到函数的名字</p>
+<p>假设我们要增强<code>now()</code>函数的功能，比如，在函数调用前后自动打印日志，但又不希望修改<code>now()</code>函数的定义，这种在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）。</p>
+<p>本质上，decorator就是一个返回函数的高阶函数。所以，我们要定义一个能打印日志的decorator，可以定义如下.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">use_logging</span><span class="params">(func)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kw)</span>:</span></span><br><span class="line">        print(<span class="string">'call %s():'</span> % func.__name__)</span><br><span class="line">        func(*args, **kw)</span><br><span class="line">        print(<span class="string">"after"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bar</span><span class="params">()</span>:</span></span><br><span class="line">  print(<span class="string">'i am bar'</span>)</span><br><span class="line"></span><br><span class="line">bar = use_logging(bar)</span><br><span class="line">bar()</span><br></pre></td></tr></table></figure>
+<p><strong>函数use_logging就是装饰器,wrapper是组装的最终函数</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">call bar():</span><br><span class="line">i am bar</span><br><span class="line">after</span><br></pre></td></tr></table></figure>
+<p>@符号是装饰器的语法糖,在定义函数的时候使用,避免再一次赋值操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">use_logging</span><span class="params">(func)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kw)</span>:</span></span><br><span class="line">        print(<span class="string">'call %s():'</span> % func.__name__)</span><br><span class="line">        func(*args, **kw)</span><br><span class="line">        print(<span class="string">"after"</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">  <span class="keyword">return</span> wrapper</span><br><span class="line"><span class="meta">@use_logging</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></span><br><span class="line">  print(<span class="string">'i am foo'</span>)</span><br><span class="line"><span class="meta">@use_logging</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bar</span><span class="params">()</span>:</span></span><br><span class="line">  print(<span class="string">'i am bar'</span>)</span><br></pre></td></tr></table></figure>
+<h5 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h5><p>装饰器语法允许在调用时,提供其他参数,可以在装饰器的外面再封装一层</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gaoceng_fengzhuang</span><span class="params">(参数)</span>  </span></span><br><span class="line"><span class="function">  <span class="title">def</span> <span class="title">use_logging</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kw)</span>:</span></span><br><span class="line">          print(<span class="string">'call %s():'</span> % func.__name__)</span><br><span class="line">          <span class="comment">#里面写参数的处理</span></span><br><span class="line">          func(*args, **kw)</span><br><span class="line">          print(<span class="string">"after"</span>)</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line">  <span class="keyword">return</span> use_logging</span><br></pre></td></tr></table></figure>
+<h4 id="类装饰器"><a href="#类装饰器" class="headerlink" title="类装饰器"></a>类装饰器</h4><p>使用类装饰器还可以依靠内部的<code>__call__</code>方法,当使用@形式将装饰器附加到函数上时,就会调用此方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span><span class="params">(Object)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,func)</span>:</span></span><br><span class="line">    self.func =func</span><br><span class="line">  <span class="comment"># 装饰器方法</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self)</span>:</span></span><br><span class="line">    print(<span class="string">'before'</span>)</span><br><span class="line">    self.func()</span><br><span class="line">    print(<span class="string">'after'</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Foo</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bar</span><span class="params">()</span>:</span></span><br><span class="line">  print(<span class="string">'bar'</span>)</span><br><span class="line">bar()</span><br><span class="line"><span class="comment"># 输出 before /bar   /after</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/10/Python-迭代器,生成器,装饰器,可变参数总结/">https://corn1ng.github.io/2018/01/10/Python-迭代器,生成器,装饰器,可变参数总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Python基础/">Python基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/11/Java消息中间件/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java消息中间件</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/09/Git/">
+        <span class="next-text nav-default">Git</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

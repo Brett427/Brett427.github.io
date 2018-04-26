@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="抽象工厂模式"/>
+
+
+
+
+  <meta name="keywords" content="设计模式, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/11/21/抽象工厂模式/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 抽象工厂模式 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          抽象工厂模式
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-11-21
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/软件工程/">软件工程</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#设计模式——抽象工厂模式"><span class="toc-text">设计模式——抽象工厂模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优点与缺点"><span class="toc-text">优点与缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#抽象工厂模式与工厂方法模式的区别"><span class="toc-text">抽象工厂模式与工厂方法模式的区别</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="设计模式——抽象工厂模式"><a href="#设计模式——抽象工厂模式" class="headerlink" title="设计模式——抽象工厂模式"></a>设计模式——抽象工厂模式</h1><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>抽象工厂模式是工厂方法模式的升级版本，它用来创建一组相关或者相互依赖的对象。</p>
+<p>抽象工厂模式提供一个创建一系列相关或者相互依赖对象的接口，而无需指定他们具体的类。</p>
+<p>就是一个工厂里放一些相关的类，使工厂数减少。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17112102.png" alt=""></p>
+<h2 id="优点与缺点"><a href="#优点与缺点" class="headerlink" title="优点与缺点"></a>优点与缺点</h2><p>最大的好处便是易于交换产品系列，其次是让具体的创建实例过程与客户端分离，<em>客户端通过他们的抽象接口操纵实例</em>，产品的具体类名也被具体工厂的实现分离。不会出现在客户代码中。</p>
+<a id="more"></a>
+<h3 id="抽象工厂模式与工厂方法模式的区别"><a href="#抽象工厂模式与工厂方法模式的区别" class="headerlink" title="抽象工厂模式与工厂方法模式的区别"></a>抽象工厂模式与工厂方法模式的区别</h3><p>​        抽象工厂模式是工厂方法模式的升级版本，他用来创建一组相关或者相互依赖的对象。他与工厂方法模式的区别就在于，工厂方法模式针对的是一个产品等级结构；而抽象工厂模式则是针对的<em>多个产品等级结构</em>。在编程中，通常一个产品结构，表现为一个接口或者抽象类，也就是说，工厂方法模式提供的所有产品都是衍生自同一个接口或抽象类，而抽象工厂模式所提供的产品则是衍生自不同的接口或抽象类。</p>
+<p>​        在抽象工厂模式中，有一个<strong>产品族</strong>的概念：所谓的产品族，是指<strong>位于不同产品等级结构中功能相关联的产品组成的家族</strong>。抽象工厂模式所提供的一系列产品就组成一个产品族；而工厂方法提供的一系列产品称为一个等级结构。*也就是说，工厂模式中每个工厂造出来的东西都是同一个类别的，<strong>抽象工厂模式中，一个工厂可以造不同类别的东西。</strong></p>
+<p>我们依然拿生产汽车的例子来说明他们之间的区别。</p>
+<p>奔驰车和宝马称为两个不同的等级结构（两种不同的车）；而A空调车和B空调车则称为两个不同的产品族（车的属性）A引擎和B引擎也是不同的产品族。再具体一点，A空调宝马车和B空调宝马车属于同一个等级结构，A空调奔驰车和B空调奔驰车属于另一个等级结构；而A空调轿车和A空调越野车属于同一个产品族(同一个零部件)，B空调车轿车和B空调越野车属于另一个产品族(同一个零部件)。</p>
+<p>​        明白了等级结构和产品族的概念，就理解工厂方法模式和抽象工厂模式的区别了.</p>
+<p><strong>抽象工厂方法就是一个工厂里生产不同等级结构中的一个（其中一种车）中的不同的配件（不同的车的属性）。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//产品类</span></span><br><span class="line"><span class="comment">//发动机以及型号    </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Engine</span> </span>&#123;    </span><br><span class="line">  </span><br><span class="line">&#125;    </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EngineA</span> <span class="keyword">extends</span> <span class="title">Engine</span></span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EngineA</span><span class="params">()</span></span>&#123;    </span><br><span class="line">        System.out.println(<span class="string">"制造--&gt;EngineA"</span>);    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;    </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EngineB</span> <span class="keyword">extends</span> <span class="title">Engine</span></span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">EngineB</span><span class="params">()</span></span>&#123;    </span><br><span class="line">        System.out.println(<span class="string">"制造--&gt;EngineB"</span>);    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">//空调以及型号    </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Aircondition</span> </span>&#123;    </span><br><span class="line">  </span><br><span class="line">&#125;    </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AirconditionA</span> <span class="keyword">extends</span> <span class="title">Aircondition</span></span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AirconditionA</span><span class="params">()</span></span>&#123;    </span><br><span class="line">        System.out.println(<span class="string">"制造--&gt;AirconditionA"</span>);    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;    </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AirconditionB</span> <span class="keyword">extends</span> <span class="title">Aircondition</span></span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AirconditionB</span><span class="params">()</span></span>&#123;    </span><br><span class="line">        System.out.println(<span class="string">"制造--&gt;AirconditionB"</span>);    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//工厂类</span></span><br><span class="line"><span class="comment">//创建工厂的接口    </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AbstractFactory</span> </span>&#123;    </span><br><span class="line">    <span class="comment">//制造发动机  </span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Engine <span class="title">createEngine</span><span class="params">()</span></span>;  </span><br><span class="line">    <span class="comment">//制造空调   </span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Aircondition <span class="title">createAircondition</span><span class="params">()</span></span>;   </span><br><span class="line">&#125;    </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment">//为奔驰生产配件    </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 奔驰工厂 <span class="keyword">implements</span> <span class="title">AbstractFactory</span></span>&#123;    </span><br><span class="line">        </span><br><span class="line">    <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Engine <span class="title">createEngine</span><span class="params">()</span> </span>&#123;      </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> EngineA();    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Aircondition <span class="title">createAircondition</span><span class="params">()</span> </span>&#123;    </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AirconditionA();    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;    </span><br><span class="line"><span class="comment">//为宝马车生产配件</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 宝马工厂 <span class="keyword">implements</span> <span class="title">AbstractFactory</span> </span>&#123;    </span><br><span class="line">    </span><br><span class="line">     <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Engine <span class="title">createEngine</span><span class="params">()</span> </span>&#123;      </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> EngineB();    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Aircondition <span class="title">createAircondition</span><span class="params">()</span> </span>&#123;    </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> AirconditionB();    </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//客户端</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span> </span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;    </span><br><span class="line">        <span class="comment">//奔驰生产配件</span></span><br><span class="line">        奔驰 j = <span class="keyword">new</span> 奔驰();    </span><br><span class="line">        j.createEngine();  </span><br><span class="line">        j.createAircondition();  </span><br><span class="line">            </span><br><span class="line">        <span class="comment">//宝马生产配件</span></span><br><span class="line">        宝马 y = <span class="keyword">new</span> 宝马();    </span><br><span class="line">        y.createEngine();  </span><br><span class="line">        y.createAircondition();  </span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>抽象工厂模式也就是不仅生产引擎，同时生产空调。<br>也就是车工厂是个父类，有生产引擎，生产空调两个接口。<br>戴尔工厂，惠普工厂继承它，可以分别生产戴尔引擎+戴尔空调，和惠普引擎+惠普空调。<br>创建小米工厂时，小米工厂的引擎生产小米引擎,小米工厂的空调生产空调.</p>
+<p>假设要多出来生产耳机这个产品,则首先我们需要增加耳麦这个父类，再加上戴尔耳麦，惠普耳麦这两个子类。<br>之后在PC厂商这个父类中，增加生产耳麦的接口。最后在戴尔工厂，惠普工厂这两个类中，分别实现生产戴尔耳麦，惠普耳麦的功能。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/11/21/抽象工厂模式/">https://corn1ng.github.io/2017/11/21/抽象工厂模式/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/设计模式/">设计模式</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/11/22/适配器模式/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">适配器模式</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/11/21/工厂方法模式/">
+        <span class="next-text nav-default">工厂方法模式和简单工厂模式</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

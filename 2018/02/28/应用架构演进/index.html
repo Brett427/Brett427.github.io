@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="应用架构演进"/>
+
+
+
+
+  <meta name="keywords" content="微服务, 分布式, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/02/28/应用架构演进/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 应用架构演进 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          应用架构演进
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-28
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用架构演进"><span class="toc-text">应用架构演进</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传统垂直应用架构"><span class="toc-text">传统垂直应用架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RPC-架构"><span class="toc-text">RPC 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RPC-框架原理"><span class="toc-text">RPC 框架原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#RPC框架的挑战"><span class="toc-text">RPC框架的挑战</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SOA-面向服务的架构-可以说RPC是SOA架构的一种实现"><span class="toc-text">SOA 面向服务的架构(可以说RPC是SOA架构的一种实现)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#微服务架构"><span class="toc-text">微服务架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#微服务对比SOA"><span class="toc-text">微服务对比SOA</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="应用架构演进"><a href="#应用架构演进" class="headerlink" title="应用架构演进"></a>应用架构演进</h2><h4 id="传统垂直应用架构"><a href="#传统垂直应用架构" class="headerlink" title="传统垂直应用架构"></a>传统垂直应用架构</h4><p>06年前，比较流行的有LAMP架构，MVC架构(Spring，Struts，Hibernate)，厚重的EJB企业架构也流行了很长一段时间。他们都属于垂直应用架构，技术比较单一，学习成本低，开发上手快，因此很长一段时间都处于统治地位。</p>
+<p>举例说明MVC的垂直架构的示意图如下所示：</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180228201842.png" alt=""></p>
+<p>通常MVC架构的应用代码会统一打包成一个war包，部署在Tomcat等web容器中。不同的应用功能之间通过本地API进行调用，基本不存在跨进程的远程服务调用。</p>
+<p>但是，垂直架构的缺点十分突出，主要表现在复杂应用的维护成本高，部署效率逐渐的降低，团队协作效率差，部分公共功能重复开发，代码重复率居高不下，系统可靠性不断的变差，新功能上线的周期越来越长。</p>
+<h4 id="RPC-架构"><a href="#RPC-架构" class="headerlink" title="RPC 架构"></a>RPC 架构</h4><p>RPC全称Remote Procedure Call,是一种进程间的通信方式，允许像调用本地服务一样调用远程服务，它的具体实现方式可以不同，例如Spring 的HTTP Invoker,Facebook 的Thrift 二进制私有协议通信。</p>
+<p>06年后，随着移动互联网的发展，远程分布式调用已经成为主流，RPC框架也犹如雨后春笋。RPC框架的普及标志着传统垂直应用架构时代的终结。</p>
+<h5 id="RPC-框架原理"><a href="#RPC-框架原理" class="headerlink" title="RPC 框架原理"></a>RPC 框架原理</h5><p>RPC 框架的目标就是让远程过程调用更加简单，透明，RPC框架负责屏蔽底层的传输方式(TCP 或UDP), 序列化方式(XML,JSON,二进制)和通信细节。框架的使用者只需要知道了解谁在什么位置提供了什么样的远程服务接口即可，开发者不需要关心底层通信细节和调用过程。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180228203828.png" alt=""></p>
+<p>RPC 框架实现的技术核心点有</p>
+<ul>
+<li>远程服务提供者需要以某种形式提供服务调用相关的信息，包括但是不限于服务接口定义，数据结构，或者中间态的服务定义文件。</li>
+<li>远程代理对象：服务调用者调用的服务实际上是远程服务的本地代理，对于Java语言来说，它的实现就是JDK的动态代理，通过动态代理的拦截机制，将本地调用封装成远程服务调用。</li>
+<li>通信：RPC框架与具体的协议无关，</li>
+<li>序列化：远程通信，需要将对象转化为二进制码流进行网络传输，不同的序列化框架，支持的数据类型，数据包大小，异常类型，性能等都不同。一般好的框架都支持多种序列化方式。</li>
+</ul>
+<p>业界主流的RPC框架有Facebook的Thrift,Google的gRPC等。</p>
+<h5 id="RPC框架的挑战"><a href="#RPC框架的挑战" class="headerlink" title="RPC框架的挑战"></a>RPC框架的挑战</h5><p>在大规模服务化之前，应用可能只是通过RPC框架，简单的暴露和引用远程服务，通过配置简单的URL地址进行远程服务调用，当服务越来越多时，服务URL配置管理越来越困难，    硬件负载均衡器的单点压力也越来越大，此时需要一个服务注册中心，动态的注册和发现服务，使服务的位置透明。</p>
+<p>随着业务的发展，服务间的依赖错综复杂，甚至分不清哪个应用需要在哪个应用之前启动，同时，服务的调用量越来越大，服务的容量问题也就暴露出来了。服务上线容易下线难，上线前的审批，下线通知，需要统一的服务生命周期管理泪流成进行管控，不同的服务安全权限不同，如何保证敏感服务不被误调用。服务化之后，服务治理问题，单凭RPC框架是无法解决的。</p>
+<h4 id="SOA-面向服务的架构-可以说RPC是SOA架构的一种实现"><a href="#SOA-面向服务的架构-可以说RPC是SOA架构的一种实现" class="headerlink" title="SOA 面向服务的架构(可以说RPC是SOA架构的一种实现)"></a>SOA 面向服务的架构(可以说RPC是SOA架构的一种实现)</h4><p>SOA 是一种粗粒度，松耦合的以服务为中心的架构，接口之间通过明确的协议和接口进行通信。SOA帮助工程师们站在一个新的高度理解企业级架构中各种组件的开发和部署形式。相对于传统的非服务化架构，SOA能够更加从容的应对复杂企业系统集成和需求的快速变化。</p>
+<p>它的设计原则主要有服务可复用，服务共享一个标准契约，服务是松耦合的，服务是底层逻辑的抽象，服务是可组合的，可编排的，服务是无状态的。所以SOA服务治理是关键。</p>
+<h3 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h3><p>微服务架构（MSA）是一种服务化架构风格，通过将功能分散到各个分散的服务中以实现对解决方案的解耦。</p>
+<p>主要特征有，原子服务，专注于做一件事，高密度部署(重要的服务可以独立进程部署)，敏捷交付，微自治(服务足够小，功能单一，可以独立打包，部署，升级)</p>
+<h3 id="微服务对比SOA"><a href="#微服务对比SOA" class="headerlink" title="微服务对比SOA"></a>微服务对比SOA</h3><ul>
+<li>服务拆分粒度：SOA首先要解决的就是异构应用的服务化，微服务强调的是独舞拆分要尽可能的小，最好是独立的原子服务</li>
+<li>服务依赖：传统的SOA服务，由于需要重用已有的资产，存在大量的服务间依赖：微服务的设计理念是服务自治，功能单一独立，，避免依赖其他服务产生耦合，耦合会带来更高的复杂度。</li>
+<li>服务规模：传统的SOA服务粒度较大，多数会采用将多个服务合并打成war包的方案，因此服务实例数比较有限，微服务强调尽可能的拆分，同时，很多服务会独立部署，这也会导致服务规模急剧增加，对服务治理和运维带来新挑战。</li>
+<li>架构差异 微服务化后，服务数量的激增会引起架构质量属性的变化，例如企业集成总线ESB逐渐被P2P虚拟总线替换，为了保证高性能，低时延，需要高性能的分布式服务框架保证微服务架构的实施。</li>
+</ul>
+<p>用一张图概括服务化架构演进图如下：</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180228215337.png" alt=""></p>
+<p>(RPC算是SOA的一种简单实现)</p>
+<blockquote>
+<p>分布式服务框架原理与实践</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/02/28/应用架构演进/">https://corn1ng.github.io/2018/02/28/应用架构演进/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/03/03/Java 运行和编译的过程/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java 运行和编译的过程</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/02/23/虚拟机字节码执行引擎/">
+        <span class="next-text nav-default">Java虚拟机字节码执行引擎</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

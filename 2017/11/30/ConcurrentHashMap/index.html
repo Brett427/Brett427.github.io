@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="ConcurrentHashMap"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/11/30/ConcurrentHashMap/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> ConcurrentHashMap - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          ConcurrentHashMap
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-11-30
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/多线程/">多线程</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ConcurrentHashMap"><span class="toc-text">ConcurrentHashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentHashMap的实现原理与使用"><span class="toc-text">ConcurrentHashMap的实现原理与使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#结构"><span class="toc-text">结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ConcurrentHashMap的初始化"><span class="toc-text">ConcurrentHashMap的初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#定位Segment"><span class="toc-text">定位Segment</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ConcurrentHashMap的操作"><span class="toc-text">ConcurrentHashMap的操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#get"><span class="toc-text">get</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#put"><span class="toc-text">put</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#size"><span class="toc-text">size</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h1><h3 id="ConcurrentHashMap的实现原理与使用"><a href="#ConcurrentHashMap的实现原理与使用" class="headerlink" title="ConcurrentHashMap的实现原理与使用"></a>ConcurrentHashMap的实现原理与使用</h3><p>ConcurrentHashMap是线程安全且高效的HashMap,并发编程中使用HashMap可能导致程序死循环，线程安全的HashTable效率低下，基于上述原因，有了ConcurrentHashMap.</p>
+<p>HashTable容器效率低下的原因是所有访问HashTable的线程都必须竞争同一把锁,假如容器里有多把锁,每一把锁用于锁容器其中一部分数据,那么当多线程访问容器里不同数据段的数据时,线程间就不会存在锁竞争,从而可以有效提高并发访问效率,这就是ConcurrentHashMap所使用的锁分段技术。首先将数据分成一段一段地存储,然后给每一段数据配一把锁,当一个线程占用锁访问其中一个段数据的时候,其他段的数据也能被其他线程访问。</p>
+<a id="more"></a>
+<h4 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h4><p>ConcurrentHashMap是由Segment数组结构和HashEntry数组结构组成。Segment是一种可重入锁, 在ConcurrentHashMap里扮演锁的角色; HashEntry则用于存储键值对数据。一个ConcurrentHashMap里包含一个Segment数组。</p>
+<p>segment 本身就相当于一个HashMap对象</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/171207.png" alt=""></p>
+<p>像这样的Segment对象，有2的N次方个，共同保存在一个名为segments的数组中。</p>
+<p>所以可以说，ConcurrentHashMap是一个二级哈希表，在一个总的哈希表下面，有若干个子哈希表。</p>
+<p>Segment的结构和HashMap类似,是一种数组和链表结构。一个Segment里包含一个HashEntry数组,每个HashEntry是一个链表结构的元素,每个Segment守护着一个HashEntry数组里的元素,当对HashEntry数组的数据进行修改时,必须首先获得与它对应的Segment锁,如下图所示。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17113001.png" alt=""></p>
+<p>ConcurrentHashMap的优势就是采用了锁分段技术，每一个Segment就像一个自治区，读写操作高度自治，segement之间互不影响。</p>
+<h4 id="ConcurrentHashMap的初始化"><a href="#ConcurrentHashMap的初始化" class="headerlink" title="ConcurrentHashMap的初始化"></a>ConcurrentHashMap的初始化</h4><p>初始化方法通过initialCapacity，loadFactor和concurrencyLevel等几个参数来初始化Segment数组，段偏移量segmentshift,段掩码segmentMask 和每个Segment里的HashEntry数组。</p>
+<h4 id="定位Segment"><a href="#定位Segment" class="headerlink" title="定位Segment"></a>定位Segment</h4><p>ConcurrentHashMap使用分段锁来保护不同段的数据，在插入和获取的时候，必须先通过散列算法定位到Segment，所以可以直到ConcurrentHashMap会首先使用Wang/Jenkins hash 的变种算法对元素的hashCode进行一次再散列。进行再散列的目的是为了减少散列冲突，使元素可以均匀的分布在不同的Segment中，从而提升容器存储效率。</p>
+<h4 id="ConcurrentHashMap的操作"><a href="#ConcurrentHashMap的操作" class="headerlink" title="ConcurrentHashMap的操作"></a>ConcurrentHashMap的操作</h4><h5 id="get"><a href="#get" class="headerlink" title="get"></a>get</h5><p>get的高效之处在于整个get过程没有加锁，除非读到空值才会加锁重读，ConcurrentHashMap中的get方法里要使用的共享变量都被定义为volatile类型，volatile类型的变量可以在线程间保持可见性。能够同时被多线程读。并且不会读到过期的值，但是只能被单线程写。get操作里只需要读不需要写，所以可以不用加锁。</p>
+<p>get过程为</p>
+<ul>
+<li>为输入的key做哈希运算，得到Hash值。</li>
+<li>通过hash值，定位到对应的Segment对象</li>
+<li>再次通过hash值，定位到Segment当中数组的具体位置。</li>
+</ul>
+<h5 id="put"><a href="#put" class="headerlink" title="put"></a>put</h5><p>put要对共享变量进行写入操作，所以为了线程安全，在操作共享变量的时候必须加锁，put方法首先定位到Segment，然后在Segment里进行插入操作，插入操作需要经过两个步骤，第一步需要对Segment里的hashEntry数组进行扩容，第二部需要定位添加元素的位置，然后将其放在HashEntry数组里。</p>
+<p>put 过程为</p>
+<ul>
+<li>为输入的key做hash运算，得到hash值</li>
+<li>通过hash值，定位到Segment对象</li>
+<li>获取可重入锁</li>
+<li>再次通过hash值，定位到Segment中数组的具体位置</li>
+<li>插入或者覆盖HashEntry对象</li>
+<li>释放锁</li>
+</ul>
+<h5 id="size"><a href="#size" class="headerlink" title="size"></a>size</h5><p>要统计整个ConcurrentHashMap里元素的大小，就必须统计所有Segment里元素的大小后求和，Segment里的全局变量count是一个volatile变量。不能把所有Segment里的count相加得到size,因为可能累加前使用的count发生了变化。</p>
+<p>最安全的做法是统计size时，把所有Segment的put,remove,clean方法全锁住，但是这样十分低效</p>
+<p>ConcurrentHashMap的做法是先尝试2次通过不锁住Segment的方式来统计各个Segment大小,如果统计的过程中,容器的count发生了变化,则再采用加锁的方式来统计所有Segment的大小。那么ConcurrentHashMap是如何判断在统计的时候容器是否发生了变化呢?使用modCount变量,在put、remove和clean方法里操作元素前都会将变量modCount进行加1,那么在统计size前后比较modCount是否发生变化,从而得知容器的大小是否发生变化。（乐观锁的思想）</p>
+<p>size方法过程</p>
+<ul>
+<li>遍历所有的Segment</li>
+<li>把Segment的元素数量累加起来</li>
+<li>把Segment的修改次数累加起来</li>
+<li>判断所有Segment的总修改次数是否大于上一次的总修改次数，如果大于，说明统计过程中有修改，重新统计，尝试次数加1，如果不是，说明没有修改，统计结束。</li>
+<li>如果尝试次数超过阀值，则对每一个Segment加锁，再重新统计。</li>
+<li>再次判断所有Segment的总修改次数是否大于上一次的总修改次数，由于已经加锁，次数一定和上次相等。</li>
+<li>释放锁，统计结束。</li>
+</ul>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/11/30/ConcurrentHashMap/">https://corn1ng.github.io/2017/11/30/ConcurrentHashMap/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/01/反射/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java反射技术总结</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/11/29/string-stringbuffer-stringbuilder-区别/">
+        <span class="next-text nav-default">string stringbuffer stringbuilder 区别</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

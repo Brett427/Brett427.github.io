@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java 中的转发和重定向"/>
+
+
+
+
+  <meta name="keywords" content="SpringMVC, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/27/Java 中的转发和重定向/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java 中的转发和重定向 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java 中的转发和重定向
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-27
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#springMVC-中的应用"><span class="toc-text">springMVC 中的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端跳转和客户端跳转"><span class="toc-text">服务端跳转和客户端跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#java中的服务端跳转"><span class="toc-text">java中的服务端跳转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端跳转"><span class="toc-text">客户端跳转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#跳转方法"><span class="toc-text">跳转方法</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">转发：</span><br><span class="line">request.getRequestDispatcher(&quot;success.jsp&quot;).forward(request,response);</span><br><span class="line"></span><br><span class="line">在服务器组件收到用户请求后。经过它的处理后有传递给了另一个组件。不修改用户的请求码。各组件处理完之后在返回给用户，例如主页面的框架。</span><br><span class="line"></span><br><span class="line">          用户请求----&gt;服务器----&gt;组件1----&gt;组件2----&gt;服务器----&gt;用户</span><br><span class="line"></span><br><span class="line">                                                          （请求不变）</span><br><span class="line"></span><br><span class="line">重定向：</span><br><span class="line">response.sendRedirect(&quot;success.jsp&quot;);</span><br><span class="line"></span><br><span class="line">在服务器组件收到用户请求后。经过处理修改用户请求。在返回给用户。这样用户再次使用这个请求就会被动的使用新的请求了。（重定向一般是为了防止用户提交完数据后点浏览器刷新或点后退之后产生重复提交）</span><br><span class="line"></span><br><span class="line">用户请求----&gt;服务器----&gt;组件----&gt;服务器----&gt;用户----&gt;新的请求</span><br><span class="line"></span><br><span class="line">                                                    （修改用户请求）</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="springMVC-中的应用"><a href="#springMVC-中的应用" class="headerlink" title="springMVC 中的应用"></a>springMVC 中的应用</h2><p>springMVC中常用到redirect来实现重定向，但是使用场景各有需求，重定向中可能需要在url中拼接参数，可能需要返回model。springMVC用RedirectAttributes 解决问题。</p>
+<p>首先，在controller中重定向用以下方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span>  “redirect：/index”；</span><br></pre></td></tr></table></figure>
+<p>此时只是重定向到简单的地址；</p>
+<p>使用RedirectAttributes 来设置重定向页面的参数。 springMVC会自动拼接URL。</p>
+<p>该对象的两个方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>：addAttribute</span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"save"</span>)</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">save</span><span class="params">(User user, RedirectAttributes redirectAttributes)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    redirectAttributes.addAttribute(<span class="string">"param"</span>,<span class="string">"value1"</span>);</span><br><span class="line">  	<span class="keyword">return</span> <span class="string">"redirect:/index"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//跳转到index时，会在URL拼接 ？ param=value1.</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span>：addFlashAttribute</span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/save"</span>)</span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">save</span><span class="params">(User user,RedirectAttributes redirectAttributes)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    redirectAttribute.addFlashAttributes(<span class="string">"param"</span>,<span class="string">"value1"</span>);</span><br><span class="line">  	<span class="keyword">return</span> <span class="string">"redirect:/index"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//跳转save后，可以在index对应的模板中通过表达式，比如jsp中jstl的$&#123;param&#125; ，获取返回值，该值实际上保存在session中，并且会在下次重定向时删除。</span></span><br></pre></td></tr></table></figure>
+<h3 id="服务端跳转和客户端跳转"><a href="#服务端跳转和客户端跳转" class="headerlink" title="服务端跳转和客户端跳转"></a>服务端跳转和客户端跳转</h3><p>服务端跳转指的是地址栏内容不变，客户端浏览器的地址栏不会显示目标地址的URL。 所以跳转与否，客户端是不知道的，属于一次request。</p>
+<p>客户端跳转指的是地址栏的内容发生了改变，客户端向服务器发送请求后，服务端再给客户端一个响应，然后客户端根据服务端给的响应中的URL再次向服务端发送请求，所以是两次请求。第二次跳转的时候，已经出了request的属性范围了。</p>
+<p>如果使用的是服务器端跳转，则执行到跳转语句时会立刻进行跳转，如果是客户端跳转，则是在整个页面执行完后才执行跳转。</p>
+<h4 id="java中的服务端跳转"><a href="#java中的服务端跳转" class="headerlink" title="java中的服务端跳转"></a>java中的服务端跳转</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">request.getRequestDispatcher(<span class="string">"sucess.jsp"</span>).forward(request,response)</span><br><span class="line">&lt;jsp:forward&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="客户端跳转"><a href="#客户端跳转" class="headerlink" title="客户端跳转"></a>客户端跳转</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.sendRedirect(<span class="string">"fail.jsp"</span>) 所有页面执行完之后再进行跳转</span><br></pre></td></tr></table></figure>
+<h4 id="跳转方法"><a href="#跳转方法" class="headerlink" title="跳转方法"></a>跳转方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>： redirect方式</span><br><span class="line">	response.sendRedirect(<span class="string">"/a.jsp"</span>) 页面路径是相对路径，可以将页面跳转到任何页面，不局限在本web应用中。</span><br><span class="line"><span class="number">2</span>： forward方式</span><br><span class="line">request.getRequestDispatcher(<span class="string">"/a.jsp"</span>).forward(request,response) 只能跳转到本应用页面。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/27/Java 中的转发和重定向/">https://corn1ng.github.io/2017/10/27/Java 中的转发和重定向/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/SpringMVC/">SpringMVC</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/11/03/leetcode15/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">15. 3 Sum</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/26/字典树/">
+        <span class="next-text nav-default">字典树</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

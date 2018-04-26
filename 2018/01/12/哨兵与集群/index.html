@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Redis哨兵与集群"/>
+
+
+
+
+  <meta name="keywords" content="Redis, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/12/哨兵与集群/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Redis哨兵与集群 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Redis哨兵与集群
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-12
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#哨兵"><span class="toc-text">哨兵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#主从复制的问题"><span class="toc-text">主从复制的问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#高可用"><span class="toc-text">高可用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Redis-哨兵的高可用性"><span class="toc-text">Redis 哨兵的高可用性</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集群"><span class="toc-text">集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据分布"><span class="toc-text">数据分布</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#数据分布理论"><span class="toc-text">数据分布理论</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="哨兵"><a href="#哨兵" class="headerlink" title="哨兵"></a>哨兵</h2><p>Redis的主从复制模式下， 一旦主节点由于故障不能提供服务， 需要人工将从节点晋升为主节点， 同时还要通知应用方更新主节点地址， 对于很多应用场景这种故障处理的方式是无法接受的。 Redis从2.8开始正式提供了Redis Sentinel（ 哨兵） 架构来解决这个问题， </p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Redis Sentinel是Redis的高可用实现方案， 在实际的生产环境中， 对提高整个系统的高可用性是非常有帮助的。</p>
+<p>哨兵的功能包括两个,一是监控主数据库和从数据库是否正常运行,二是主数据库出现故障时自动将从数据库转换为主数据库.</p>
+<h5 id="主从复制的问题"><a href="#主从复制的问题" class="headerlink" title="主从复制的问题"></a>主从复制的问题</h5><p>Redis的主从复制模式可以将主节点的数据改变同步给从节点， 这样从节点就可以起到两个作用： 第一， 作为主节点的一个备份， 一旦主节点出了故障不可达的情况， 从节点可以作为后备“顶”上来， 并且保证数据尽量不丢失（ 主从复制是最终一致性） 。 第二， 从节点可以扩展主节点的读能力， 一旦主节点不能支撑住大并发量的读操作， 从节点可以在一定程度上帮助主节点分担读压力。</p>
+<p>但是主从复制也带来了以下问题</p>
+<ul>
+<li>一旦主节点出现故障，需要手动将一个从节点晋升为主节点，同时需要修改应用方的主节点地址， 还需要命令其他从节点去复制新的主节点， 整个过程都需要人工干预。(高可用问题)</li>
+<li>主节点的写能力受到单机的限制。(分布式问题)</li>
+<li>主节点的存储能力受到单机的限制。(分布式问题)</li>
+</ul>
+<h5 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h5><p>Redis主从复制模式下的主节点出现故障后， 故障转移过程如下所示。</p>
+<p>1）主节点发生故障后，客户端连接主节点失败，两个从节点与主节点连接失败造成复制中断。</p>
+<p>2）如果主节点无法正常启动， 需要选出一个从节点（slave-1),对其执行slaveof no one命令使其成为新的主节点。</p>
+<p>3)原来的从节点（ slave-1） 成为新的主节点后， 更新应用方的主节点信息， 重新启动应用方。</p>
+<p>4)客户端命令另一个从节点（ slave-2） 去复制新的主节点（ new-master）</p>
+<p>5)待原来的主节点恢复后， 让它去复制新的主节点。</p>
+<p>上述处理过程就可以认为整个服务或者架构的设计不是高可用的， 因为整个故障转移的过程需要人介入.</p>
+<h5 id="Redis-哨兵的高可用性"><a href="#Redis-哨兵的高可用性" class="headerlink" title="Redis 哨兵的高可用性"></a>Redis 哨兵的高可用性</h5><p>当主节点出现故障时， Redis Sentinel能自动完成故障发现和故障转移，并通知应用方， 从而实现真正的高可用。</p>
+<p>Redis Sentinel是一个分布式架构， 其中包含若干个Sentinel节点和Redis数据节点， 每个Sentinel节点会对数据节点和其余Sentinel节点进行监控， 当它发现节点不可达时， 会对节点做下线标识。 如果被标识的是主节点， 它还会和其他Sentinel节点进行“协商”， 当大多数Sentinel节点都认为主节点不可达时， 它们会选举出一个Sentinel节点来完成自动故障转移的工作， 同时会将这个变化实时通知给Redis应用方。 整个过程完全是自动的， 不需要人工来介入， 所以这套方案很有效地解决了Redis的高可用问题。</p>
+<h2 id="集群"><a href="#集群" class="headerlink" title="集群"></a>集群</h2><p>Redis Cluster是Redis的分布式解决方案，在3.0版本正式推出，有效地解决了Redis分布式方面的需求。 当遇到单机内存、 并发、 流量等瓶颈时， 可以采用Cluster架构方案达到负载均衡的目的。</p>
+<h3 id="数据分布"><a href="#数据分布" class="headerlink" title="数据分布"></a>数据分布</h3><h5 id="数据分布理论"><a href="#数据分布理论" class="headerlink" title="数据分布理论"></a>数据分布理论</h5><p>分布式数据库首先要解决把整个数据集按照分区规则映射到多个节点的问题， 即把数据集划分到多个节点上， 每个节点负责整体数据的一个子集。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/1AF80826-FF01-413A-97AE-D1A995A1CB8D.png" width="40%"></p>
+<p>常见的数据分区规则主要有哈希分区和顺序分区两种。Redis Cluster采用哈希分区规则.</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/2FCF5E61-5B5F-4BC2-93C2-2735A519F8FF.png"></p>
+<p>常见哈希规则主要有</p>
+<ul>
+<li>节点取余分区</li>
+</ul>
+<p>使用特定的数据， 如Redis的键或用户ID， 再根据节点数量N使用公式：hash（ key） %N计算出哈希值， 用来决定数据映射到哪一个节点上。突出优点是简单性， 常用于数据库的分库分表规则。</p>
+<ul>
+<li>一致性哈希分区</li>
+</ul>
+<p>一致性哈希分区（ Distributed Hash Table） 实现思路是为系统中每个节点分配一个token， 范围一般在0~<code>2^32</code>， 这些token构成一个哈希环。 数据读写执行节点查找操作时， 先根据key计算hash值， 然后顺时针找到第一个大于等于该哈希值的token节点。 </p>
+<ul>
+<li>虚拟槽分区</li>
+</ul>
+<p>虚拟槽分区巧妙地使用了哈希空间， 使用分散度良好的哈希函数把所有数据映射到一个固定范围的整数集合中， 整数定义为槽（ slot） 。 这个范围一般远远大于节点数， 比如Redis Cluster槽范围是0~16383。 槽是集群内数据管理和迁移的基本单位。 采用大范围槽的主要目的是为了方便数据拆分和集群扩展。 每个节点会负责一定数量的槽， 如下图所示。当前集群有5个节点， 每个节点平均大约负责3276个槽。 由于采用高质量的哈希算法， 每个槽所映射的数据通常比较均匀， 将数据平均划分到5个节点进行数据分区。 Redis Cluster就是采用虚拟槽分区， 下面就介绍Redis数据分区方法。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/F464CD1E-5B6C-49CB-9224-1B059B8D3D08.png" width="40%"></p>
+<p>Redis Cluser采用虚拟槽分区， 所有的键根据哈希函数映射到0~16383整数槽内， 计算公式： <code>slot=CRC16 (key) &amp;16383</code>。 每一个节点负责维护一部分槽以及槽所映射的键值数据.</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/12/哨兵与集群/">https://corn1ng.github.io/2018/01/12/哨兵与集群/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/12/Redis 复制与内存/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Redis复制与内存</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/11/Java消息中间件/">
+        <span class="next-text nav-default">Java消息中间件</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

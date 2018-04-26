@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="计算机网络问题总结"/>
+
+
+
+
+  <meta name="keywords" content="计算机网络, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/05/计算机网络问题总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 计算机网络问题总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          计算机网络问题总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-05
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/计算机基础/">计算机基础</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#计算机网络问题总结"><span class="toc-text">计算机网络问题总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-TCP-IP的用途区别"><span class="toc-text">HTTP,TCP,IP的用途区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Socket"><span class="toc-text">Socket</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据帧"><span class="toc-text">数据帧</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#链路层和网络层的关系"><span class="toc-text">链路层和网络层的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#包传递过程中哪些不变，哪些变"><span class="toc-text">包传递过程中哪些不变，哪些变</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#链路层"><span class="toc-text">链路层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#物理层怎么传"><span class="toc-text">物理层怎么传</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最后的地址怎么找到"><span class="toc-text">最后的地址怎么找到</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MAC地址与IP地址"><span class="toc-text">MAC地址与IP地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#交换机与路由器"><span class="toc-text">交换机与路由器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#包首部"><span class="toc-text">包首部</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据链路的作用"><span class="toc-text">数据链路的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MAC地址"><span class="toc-text">MAC地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据链路有哪些"><span class="toc-text">数据链路有哪些</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="计算机网络问题总结"><a href="#计算机网络问题总结" class="headerlink" title="计算机网络问题总结"></a>计算机网络问题总结</h2><h4 id="HTTP-TCP-IP的用途区别"><a href="#HTTP-TCP-IP的用途区别" class="headerlink" title="HTTP,TCP,IP的用途区别"></a>HTTP,TCP,IP的用途区别</h4><p>http负责将什么样的数据送给对方，同时，http接收端负责解释这些数据的真正含义</p>
+<p>TCP负责将客户的数据按序送到客户指定的目的地，如果有丢失，则负责重传。</p>
+<p>IP协议负责TCP输入的客户目的地，根据一定的策略将数据送到目的地。IP协议无法保证对端一定活着，IP是不够智能的，只能简单的运送，无法解决丢包重传，重新排序，流量控制等复杂的操作。如果没有上层的Tcp协议，应用层的协议就要无时无刻不盯着自己发送的数据包，超时就重传。乱序则排序，把这些功能抽象出来就是TCP的作用。</p>
+<h4 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h4><p>socket函数是<strong>操作系统内核将“TCP/IP协议栈 + 底层网卡”抽象出来的一个个用户友好的函数，用于操纵本地的“TCP/IP协议栈 + 底层网卡”与远端的服务器/主机完成通信的任务。</strong></p>
+<h4 id="数据帧"><a href="#数据帧" class="headerlink" title="数据帧"></a>数据帧</h4><p>所谓数据帧（Data frame），就是数据链路层的协议数据单元，它包括三部分：帧头，数据部分，帧尾。其中，帧头和帧尾包含一些必要的控制信息，比如同步信息、地址信息、差错控制信息等；数据部分则包含网络层传下来的数据，比如IP数据包。</p>
+<h4 id="链路层和网络层的关系"><a href="#链路层和网络层的关系" class="headerlink" title="链路层和网络层的关系"></a>链路层和网络层的关系</h4><p>数据链路层提供直连两个设备之间的通信功能。与此相比，作为网络层的IP则负责在没有直连的两个网络之间进行通信传输。</p>
+<p>好比一个人要去很远的地方旅行，其中要坐汽车，要坐火车，要坐船。同时他做了一个规划表，详细制定了几点到几点应该坐什么交通工具从哪到哪。</p>
+<p>在他买了机票，汽车票，船票后，他们都只在特定的区间是有效的。所以就相当于它们都只负责某一个区间的通信运输，而那个详细的规划表就相当于IP,它负责将数据包发送到最终的地址。</p>
+<p>如果只有车票没有行程表，没法到达目的地，因为不知道什么时候该换乘，也不知道下一段路坐什么车，而光有行程表没有车票也不行，因为没法乘坐交通工具。（图解TCPIP /117页）</p>
+<p>也就是网络层知道该往哪条路走(路由选择)(一到路由器就知道下段路该往哪走)，具体在这条链路上怎么走由链路层决定。</p>
+<p>(我的理解：链路层以上的层都是说明了数据该走到哪，走到以后怎么解析，而真正说明怎么走的就是链路层协议规定的内容)</p>
+<h4 id="包传递过程中哪些不变，哪些变"><a href="#包传递过程中哪些不变，哪些变" class="headerlink" title="包传递过程中哪些不变，哪些变"></a>包传递过程中哪些不变，哪些变</h4><p>帧经过交换机时，其源、目标MAC是不会变的，一句话：二层转发不改变帧的MAC地址、IP地址；<br>帧经过路由器时，进行路由转发，IP地址是不会变的，但MAC地址必定会变。</p>
+<h4 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h4><p>主要负责物理层面上的互连的，节点之间的通信传输，例如与一个以太网相连的两个节点之间的通信。将01序列划分为具有意义的数据帧送给对端。</p>
+<p>链路层的协议有许多种，但是有三个基本的问题，那就是封装成帧，透明传输，差错控制。</p>
+<ul>
+<li>封装成帧</li>
+</ul>
+<p>数据链路层的主要工作是添加一个帧头部和帧尾部，不同的数据链路层协议可能格式不同，但是基本的格式都试类似的：</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-08%2021-53-14%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>这里的数据部分，一般有一个最大程度，我们称为MTU，在MAC里一般是1500个字节，当数据是由可打印的ASC2码组成的文件时，可以使用特殊的帧定字符来标明一个帧的开始和结束。比如使用SOH(Start Of Header)–0x01和EOT(End Of Transmission)–0x04来表示，这样数据链路层就可以识别出帧的开始和结束。</p>
+<ul>
+<li>透明传输</li>
+</ul>
+<p>如果我们提供任何数据输入，数据链路层都可以成功传递，那么我们称之为透明传输，即数据链路层的功能对于网络层和上层是透明的。</p>
+<ul>
+<li>错误检测</li>
+</ul>
+<p>现实的通信链路都不会是理想的，这就是说，传输过程中有可能1变成0,0变成1，这种情况就叫做比特差错。数据链路层提供了<strong>循环冗余检验CRC</strong>方法来检测比特差错，其主要使用了帧检验序列FCS来检测比特错误。发送数据前先计算帧的数据部分得出FCS添加在数据部分后，接收端收到数据后添加上FCS后计算验证。</p>
+<p>需要注意的是数据链路层并没有向网络层提供可靠传输服务，传输差错一类是比特差错，还有一类是帧丢失、帧重复或帧失序。完整的传输错误控制是在TCP中实现的。</p>
+<h4 id="物理层怎么传"><a href="#物理层怎么传" class="headerlink" title="物理层怎么传"></a>物理层怎么传</h4><p>物理层只需要把数据从物理相连的链路上传就行了，连到哪，就走到哪，只有到了设备,也就是到了可识别协议的设备的时候,才会有选择路径的说法。</p>
+<h4 id="最后的地址怎么找到"><a href="#最后的地址怎么找到" class="headerlink" title="最后的地址怎么找到"></a>最后的地址怎么找到</h4><p>通过IP地址可以找到目的地在哪一个网络，然后找到这个网络后，就需要通过MAC地址进行广播找到最终的终端。</p>
+<h4 id="MAC地址与IP地址"><a href="#MAC地址与IP地址" class="headerlink" title="MAC地址与IP地址"></a>MAC地址与IP地址</h4><p>MAC寻址中参考的表叫做地址转发表，IP寻址中参考的表叫做路由控制表。</p>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-04%2015-31-13%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=9lWQM3ujpISO409F0zqt6h25vK9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NDE5MTA1JnQ9MTUyMjgyNzEwNSZyPTkwNzk4MDI1NiZmPS8yMDE4LTA0LTA0JTIwMTUtMzEtMTMlRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
+<h4 id="交换机与路由器"><a href="#交换机与路由器" class="headerlink" title="交换机与路由器"></a>交换机与路由器</h4><p>网桥也就是两层交换机，是从数据链路层上延长网络的设备。</p>
+<p>路由器也就是三层交换机，是通过网络层转发分组数据的设备。</p>
+<p>4-7层交换机 处理传输层以上各层网络传输的设备</p>
+<h4 id="包首部"><a href="#包首部" class="headerlink" title="包首部"></a>包首部</h4><p>每一个包首部中至少都会包含两部分信息，一个是发送端接受端地址，另一个上层的协议类型。</p>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-04%2016-10-55%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=BlugcJjoBveu52J1ZnI5rRbPX+FhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NDIxNDc4JnQ9MTUyMjgyOTQ3OCZyPTgyMDQyNjMyOSZmPS8yMDE4LTA0LTA0JTIwMTYtMTAtNTUlRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
+<h4 id="数据链路的作用"><a href="#数据链路的作用" class="headerlink" title="数据链路的作用"></a>数据链路的作用</h4><p>各个设备在数据传输时，链路层和物理层必不可少，众所周知，计算机以二进制0,1来表示信息，然而实际的通信媒介之间处理的却是电压的高低，光的闪灭以及电波的强弱等信号。把这些信号与二进制的0,1进行转换正是物理层的责任。</p>
+<p>数据链路层的处理也不是单纯的01序列，链路层把他们集合为一个叫做帧的块，然后再进行传输。</p>
+<h4 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h4><p>mac地址用于识别<strong>数据链路中</strong>互联的节点。48位</p>
+<h4 id="数据链路有哪些"><a href="#数据链路有哪些" class="headerlink" title="数据链路有哪些"></a>数据链路有哪些</h4><p>有以太网，无线通信，PPP(点对点，即1对1连接计算机)的方式。</p>
+<p>ATM,POS,FDDI等。</p>
+<p>这些链路协议相当于运输工具，就相当于士兵运货物从海南到北京，其中可能要用船，可能的地方只能骑马，有的地方可以开越野车，（就相当于不同的链路协议）</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/04/05/计算机网络问题总结/">https://corn1ng.github.io/2018/04/05/计算机网络问题总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/计算机网络/">计算机网络</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/06/责任链模式/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">责任链模式</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/04/04/IaaS、PaaS、SaaS/">
+        <span class="next-text nav-default">IaaS、PaaS、SaaS</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

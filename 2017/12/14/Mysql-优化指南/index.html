@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql 优化指南"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/14/Mysql-优化指南/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql 优化指南 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql 优化指南
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-14
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL-优化"><span class="toc-text">SQL 优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SQL优化的一般步骤"><span class="toc-text">SQL优化的一般步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#通过-show-status-和应用特点了解各种-SQL-的执行频率"><span class="toc-text">通过 show status 和应用特点了解各种 SQL 的执行频率</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#定位执行效率较低的SQL语句"><span class="toc-text">定位执行效率较低的SQL语句</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过explain-分析低效SQL的执行计划"><span class="toc-text">通过explain 分析低效SQL的执行计划:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#确定问题-采取相应的优化措施"><span class="toc-text">确定问题,采取相应的优化措施</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#索引问题"><span class="toc-text">索引问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#索引的存储分类"><span class="toc-text">索引的存储分类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mysql-如何使用索引"><span class="toc-text">mysql 如何使用索引</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看索引使用情况"><span class="toc-text">查看索引使用情况</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#两个简单实用优化方法"><span class="toc-text">两个简单实用优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#定期分析表"><span class="toc-text">定期分析表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#优化表"><span class="toc-text">优化表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用SQL优化"><span class="toc-text">常用SQL优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#大批量插入数据"><span class="toc-text">大批量插入数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#insert优化"><span class="toc-text">insert优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#group-by-优化"><span class="toc-text">group by 优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#order-by-优化"><span class="toc-text">order by 优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#join-优化"><span class="toc-text">join 优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#or-优化"><span class="toc-text">or 优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询优先还是更新优先"><span class="toc-text">查询优先还是更新优先</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其他优化措施"><span class="toc-text">其他优化措施</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="SQL-优化"><a href="#SQL-优化" class="headerlink" title="SQL 优化"></a>SQL 优化</h3><h4 id="SQL优化的一般步骤"><a href="#SQL优化的一般步骤" class="headerlink" title="SQL优化的一般步骤"></a>SQL优化的一般步骤</h4><h5 id="通过-show-status-和应用特点了解各种-SQL-的执行频率"><a href="#通过-show-status-和应用特点了解各种-SQL-的执行频率" class="headerlink" title="通过 show status 和应用特点了解各种 SQL 的执行频率"></a>通过 show status 和应用特点了解各种 SQL 的执行频率</h5><p>通过show status可以提供服务器状态信息,show status可以根据需要显式session级别的统计结果和global 级别的统计结果.</p>
+<a id="more"></a>
+<h5 id="定位执行效率较低的SQL语句"><a href="#定位执行效率较低的SQL语句" class="headerlink" title="定位执行效率较低的SQL语句"></a>定位执行效率较低的SQL语句</h5><p>可以通过以下两种方式定位执行效率地的sql语句,</p>
+<ul>
+<li>通过慢查询日志定位那些优化效率较低的sql语句…但是慢查询日志在查询结束后才记录,所以在应用反应执行效率出现问题的时候查询慢查询日志并不能定位问题.</li>
+<li>使用show processlist 命令查看当前MYSQL在运行的线程,包括线程的状态,是否锁表等等,可以实时查看SQL执行情况</li>
+</ul>
+<h5 id="通过explain-分析低效SQL的执行计划"><a href="#通过explain-分析低效SQL的执行计划" class="headerlink" title="通过explain 分析低效SQL的执行计划:"></a>通过explain 分析低效SQL的执行计划:</h5><p>通过以上步骤查询到效率低的 SQL 后,我们可以通过 explain 或者 desc 获取MySQL 如何执行 SELECT 语句的信息,包括 select 语句执行过程表如何连接和连接的次序。explain 可以知道什么时候必须为表加入索引以得到一个使用索引来寻找记录的更快的 SELECT。</p>
+<h5 id="确定问题-采取相应的优化措施"><a href="#确定问题-采取相应的优化措施" class="headerlink" title="确定问题,采取相应的优化措施"></a>确定问题,采取相应的优化措施</h5><p>通过以上步骤查询到效率低的 SQL 后,我们可以通过 explain 或者 desc 获取MySQL 如何执行 SELECT 语句的信息,包括 select 语句执行过程表如何连接和连接的次序。</p>
+<h4 id="索引问题"><a href="#索引问题" class="headerlink" title="索引问题"></a>索引问题</h4><h5 id="索引的存储分类"><a href="#索引的存储分类" class="headerlink" title="索引的存储分类"></a>索引的存储分类</h5><p>myisam 表的数据文件和索引文件是自动分开的,innoDB的数据和索引是存储在同一个表空间里面的,但是可以有多个文件组成.</p>
+<p>索引的语法:</p>
+<p>创建索引: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE  [UNIQUE|FULLTEXT|SPATIAL] INDEX index_name [USING index_type] </span><br><span class="line">ON tbl_name (index_col_name,...)</span><br><span class="line">index_col_name的格式:  col_name [(length)][ASC | DESC]</span><br></pre></td></tr></table></figure>
+<p>索引的存储类型目前只有两种(btree和hash) ,具体和表的模式有关.</p>
+<p>myisam -&gt;btree </p>
+<p>innoDB -&gt;btree</p>
+<p>memory/heap -&gt; hash btree</p>
+<h5 id="mysql-如何使用索引"><a href="#mysql-如何使用索引" class="headerlink" title="mysql 如何使用索引"></a>mysql 如何使用索引</h5><p>索引用于快速找出在某个列中有某一特定值的行,对相关列使用索引是提高select操作性能的最佳途径.</p>
+<p>下列情况中,MySQL不会使用已有的索引</p>
+<p>1 如果MySQL估计使用索引比全表扫描更慢,则不会使用索引.</p>
+<p>2 如果使用 heap 表并且 where 条件中不用=索引列,其他&gt; 、&lt;、 &gt;=、 &lt;=均不使用索引</p>
+<p>3 如果不是索引列的第一部分</p>
+<p>4 如果like 是以% 开始</p>
+<p>5 对 where 后边条件为字符串的一定要加引号,字符串如果为数字 mysql 会自动转为字符串,但是不使用        索引。</p>
+<h5 id="查看索引使用情况"><a href="#查看索引使用情况" class="headerlink" title="查看索引使用情况"></a>查看索引使用情况</h5><p>如果索引正在工作,Handler_read_key 的值将很高,这个值代表了一个行被索引值读的次数,很低的值表明增加索引得到的性能改善不高,因为索引并不经常使用 。<br>Handler_read_rnd_next 的值高则意味着查询运行低效,并且应该建立索引补救。这个值的含义是在数据文件中读下一行的请求数。如果你正进行大量的表扫描,该值较高。通常说明表索引不正确或写入的查询没有利用索引。</p>
+<h3 id="两个简单实用优化方法"><a href="#两个简单实用优化方法" class="headerlink" title="两个简单实用优化方法"></a>两个简单实用优化方法</h3><h5 id="定期分析表"><a href="#定期分析表" class="headerlink" title="定期分析表"></a>定期分析表</h5><p>ANALYZE TABLE</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ANALYZE [LOCAL | NO_WRITE_TO_BINLOG] TABLE tbl_name [, tbl_name] ...</span><br></pre></td></tr></table></figure>
+<p>本语句用于分析和存储表的关键字分布。在分析期间,使用一个读取锁定对表进行锁定。这对于 MyISAM, BDB 和 InnoDB 表有作用。对于 MyISAM 表,本语句与使用 myisamchk -a 相当。</p>
+<p>CHECK TABLE</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CHECK TABLE tbl_name [, tbl_name] ... [option] ...</span><br><span class="line">option = &#123;QUICK | FAST | MEDIUM | EXTENDED | CHANGED&#125;</span><br></pre></td></tr></table></figure>
+<p>检查一个或多个表是否有错误。CHECK TABLE 对 MyISAM 和 InnoDB 表有作用。对于MyISAM 表,关键字统计数据被更新。CHECK TABLE 也可以检查视图是否有错误,比如在视图定义中被引用的表已不存在。</p>
+<p>CHECKSUM TABLE</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CHECKSUM TABLE tbl_name [, tbl_name] ... [ QUICK | EXTENDED ]</span><br></pre></td></tr></table></figure>
+<p>报告一个表校验和。</p>
+<h5 id="优化表"><a href="#优化表" class="headerlink" title="优化表"></a>优化表</h5><p>OPTIMIZE TABLE</p>
+<p>语法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OPTIMIZE [LOCAL | NO_WRITE_TO_BINLOG] TABLE tbl_name [, tbl_name] ...</span><br></pre></td></tr></table></figure>
+<p>如果已经删除了表的一大部分,或者如果您已经对含有可变长度行的表(含有VARCHAR, BLOB 或 TEXT 列的表)进行了很多更改,则应使用 OPTIMIZE TABLE。被删除的记录被保持在链接清单中,后续的 INSERT 操作会重新使用旧的记录位置。您可以使用 OPTIMIZE TABLE 来重新利用未使用的空间,并整理数据文件的碎片。OPTIMIZE TABLE 只对 MyISAM, BDB 和 InnoDB 表起作用。</p>
+<h3 id="常用SQL优化"><a href="#常用SQL优化" class="headerlink" title="常用SQL优化"></a>常用SQL优化</h3><h5 id="大批量插入数据"><a href="#大批量插入数据" class="headerlink" title="大批量插入数据"></a>大批量插入数据</h5><p>1因为 Innodb 类型的表是按照主键的顺序保存的,所以将导入的数据按照主键的顺序排列,可以有效的提高导入数据的效率。如果 Innodb 表没有主键,那么系统会默认创建一个内部列作为主键,所以如果可以给表创建一个主键,将可以利用这个优势提高导入数据的效率。</p>
+<p>2在导入数据前执行 SET UNIQUE_CHECKS=0,关闭唯一性校验,在导入结束后执行 SET UNIQUE_CHECKS=1,恢复唯一性校验,可以提高导入的效率。</p>
+<p>3 如果应用使用自动提交的方式,建议在导入前执行 SET AUTOCOMMIT=0,关闭自动提交,导入结束后再执行 SET AUTOCOMMIT=1,打开自动提交,也可以提高导入的效率。</p>
+<h5 id="insert优化"><a href="#insert优化" class="headerlink" title="insert优化"></a>insert优化</h5><p>1如果你同时从同一客户插入很多行,使用多个值表的 INSERT 语句。这比使用分开INSERT 语句快。</p>
+<p>2如果你从不同客户插入很多行,能通过使用 INSERT DELAYED 语句得到更高的速度。Delayed 的含义是让 insert 语句马上执行,其实数据都被放在内存的队列中,并没有真正写入磁盘;这比每条语句分别插入要快的多;</p>
+<p>3将索引文件和数据文件分在不同的磁盘上存放(利用建表中的选项);</p>
+<p>4 如果进行批量插入,可以增加 bulk_insert_buffer_size 变量值的方法来提高速度,但是,这只能对 myisam 表使用;</p>
+<p>5 当从一个文本文件装载一个表时,使用 LOAD DATA INFILE。这通常比使用很多INSERT 语句快 20 倍;</p>
+<p>6 根据应用情况使用 replace 语句代替 insert;</p>
+<p>7 根据应用情况使用 ignore 关键字忽略重复记录。</p>
+<h5 id="group-by-优化"><a href="#group-by-优化" class="headerlink" title="group by 优化"></a>group by 优化</h5><p>默认情况下group by 会先进行排序, 如果查询包括 GROUP BY 但你想要避免排序结果的消耗,你可以指定 ORDER BY NULL 禁止排序。</p>
+<h5 id="order-by-优化"><a href="#order-by-优化" class="headerlink" title="order by 优化"></a>order by 优化</h5><p>在某些情况中,MySQL 可以使用一个索引来满足 ORDER BY 子句,而不需要额外的排序 。where 条件和 order by 使用相同的索引,并且 order by 的顺序和索引顺序相同 ,并且 order by 的字段都是升序或者都是降序。</p>
+<h5 id="join-优化"><a href="#join-优化" class="headerlink" title="join 优化"></a>join 优化</h5><p>子查询可以被更有效率的连接(JOIN)替代。</p>
+<p>连接(JOIN).. 之所以更有效率一些,是因为 MySQL 不需要在内存中创建临时表来完成这个逻辑上的需要两个步骤的查询工作。</p>
+<h5 id="or-优化"><a href="#or-优化" class="headerlink" title="or 优化"></a>or 优化</h5><p>对于 or 子句,如果要利用索引,则 or 之间的每个条件列都必须用到索引;如果没有索引,则应该考虑增加索引。</p>
+<h5 id="查询优先还是更新优先"><a href="#查询优先还是更新优先" class="headerlink" title="查询优先还是更新优先"></a>查询优先还是更新优先</h5><p>MySQL 还允许改变语句调度的优先级,它可以使来自多个客户端的查询更好地协作,这样单个客户端就不会由于锁定而等待很长时间。改变优先级还可以确保特定类型的查询被处理得更快。</p>
+<h5 id="其他优化措施"><a href="#其他优化措施" class="headerlink" title="其他优化措施"></a>其他优化措施</h5><p>1 使用持久的连接数据库以避免连接开销。</p>
+<p>2 经常检查所有查询确实使用了必要的索引。</p>
+<p>3 避免在频繁更新的表上执行复杂的 SELECT 查询,以避免与锁定表有关的由于读、写冲突发生的问题。</p>
+<p>4 对于没有删除的行操作的 MyISAM 表,插入操作和查询操作可以并行进行,因为没有删除操作的表查询期间不会阻塞插入操作.对于确实需要执行删除操作的表,尽量在空闲时间进行批量删除操作,避免阻塞其他操作。</p>
+<p>5.充分利用列有默认值的事实。只有当插入的值不同于默认值时,才明确地插入值。这减少 MySQL 需要做的语法分析从而提高插入速度。</p>
+<p>6.对经常访问的可以重构的数据使用内存表,可以显著提高访问的效率。</p>
+<p>7.通过复制可以提高某些操作的性能。可以在复制服务器中分布客户的检索以均分负载。为了防止备份期间对应用的影响,可以在复制服务器上执行备份操作.</p>
+<p>8,表的字段尽量不使用自增长变量,在高并发情况下该字段的自增可能对效率有比较大的影响,推荐通过应用来实现字段的自增长。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/14/Mysql-优化指南/">https://corn1ng.github.io/2017/12/14/Mysql-优化指南/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/17/创建高性能的索引/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">创建高性能的索引</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/12/Java-序列化与反序列化/">
+        <span class="next-text nav-default">Java 序列化与反序列化</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

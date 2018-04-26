@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="jQuery"/>
+
+
+
+
+  <meta name="keywords" content="JavaScript, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/07/jQuery/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> jQuery - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          jQuery
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-07
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/前端/">前端</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-选择器"><span class="toc-text">jQuery 选择器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-事件"><span class="toc-text">jQuery 事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-获取内容和属性"><span class="toc-text">jQuery 获取内容和属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-设置内容和属性"><span class="toc-text">jQuery 设置内容和属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-添加元素"><span class="toc-text">jQuery 添加元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-删除元素"><span class="toc-text">jQuery 删除元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-操作css"><span class="toc-text">jQuery 操作css</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#css-方法"><span class="toc-text">css() 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#返回css-属性-返回首个匹配元素的background-color-值。"><span class="toc-text">返回css 属性 返回首个匹配元素的background-color 值。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#设置css属性"><span class="toc-text">设置css属性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jQuery-遍历"><span class="toc-text">jQuery 遍历</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jquery-AJAX"><span class="toc-text">jquery AJAX</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#jquery-load-方法-selector-load-URL-data-callback"><span class="toc-text">jquery load() 方法   $(selector).load(URL,data,callback);</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get-方法和post-方法"><span class="toc-text">get() 方法和post() 方法</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p>基础语法 ${selecttor}.action()</p>
+<p>所有的jQuery函数位于一个document ready 函数中<br><a id="more"></a><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//jquery 代码。</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="jQuery-选择器"><a href="#jQuery-选择器" class="headerlink" title="jQuery 选择器"></a>jQuery 选择器</h3><ol>
+<li><p>元素选择器</p>
+<p>$(“p”) 在页面中选择所有<code>&lt;p&gt;</code>元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(funcion()&#123;</span><br><span class="line">            $(<span class="string">"button"</span>).click(funcion()&#123;</span><br><span class="line">            $(<span class="string">"p"</span>).hide();</span><br><span class="line">                              &#125;);</span><br><span class="line">                  &#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>id选择器</p>
+<p>$(“#test”)在页面中选择Id 为 test 的元素。</p>
+</li>
+<li><p>.class (泪点)   .class 选择器</p>
+<p>$(“.text”) 选择所有class=”text”的元素。</p>
+</li>
+</ol>
+<h3 id="jQuery-事件"><a href="#jQuery-事件" class="headerlink" title="jQuery 事件"></a>jQuery 事件</h3><p><img src="http://blog-1252095801.cosgz.myqcloud.com/QQ20171007-145159.png" alt="shijian"></p>
+<p>mouseenter() 当鼠标指针穿过元素时，会发生mouseenter事件。</p>
+<p>mouseleave() 当鼠标离开元素时，会发生 mouseleave事件。</p>
+<p>mousedown()当鼠标指针移动到元素上方，并按下鼠标按键时，会发生</p>
+<p>focus()  当元素获得焦点时，会发生focus事件。</p>
+<p>Blur()当元素失去焦点时，会发生blur事件。</p>
+<h3 id="jQuery-获取内容和属性"><a href="#jQuery-获取内容和属性" class="headerlink" title="jQuery 获取内容和属性"></a>jQuery 获取内容和属性</h3><p>三个用于dom操作的jQuery方法</p>
+<p>text() 设置或返回所选元素的文本内容。html() 设置或返回所选元素的内容 （包括HTML标记）val() 设置或返回表单字段的值</p>
+<p>attr()方法用于获取属性值。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">  $(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    alert($(<span class="string">"#a"</span>).attr(<span class="string">"href"</span>));</span></span><br><span class="line"><span class="undefined">  &#125;);</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.222.com"</span> <span class="attr">id</span>=<span class="string">"a"</span>&gt;</span>菜鸟教程<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span>&gt;</span>显示 href 属性的值<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line">// 显示 http://www.222.com</span><br></pre></td></tr></table></figure>
+<h3 id="jQuery-设置内容和属性"><a href="#jQuery-设置内容和属性" class="headerlink" title="jQuery 设置内容和属性"></a>jQuery 设置内容和属性</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#btn1"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test1"</span>).text(<span class="string">"Hello world!"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">"#btn2"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test2"</span>).html(<span class="string">"&lt;b&gt;Hello world!&lt;/b&gt;"</span>);</span><br><span class="line">&#125;);</span><br><span class="line">$(<span class="string">"#btn3"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $(<span class="string">"#test3"</span>).val(<span class="string">"RUNOOB"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>text()、html() 以及 val()，同样拥有回调函数。回调函数有两个参数：被选元素列表中当前元素的下标，以及原始（旧的）值。然后以函数新值返回您希望使用的字符串。</p>
+<p>jQuery attr() 方法也用于设置/改变属性值。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#runoob"</span>).attr(<span class="string">"href"</span>,<span class="string">"http://www.runoob.com/jquery"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>jQuery 方法 attr()，也提供回调函数。回调函数有两个参数：被选元素列表中当前元素的下标，以及原始（旧的）值。然后以函数新值返回您希望使用的字符串。</p>
+<h3 id="jQuery-添加元素"><a href="#jQuery-添加元素" class="headerlink" title="jQuery 添加元素"></a>jQuery 添加元素</h3><ul>
+<li>append() - 在被选元素的结尾插入内容</li>
+<li>prepend() - 在被选元素的开头插入内容</li>
+<li>after() - 在被选元素之后插入内容</li>
+<li>before() - 在被选元素之前插入内容</li>
+</ul>
+<h3 id="jQuery-删除元素"><a href="#jQuery-删除元素" class="headerlink" title="jQuery 删除元素"></a>jQuery 删除元素</h3><ul>
+<li>remove() - 删除被选元素（及其子元素）</li>
+<li>empty() - 从被选元素中删除子元素</li>
+</ul>
+<h3 id="jQuery-操作css"><a href="#jQuery-操作css" class="headerlink" title="jQuery 操作css"></a>jQuery 操作css</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.important</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="attribute">font-weight</span>:bold;</span><br><span class="line">        <span class="attribute">font-size</span>:xx-large;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="selector-class">.blue</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="attribute">color</span>:blue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>addclass()方法 添加css样式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"h1,h2,p"</span>).addClass(<span class="string">"blue"</span>);</span><br><span class="line">  $(<span class="string">"div"</span>).addClass(<span class="string">"important"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>removeclass()方法 删除css 属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"h1,h2,p"</span>).removeClass(<span class="string">"blue"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="css-方法"><a href="#css-方法" class="headerlink" title="css() 方法"></a>css() 方法</h3><h5 id="返回css-属性-返回首个匹配元素的background-color-值。"><a href="#返回css-属性-返回首个匹配元素的background-color-值。" class="headerlink" title="返回css 属性 返回首个匹配元素的background-color 值。"></a>返回css 属性 返回首个匹配元素的background-color 值。</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"p"</span>).css(<span class="string">"background-color"</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="设置css属性"><a href="#设置css属性" class="headerlink" title="设置css属性"></a>设置css属性</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(&quot;p&quot;).css(&quot;background-color&quot;,&quot;yellow&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="jQuery-遍历"><a href="#jQuery-遍历" class="headerlink" title="jQuery 遍历"></a>jQuery 遍历</h3><p>指根据其他元素的关系来查找HTML元素。</p>
+<p><em>向上遍历DOM树。parernt() parents() parentsUntil()</em></p>
+<p>parent() 方法返回被选元素的直接父元素。</p>
+<p>parents() 方法返回被选元素的所有祖先元素，它一路向上直到文档的根元素 (<html>)。</html></p>
+<p>parentsUntil() 方法返回介于两个给定元素之间的所有祖先元素。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"span"</span>).parentsUntil(<span class="string">"div"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><em>向下遍历DOM 树 children() find()</em></p>
+<p>children() 方法返回被选元素的所有直接子元素</p>
+<p>find() 方法返回被选元素的后代元素，一路向下直到最后一个后代。</p>
+<p>下面的例子返回属于 <code>&lt;div&gt;</code> 后代的所有 <code>&lt;span&gt;</code> 元素：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"div"</span>).find(<span class="string">"span"</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><em>水平遍历DOM树 siblings() next() mextAll() nextUtil() prev() prevAll() prevUntil()</em></p>
+<h3 id="jquery-AJAX"><a href="#jquery-AJAX" class="headerlink" title="jquery AJAX"></a>jquery AJAX</h3><h5 id="jquery-load-方法-selector-load-URL-data-callback"><a href="#jquery-load-方法-selector-load-URL-data-callback" class="headerlink" title="jquery load() 方法   $(selector).load(URL,data,callback);"></a>jquery load() 方法   $(selector).load(URL,data,callback);</h5><p>load方法从服务器加载数据，并把返回的数据放入到被选的元素中。必须的URL 参数规定希望加载的URL。可选的data参数规定与请求一同发送的查询字符串键值对集合。可选的callback参数是load()方法完成后所执行的函数名称。</p>
+<p>回调函数的参数可以设置不同的参数</p>
+<p>Responsetxt 包含调用成功时的结果内容</p>
+<p>statusTXT 包含调用的状态</p>
+<p>xhr 包含XMLHttpRequest对象。</p>
+<h5 id="get-方法和post-方法"><a href="#get-方法和post-方法" class="headerlink" title="get() 方法和post() 方法"></a>get() 方法和post() 方法</h5><p>get() 和post() 请求从服务器请求数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$.get(URL,callback);</span><br><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $.get(<span class="string">"demo_test.php"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">data,status</span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">"数据: "</span> + data + <span class="string">"\n状态: "</span> + status);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">$(<span class="string">"button"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    $.post(<span class="string">"/try/ajax/demo_test_post.php"</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        name:<span class="string">"菜鸟教程"</span>,</span><br><span class="line">        url:<span class="string">"http://www.runoob.com"</span></span><br><span class="line">    &#125;,</span><br><span class="line">        <span class="function"><span class="keyword">function</span>(<span class="params">data,status</span>)</span>&#123;</span><br><span class="line">        alert(<span class="string">"数据: \n"</span> + data + <span class="string">"\n状态: "</span> + status);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/07/jQuery/">https://corn1ng.github.io/2017/10/07/jQuery/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/JavaScript/">JavaScript</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/08/Java问题总结/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java 问题总结</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/07/CSS/">
+        <span class="next-text nav-default">CSS总结</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

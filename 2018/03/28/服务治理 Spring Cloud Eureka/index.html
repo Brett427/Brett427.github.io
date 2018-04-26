@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="服务治理 Spring Cloud Eureka"/>
+
+
+
+
+  <meta name="keywords" content="微服务, 分布式, SpringCloud, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/03/28/服务治理 Spring Cloud Eureka/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 服务治理 Spring Cloud Eureka - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          服务治理 Spring Cloud Eureka
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-03-28
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/微服务/">微服务</a>
+            
+              <a href="/categories/微服务/分布式/">分布式</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务治理-Spring-Cloud-Eureka"><span class="toc-text">服务治理 Spring Cloud Eureka</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务治理"><span class="toc-text">服务治理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eureka"><span class="toc-text">Eureka</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eureka配置"><span class="toc-text">Eureka配置</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="服务治理-Spring-Cloud-Eureka"><a href="#服务治理-Spring-Cloud-Eureka" class="headerlink" title="服务治理 Spring Cloud Eureka"></a>服务治理 Spring Cloud Eureka</h2><p><code>Spring Cloud Eureka</code>是Spring Cloud Netflix 微服务套件中的一部分，基于<code>Netflix Eureka</code> 做了二次封装，主要负责完成微服务架构中的服务治理功能。</p>
+<h4 id="服务治理"><a href="#服务治理" class="headerlink" title="服务治理"></a>服务治理</h4><p>服务治理是微服务架构中最为核心和基础的模块，主要用来实现各个微服务实例的自动化注册与发现。</p>
+<p>最开始构建微服务系统的时候可能服务并不多，可以通过做一些静态配置来完成服务的调用，但是当业务发展，静态配置变得越来越难以维护，面对不断发展的业务，我们的集群规模，服务的位置，服务的命名都有可能发生变化。为了解决微服务架构中服务实例维护问题，产生了大量服务治理框架与产品，这些框架与产品的实现都围绕着服务注册与服务发现机制来完成微服务应用实例的自动化管理。</p>
+<ul>
+<li>服务注册</li>
+</ul>
+<p>服务治理框架中，通常有一个注册中心，每个服务单元向注册中心登记自己的服务，将主机与端口号，版本号，通信协议等一些附加信息告知注册中心。注册中心按服务名分类组织服务清单。</p>
+<ul>
+<li>服务发现</li>
+</ul>
+<p>在服务治理框架下运作，服务间的调用不再通过指定具体的实例地址来实现。而是通过向服务名发起请求调用来实现(这样，当这个服务有多个实例时，就可以负载均衡的找到空闲的实例)。所以服务调用方在调用服务提供方接口的时候，并不知道具体的服务实例位置，因此，调用方需要向服务注册中心咨询服务，并获取所有服务的实例清单。以实现对具体服务实例的访问。</p>
+<h3 id="Eureka"><a href="#Eureka" class="headerlink" title="Eureka"></a>Eureka</h3><p>用来实现服务注册与发现，既包含了服务端组件，也包含了客户端组件，都用Java语言编写。</p>
+<p>Eureka服务端，也称为服务注册中心，同其他服务注册中心一样，都支持高可用配置。依托强一致性提供良好的服务实例可用性。应对多种不同的故障场景。</p>
+<p>Eureka客户端(服务提供者，服务消费者)，主要处理服务的<strong>注册</strong>与<strong>发现</strong>，客户端服务通过注解和参数配置的方式，嵌入在客户端应用程序的代码中，应用程序运行时，Eureka客户端向注册中心自身提供的服务并周期性的发送心跳来更新它的服务租约。同时，也能从服务端查询当前注册的服务信息并把他们缓存到本地并周期性的刷新服务状态。</p>
+<p>Eureka中有三个核心角色，分别是服务注册中心，服务提供者，以及服务消费者。</p>
+<p>服务注册中心也就是Eureka提供的服务端，提供服务注册与发现的功能，也就是前面的eureka-server.</p>
+<p>服务提供者是提供服务的应用，可以是Spring Boot应用，也可以是其他技术平台遵循Eureka通信机制的应用，他将自己的服务注册到Eureka,以供其他应用发现。</p>
+<p>服务消费者从服务注册中心获取服务列表，从而使消费者可以知道去何处调用其所需要的服务。</p>
+<p><strong>很多时候，Eureka客户端既是服务提供者又是服务消费者</strong></p>
+<h3 id="Eureka配置"><a href="#Eureka配置" class="headerlink" title="Eureka配置"></a>Eureka配置</h3><ul>
+<li>制定注册中心</li>
+</ul>
+<p>主要通过<code>eureka.client.serviceUrl</code>参数实现。它的配置值存储在HashMap中。并且设置有一组默认值，默认值的key为<code>defaultZone</code>,value=<code>http://localhost:8761/eureka/</code>。</p>
+<ul>
+<li>元数据</li>
+</ul>
+<p>元数据是eureka客户端在向服务注册中心发送注册请求时，用于描述自身服务信息的对象，其中包括了一些标准化的元数据，比如服务名称，实例名称，实例IP,实例端口等用于服务治理的重要信息。</p>
+<ul>
+<li>实例名配置</li>
+</ul>
+<p>实例名，即InstanceInfo中的instanceId参数，，它是区分同一服务中不同实例的唯一标识。原生实现中，采用主机名作为默认值。我们可以采用下面的方法使用不同的端口开启同一个服务的多个实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.instace.instanceId=$&#123;spring.application.name&#125;:$&#123;random.int&#125;</span><br></pre></td></tr></table></figure>
+<p>通过加随机数的方式来区别不同的实例，从而实现在同一个主机上，不指定端口就能够启动多个实例。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/03/28/服务治理 Spring Cloud Eureka/">https://corn1ng.github.io/2018/03/28/服务治理 Spring Cloud Eureka/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+              <a href="/tags/SpringCloud/">SpringCloud</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/03/29/客户端负载均衡Spring Cloud Ribbon/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">客户端负载均衡Spring Cloud Ribbon</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/03/27/RabbitMq/">
+        <span class="next-text nav-default">RabbitMq入门</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

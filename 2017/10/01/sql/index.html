@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="sql 语句总结 "/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/01/sql/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> sql 语句总结  - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          sql 语句总结 
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-01
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#检索数据"><span class="toc-text">检索数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#select语句"><span class="toc-text">select语句</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排序检索数据"><span class="toc-text">排序检索数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤数据"><span class="toc-text">过滤数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用通配符进行过滤"><span class="toc-text">用通配符进行过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#like操作符"><span class="toc-text">like操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通配符"><span class="toc-text">%通配符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通配符-1"><span class="toc-text">_通配符</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用正则表达式进行搜索"><span class="toc-text">使用正则表达式进行搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本字符匹配"><span class="toc-text">基本字符匹配</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#匹配多个实例"><span class="toc-text">匹配多个实例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#字符类"><span class="toc-text">字符类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#重复元字符（匹配前面一个字符）"><span class="toc-text">重复元字符（匹配前面一个字符）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#定位符"><span class="toc-text">定位符</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建计算字段"><span class="toc-text">创建计算字段</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#拼接字段"><span class="toc-text">拼接字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用别名AS"><span class="toc-text">使用别名AS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用数据处理函数"><span class="toc-text">使用数据处理函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#文本处理函数"><span class="toc-text">文本处理函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#日期时间处理函数-数值处理函数"><span class="toc-text">日期时间处理函数/数值处理函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#汇总数据"><span class="toc-text">汇总数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#聚集函数"><span class="toc-text">聚集函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚集不同值"><span class="toc-text">聚集不同值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组合聚集函数"><span class="toc-text">组合聚集函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分组数据"><span class="toc-text">分组数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建分组-group-by"><span class="toc-text">创建分组 group by</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#过滤分组"><span class="toc-text">过滤分组</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用子查询"><span class="toc-text">使用子查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#联结表"><span class="toc-text">联结表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#联结多个表"><span class="toc-text">联结多个表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高级联结"><span class="toc-text">高级联结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自联结"><span class="toc-text">自联结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自然联结"><span class="toc-text">自然联结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#外部联结"><span class="toc-text">外部联结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql-NULL-值处理"><span class="toc-text">Mysql NULL 值处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组合查询"><span class="toc-text">组合查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建组合查询"><span class="toc-text">创建组合查询</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全文本搜索"><span class="toc-text">全文本搜索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#插入数据-insert"><span class="toc-text">插入数据 /insert</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#插入完整的行"><span class="toc-text">插入完整的行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#插入多个行"><span class="toc-text">插入多个行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#插入检索出的数据"><span class="toc-text">插入检索出的数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新和删除数据"><span class="toc-text">更新和删除数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#更新数据"><span class="toc-text">更新数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除数据"><span class="toc-text">删除数据</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">databases</span>; 显示所有数据库</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">tables</span>; 显示一个数据库中的列表</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">status</span> 用于显示服务器状态信息</span><br></pre></td></tr></table></figure>
+<h2 id="检索数据"><a href="#检索数据" class="headerlink" title="检索数据"></a>检索数据</h2><h4 id="select语句"><a href="#select语句" class="headerlink" title="select语句"></a>select语句</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product; 检索单个列</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> product;检索多个列 </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> product; 检索所有列</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">distinct</span> <span class="keyword">id</span> <span class="keyword">from</span> product 检索不同的行 </span><br><span class="line"></span><br><span class="line">限制结果</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">limit</span> <span class="number">5</span>;limit 5 指示返回不多于5行</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">limit</span> <span class="number">5</span>,<span class="number">5</span>;表示从行5开始的接下来5行</span><br><span class="line"></span><br><span class="line">使用完全限定的表名</span><br><span class="line"><span class="keyword">select</span> product.name <span class="keyword">from</span> products;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="排序检索数据"><a href="#排序检索数据" class="headerlink" title="排序检索数据"></a>排序检索数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>; 根据一个列排序</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,price <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">order</span> <span class="keyword">by</span> price,<span class="keyword">name</span>;根据多个列排序</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,price,<span class="keyword">name</span> <span class="keyword">from</span> prodct <span class="keyword">order</span> <span class="keyword">by</span> price <span class="keyword">DESC</span>, <span class="keyword">name</span>; 指定排序方向</span><br><span class="line"></span><br><span class="line">在给出order by 子句时，应该保证它位于from之后，如果使用limit，则limit位于order by 之后</span><br></pre></td></tr></table></figure>
+<h2 id="过滤数据"><a href="#过滤数据" class="headerlink" title="过滤数据"></a>过滤数据</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,price <span class="keyword">from</span> product <span class="keyword">where</span> price=<span class="number">20</span>; 使用where子句</span><br></pre></td></tr></table></figure>
+<p>where 子句操作符 &lt;&gt;和！= 标识不等于。between 标识指定两个值之间。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,price <span class="keyword">from</span> prodct <span class="keyword">where</span> price <span class="keyword">between</span> <span class="number">5</span> <span class="keyword">and</span> <span class="number">10</span>;     between</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> price <span class="keyword">is</span> <span class="literal">NULL</span>; 空值检查 </span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,price,<span class="keyword">name</span> <span class="keyword">from</span> products <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">30</span> <span class="keyword">and</span> price=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,pricee <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">or</span> price=<span class="number">1</span>; 多个where语句用and or 连接。可以用（）改变计算顺序。</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,price <span class="keyword">from</span> products <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span> (<span class="number">1</span>,<span class="number">2</span>) <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>;圆括号在where子句的另一种用法</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,price <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">or</span> <span class="keyword">id</span>=<span class="number">2</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>; in 操作符用来指定条件的范围。</span><br><span class="line">上面两句含义相同。</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">in</span> product <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">not</span> <span class="keyword">in</span> (<span class="number">1</span>,<span class="number">2</span>) <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>; not 操作符用来否定后面跟的条件。</span><br></pre></td></tr></table></figure>
+<h2 id="用通配符进行过滤"><a href="#用通配符进行过滤" class="headerlink" title="用通配符进行过滤"></a>用通配符进行过滤</h2><p>通配符是用来匹配值的一部分特殊字符。</p>
+<h3 id="like操作符"><a href="#like操作符" class="headerlink" title="like操作符"></a>like操作符</h3><h4 id="通配符"><a href="#通配符" class="headerlink" title="%通配符"></a>%通配符</h4><p>% 表示任何字符出现任意次数(包括0次)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> prodcut <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> <span class="string">'jet%'</span>;找出以jet开头的产品。</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> ‘%jet%’; 找出包含jet的产品</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> prodct <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> <span class="string">'a%z'</span>; 找出以 a 开头,以 z 结尾的字段。</span><br></pre></td></tr></table></figure>
+<h4 id="通配符-1"><a href="#通配符-1" class="headerlink" title="_通配符"></a>_通配符</h4><p>_用来匹配单个字符<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span> <span class="string">'_ jet'</span> 返回了 <span class="number">1</span> jet, <span class="number">2</span> jet 。 （注意空格）</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用正则表达式进行搜索"><a href="#使用正则表达式进行搜索" class="headerlink" title="使用正则表达式进行搜索"></a>使用正则表达式进行搜索</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">有 wkn wkn1 wkn2 wkn3 4个数据</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> person <span class="keyword">where</span> <span class="keyword">name</span> <span class="keyword">like</span><span class="string">'wkn'</span> 找到一个wkn</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> person <span class="keyword">where</span> <span class="keyword">name</span> regexp <span class="string">'wkn'</span></span><br><span class="line">找到四个. </span><br><span class="line">所以<span class="keyword">Like</span> 匹配整个列，regexp 在列值内进行匹配。</span><br></pre></td></tr></table></figure>
+<h4 id="基本字符匹配"><a href="#基本字符匹配" class="headerlink" title="基本字符匹配"></a>基本字符匹配</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>，<span class="keyword">name</span> <span class="keyword">from</span> prodct <span class="keyword">where</span> <span class="keyword">name</span> REGEXP <span class="string">'a'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>;检索name中包含a 的所有行</span><br><span class="line">此句子告诉mysql regexp 后跟的东西作为正则表达式</span><br></pre></td></tr></table></figure>
+<p>.在正则表达式中表示匹配任意一个字符<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> REGEXP <span class="string">'.0'</span></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>; 返回了 10，20 两个name.</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> REGEXP <span class="string">'1000|2000'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>;| 用于搜索两个串之一。</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> REGEXP ‘[<span class="number">123</span>]<span class="keyword">on</span>’;[]用来匹配中括号中的单一字符。匹配1on,2on,3on;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">name</span> <span class="keyword">from</span> priduct <span class="keyword">where</span> <span class="keyword">name</span> REGEXP <span class="string">'[1-3]on'</span>; 相当于 1on,2on,3on; </span><br><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> prodcut <span class="keyword">where</span> <span class="keyword">name</span> regep <span class="string">'\\.'</span> 表示查找. 类似，\\- 标识-</span><br></pre></td></tr></table></figure></p>
+<h4 id="匹配多个实例"><a href="#匹配多个实例" class="headerlink" title="匹配多个实例"></a>匹配多个实例</h4><h5 id="字符类"><a href="#字符类" class="headerlink" title="字符类"></a>字符类</h5><p>[:alnum:] 任意字母和数字<br>[:alpha:]任意字符<br>[:dight:]任意数字</p>
+<h5 id="重复元字符（匹配前面一个字符）"><a href="#重复元字符（匹配前面一个字符）" class="headerlink" title="重复元字符（匹配前面一个字符）"></a>重复元字符（匹配前面一个字符）</h5><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">* 0个或者多个匹配</span><br><span class="line"></span><br><span class="line">+ 1个或多个匹配</span><br><span class="line"></span><br><span class="line">？ 0个或者1个匹配</span><br><span class="line"></span><br><span class="line">&#123;n&#125;指定数目的匹配</span><br><span class="line"></span><br><span class="line">&#123;n,&#125;不少于指定数目的匹配</span><br><span class="line"></span><br><span class="line">&#123;n,m&#125;指定的范围</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> regexp <span class="string">'\\([0-9] sticks?\\)'</span></span><br><span class="line">\\(匹配（ [<span class="number">0</span><span class="number">-9</span>]匹配任意数字，sticks? 匹配stick 和sticks s后的？使s可选。</span><br></pre></td></tr></table></figure>
+<h5 id="定位符"><a href="#定位符" class="headerlink" title="定位符"></a>定位符</h5><p>^ 文本的开始</p>
+<p>$ 文本的结尾</p>
+<p>[[:&lt;:]]词的开始</p>
+<p>[[:&lt;:]]词的结尾<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">name</span> regexp <span class="string">'^[0-9\\.]'</span></span><br><span class="line">找出以数字或者以.开头的所有信息。</span><br></pre></td></tr></table></figure></p>
+<h2 id="创建计算字段"><a href="#创建计算字段" class="headerlink" title="创建计算字段"></a>创建计算字段</h2><p>字段 基本与列的意思相同，数据库一般成为列，字段通常用在计算字段的连接上。</p>
+<h3 id="拼接字段"><a href="#拼接字段" class="headerlink" title="拼接字段"></a>拼接字段</h3><p>在mysql的select语句总，可以使用concat()函数来拼接两个列。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="keyword">name</span>, <span class="string">'('</span>, country,<span class="string">')'</span>) <span class="keyword">from</span> prodcut <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>;</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>concat((name, ‘(‘, country,’)’)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACE(USA)</td>
+</tr>
+<tr>
+<td>Brett(CHA)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使用别名AS"><a href="#使用别名AS" class="headerlink" title="使用别名AS"></a>使用别名AS</h3><p>别名是一个字段或者值的替换名，使用as 进行赋予。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="keyword">name</span>, <span class="string">'('</span>, country,<span class="string">')'</span>) <span class="keyword">as</span> aaa <span class="keyword">from</span> prodcut <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">name</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,aprice，a*aprice <span class="keyword">as</span> bprice <span class="keyword">from</span> orders <span class="keyword">where</span> <span class="keyword">name</span>=<span class="number">11</span>; 使用算术运算</span><br></pre></td></tr></table></figure>
+<h2 id="使用数据处理函数"><a href="#使用数据处理函数" class="headerlink" title="使用数据处理函数"></a>使用数据处理函数</h2><h4 id="文本处理函数"><a href="#文本处理函数" class="headerlink" title="文本处理函数"></a>文本处理函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>,<span class="keyword">upper</span>(<span class="keyword">name</span>)<span class="keyword">as</span> uname <span class="keyword">from</span> products;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Left()返回串左边的字符</li>
+<li>length() 返回长度</li>
+<li>locate() 找出串的一个子串</li>
+<li>lower() 将串转换为小写</li>
+<li>ltrim() 去掉左边空格</li>
+<li>upper()转换为大写</li>
+</ul>
+<h4 id="日期时间处理函数-数值处理函数"><a href="#日期时间处理函数-数值处理函数" class="headerlink" title="日期时间处理函数/数值处理函数"></a>日期时间处理函数/数值处理函数</h4><h2 id="汇总数据"><a href="#汇总数据" class="headerlink" title="汇总数据"></a>汇总数据</h2><h4 id="聚集函数"><a href="#聚集函数" class="headerlink" title="聚集函数"></a>聚集函数</h4><p>聚集函数运行在行组上，计算和返回单个值的函数。</p>
+<ul>
+<li>AVG() 返回某列的平均值</li>
+<li>COUNT() 返回某列的行数</li>
+<li>MAX() 返回某列的最大值</li>
+<li>MIN() 返回某列的最小值</li>
+<li>SUM() 返回某列值之和</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">avg</span>(price) <span class="keyword">as</span> aprice <span class="keyword">from</span> product ;//返回所有产品的平均价格。</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">avg</span>(price) <span class="keyword">as</span> aprice <span class="keyword">from</span> prodcut <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span> (<span class="number">2</span>,<span class="number">3</span>) //返回<span class="number">2</span>和<span class="number">3</span>的平均值</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">as</span> num_cust <span class="keyword">from</span> customers //返回表中的条目数。</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(email) <span class="keyword">as</span> num_email <span class="keyword">from</span> customers//统计有电子邮件的人数</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">max</span>(price) <span class="keyword">from</span> <span class="keyword">as</span> maxprice <span class="keyword">from</span> product;</span><br><span class="line"><span class="keyword">select</span> sun(quantity) <span class="keyword">from</span> prodcut <span class="keyword">where</span> <span class="keyword">num</span>=<span class="number">100</span>;//返回指定列值的和。</span><br></pre></td></tr></table></figure>
+<h4 id="聚集不同值"><a href="#聚集不同值" class="headerlink" title="聚集不同值"></a>聚集不同值</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">avg</span>(<span class="keyword">distinct</span> price) <span class="keyword">as</span> avg_price <span class="keyword">from</span> product <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1003</span>;//此平均值只考虑不同的价格。</span><br></pre></td></tr></table></figure>
+<h4 id="组合聚集函数"><a href="#组合聚集函数" class="headerlink" title="组合聚集函数"></a>组合聚集函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) ,<span class="keyword">MIN</span>(price),<span class="keyword">MAX</span>(price) <span class="keyword">from</span> product;</span><br></pre></td></tr></table></figure>
+<h2 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h2><p>把数据分为多个逻辑组，以便对每个组进行聚集计算。</p>
+<h4 id="创建分组-group-by"><a href="#创建分组-group-by" class="headerlink" title="创建分组 group by"></a>创建分组 group by</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">count</span>(*) <span class="keyword">as</span> num_p <span class="keyword">from</span> product <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span>;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">id</th>
+<th style="text-align:center">num_p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">3</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">7</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">8</td>
+</tr>
+</tbody>
+</table>
+<p>使用group by 后，就可以对每个组进行聚集了。</p>
+<h4 id="过滤分组"><a href="#过滤分组" class="headerlink" title="过滤分组"></a>过滤分组</h4><p>where不能完成过滤分组的任务，因为where筛选的行。应该使用having,having 专门用来过滤分组</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>,<span class="keyword">count</span>() <span class="keyword">as</span> orders <span class="keyword">from</span> priduct <span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">id</span> <span class="keyword">having</span> <span class="keyword">count</span>(*)&gt;=<span class="number">2</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>，<span class="keyword">count</span>() <span class="keyword">from</span> product <span class="keyword">where</span> price&gt;<span class="number">10</span> <span class="keyword">group</span> <span class="keyword">by</span> price <span class="keyword">having</span> <span class="keyword">count</span>()&gt;<span class="number">2</span>;//合在一起</span><br></pre></td></tr></table></figure>
+<h2 id="使用子查询"><a href="#使用子查询" class="headerlink" title="使用子查询"></a>使用子查询</h2><p>子查询 即嵌套在其他查询中的查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">name</span>, contanct <span class="keyword">from</span> customers <span class="keyword">where</span> <span class="keyword">id</span> <span class="keyword">in</span>(<span class="keyword">select</span> cust_id <span class="keyword">from</span> orders <span class="keyword">where</span> order_num <span class="keyword">in</span> (<span class="keyword">select</span> order_num  <span class="keyword">from</span> orderitems <span class="keyword">where</span> pro_id=<span class="number">2</span>));//</span><br><span class="line">利用子查询进行过滤&lt;主要使用IN关键字进行配合&gt;</span><br><span class="line">加入列出订购物品2的所有客户</span><br><span class="line">1）检索包含物品2的所有订单的编号</span><br><span class="line">2）检索具有前一步骤列出订单编号的所有客户ID</span><br><span class="line">3)检索前一步骤返回的所有客户ID的客户信息。</span><br><span class="line">利用子查询组合成一个语句。</span><br></pre></td></tr></table></figure>
+<p>在select语句中，子查询总是从内向外处理。</p>
+<h2 id="联结表"><a href="#联结表" class="headerlink" title="联结表"></a>联结表</h2><p>关系表的设计就是要保证把信息分解成多个表，一类数据一个表。</p>
+<blockquote>
+<p>外键 ： 外键为某个表中的一列，它包含另一个表的主键值，定义了两个表之间的关系。</p>
+</blockquote>
+<p>现在有两个表 一个供应商表vend，一个产品表product。供应商表存储供应商信息，每个供应商占一行，唯一的标识就成为主键。产品表只存储产品信息，它除了存储供应商的ID外不存储供应商的其他信息供应商表的主键在产品表中又称为外键。利用供应商ID可以从产品表中找出相应供应商的详细信息。</p>
+<p>如果数据存储在多个表中，怎么用单条select 语句检索出数据。答案是使用联结。<br>1)创建联结 规定要联结的表以及它们如何关联即可。 此处必须使用完全限定列名 ，因为两个表中都有vend_id; (下面的也称为等值联结)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> vend_name, pro_name,pro_price <span class="keyword">from</span> vend,products <span class="keyword">where</span> vend.vendid=product.vendid <span class="keyword">order</span> <span class="keyword">by</span> vend_name, pro_name;</span><br></pre></td></tr></table></figure>
+<p>下面的结果同上 两个表的关系是from 子句的组成部分，以INNER JOIN 指定。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> vend_name,pro_name,pro_price <span class="keyword">from</span> vend <span class="keyword">INNER</span> <span class="keyword">JOIN</span> products <span class="keyword">ON</span> vend.vendid=product.vendid;</span><br></pre></td></tr></table></figure>
+<h4 id="联结多个表"><a href="#联结多个表" class="headerlink" title="联结多个表"></a>联结多个表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> pro_name,vend_name,pro_price,quantity <span class="keyword">from</span> orderitems,prodct,vends <span class="keyword">where</span> product.vendid = vend.vendid <span class="keyword">and</span> orderitem.proid=product.proid <span class="keyword">and</span> order_num=<span class="number">25</span>;//此法优于子查询</span><br></pre></td></tr></table></figure>
+<h2 id="高级联结"><a href="#高级联结" class="headerlink" title="高级联结"></a>高级联结</h2><p>除了给列名和计算字段起别名外，还允许对表名起别名。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> cust_name ,cust_contact <span class="keyword">from</span> customers <span class="keyword">as</span> c,orders <span class="keyword">as</span> o,orderitems <span class="keyword">as</span> oi <span class="keyword">where</span> c.cust_id=o.cust_id <span class="keyword">and</span> oi.order_num=o.order_num <span class="keyword">and</span> pro_id =<span class="string">'t'</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="自联结"><a href="#自联结" class="headerlink" title="自联结"></a>自联结</h4><p>假如你发现某商品(Id为1001) 存在问题，因此想知道生产该商品的生产商生产的其他商品是否存在问题，此查询要求首先找到生产Id为1001 的生产商，然后找出这个供应商生产的其他商品。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> pro_id,pro_name <span class="keyword">from</span> product <span class="keyword">where</span> vend_id=(<span class="keyword">select</span> vend_id <span class="keyword">from</span> products <span class="keyword">where</span> pro_id = <span class="number">1001</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> p1.pro_id,p1.pro_name <span class="keyword">from</span> product <span class="keyword">as</span> p1,product <span class="keyword">as</span> p2, <span class="keyword">where</span> p1.vend_id =p2.vend_id <span class="keyword">and</span> p2.pro_id=<span class="number">1001</span>;//使用自联结。一个相同的表两个名称。</span><br></pre></td></tr></table></figure>
+<h4 id="自然联结"><a href="#自然联结" class="headerlink" title="自然联结"></a>自然联结</h4><p>标准的内部联结返回所有数据，甚至相同的列多次出现，自然联结排序多次出现，使每个列只返回一次。</p>
+<h4 id="外部联结"><a href="#外部联结" class="headerlink" title="外部联结"></a>外部联结</h4><p>许多联结将一个表中的行与另一个表中的行进行关联，但有时候会需要包含哪些没有关联行的那些行。包含了相关表中没有关联行的联结称为外部联结。</p>
+<p>例如 列出所有产品及订购数量，包括没有人订购的产品。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> customers.cust_id,orders.order_num <span class="keyword">from</span> customers <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> orders <span class="keyword">ON</span> customers.cust_id=order.cust_id;</span><br></pre></td></tr></table></figure>
+<p>类似内部联结，这条语句使用outer join 指定联结的类型，外部联结还包含了没有关联行的行。在使用outer join时，必须用right或者left指定其所有行的表（right指出的是outer join右边的表，left指出的是outer join 左边的表）上面例子是哦那个left从customer表选择所有行。</p>
+<table>
+<thead>
+<tr>
+<th>a</th>
+<th>id</th>
+<th>name</th>
+<th>b</th>
+<th>id</th>
+<th>job</th>
+<th>parent_id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>1</td>
+<td>张三</td>
+<td></td>
+<td>1</td>
+<td>23</td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>2</td>
+<td>李四</td>
+<td></td>
+<td>2</td>
+<td>34</td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td>3</td>
+<td>王五</td>
+<td></td>
+<td>3</td>
+<td>34</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p>a.id 和 b.parent_id存在关系。</p>
+<p>内联结</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> a.* ,b.* <span class="keyword">from</span> a <span class="keyword">inner</span> <span class="keyword">join</span> b <span class="keyword">on</span> a.id=b.parent_id</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>张三</th>
+<th>1</th>
+<th>23</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>李四</td>
+<td>2</td>
+<td>34</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>左联结(指向a a 是完整的)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> a.*,b.* <span class="keyword">from</span> a <span class="keyword">left</span> <span class="keyword">join</span> b <span class="keyword">on</span> a.id=b.parennt_id</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>张三</th>
+<th>1</th>
+<th>23</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>李四</td>
+<td>2</td>
+<td>34</td>
+<td>2</td>
+</tr>
+<tr>
+<td>王五</td>
+<td>null</td>
+<td>null</td>
+<td>nill</td>
+</tr>
+</tbody>
+</table>
+<p>右联结（指向b b 是完整的）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> a.*,b.* <span class="keyword">from</span> a <span class="keyword">right</span> <span class="keyword">join</span> b <span class="keyword">on</span> a.id=b.paren_id</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>张三</th>
+<th>1</th>
+<th>23</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>李四</td>
+<td>2</td>
+<td>34</td>
+<td>2</td>
+</tr>
+<tr>
+<td>null</td>
+<td>3</td>
+<td>34</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Mysql-NULL-值处理"><a href="#Mysql-NULL-值处理" class="headerlink" title="Mysql NULL 值处理"></a>Mysql NULL 值处理</h2><p>MySQL 使用 SQL SELECT 命令及 WHERE 子句来读取数据表中的数据,但是当提供的查询条件字段为 NULL 时，该命令可能就无法正常工作。</p>
+<p>为了处理这种情况，MySQL提供了三大运算符:</p>
+<ul>
+<li><strong>IS NULL:</strong> 当列的值是 NULL,此运算符返回 true。</li>
+<li><strong>IS NOT NULL:</strong> 当列的值不为 NULL, 运算符返回 true。</li>
+<li><strong>&lt;=&gt;:</strong> 比较操作符（不同于=运算符），当比较的的两个值为 NULL 时返回 true。</li>
+</ul>
+<p>关于 NULL 的条件比较运算是比较特殊的。你不能使用 = NULL 或 != NULL 在列中查找 NULL 值 。</p>
+<p>应该使用IS NULL 和 IS NOT NULL 运算符。</p>
+<h2 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h2><p>允许执行多个select语句，并将结果作为单个查询结果集返回。这些组合查询通常成为union 或者复合查询。</p>
+<h4 id="创建组合查询"><a href="#创建组合查询" class="headerlink" title="创建组合查询"></a>创建组合查询</h4><p>使用UNION组合数条sql查询 简单组合在一起即可。<br>UNION 从查询结果中自动去除了重复的行 如果不想，可以使用UNION ALL</p>
+<h2 id="全文本搜索"><a href="#全文本搜索" class="headerlink" title="全文本搜索"></a>全文本搜索</h2><h2 id="插入数据-insert"><a href="#插入数据-insert" class="headerlink" title="插入数据 /insert"></a>插入数据 /insert</h2><h4 id="插入完整的行"><a href="#插入完整的行" class="headerlink" title="插入完整的行"></a>插入完整的行</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customers <span class="keyword">values</span>(<span class="literal">NULL</span>,<span class="string">'wkn'</span>,<span class="string">'Los angeles'</span>)</span><br></pre></td></tr></table></figure>
+<p>每个必须提供一个值，如果没有值的话必须使用NULL。<br>第一列为id,也为NULL,因为该列mysql会自动增量。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customers(<span class="keyword">name</span>,address,city) <span class="keyword">values</span>(<span class="string">'wkn'</span>,<span class="string">'sysu'</span>,<span class="string">'GZ'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>&nbsp;此法在表名后面明确的列出了列名，插入行时，会对应的进行插入。这样即使表的结构改变，仍然可以正常工作。</p>
+<h4 id="插入多个行"><a href="#插入多个行" class="headerlink" title="插入多个行"></a>插入多个行</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> customers(<span class="keyword">name</span>,address,city) <span class="keyword">values</span>(<span class="string">'wkn'</span>,<span class="string">'qqq'</span>,<span class="string">'ddd'</span>),(<span class="string">'mmm'</span>,<span class="string">'ds'</span>,<span class="string">'er'</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="插入检索出的数据"><a href="#插入检索出的数据" class="headerlink" title="插入检索出的数据"></a>插入检索出的数据</h4><p>insert 还可以将select 语句的结果直接插入到表中，也就是insert select.</p>
+<h2 id="更新和删除数据"><a href="#更新和删除数据" class="headerlink" title="更新和删除数据"></a>更新和删除数据</h2><h4 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h4><ul>
+<li>更新特定行</li>
+<li>更行所有行</li>
+</ul>
+<p>更新由三部分组成，要更新的表，列名和他们的新植，确定要更新行的过滤条件。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> customers <span class="keyword">set</span> email=<span class="string">'www@qq.com'</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1005</span>;</span><br></pre></td></tr></table></figure></p>
+<p>update语句总是以要更新的表的名字开始， set命令用来将新值赋给被更新的列。update语句以where子句结束，告诉mysql更新哪一行。没有where子句，就会更新所有行。</p>
+<p>更新多列的语法稍有不同<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> customers <span class="keyword">set</span> <span class="keyword">name</span>=<span class="string">'wkn'</span>,address=<span class="string">'Golden state'</span> <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1005</span>;</span><br></pre></td></tr></table></figure></p>
+<p>为删除某列，可以把值直接置为null.</p>
+<h4 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h4><ul>
+<li>删除特定行</li>
+<li>删除所有行</li>
+</ul>
+<p>删一行<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> customers <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1006</span>;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/01/sql/">https://corn1ng.github.io/2017/10/01/sql/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/01/更多的bash shell命令/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">一些bash shell命令</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/09/29/Java 常用基础知识/">
+        <span class="next-text nav-default">Java基础积累</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

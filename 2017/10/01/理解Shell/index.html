@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="理解Shell"/>
+
+
+
+
+  <meta name="keywords" content="Linux, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/01/理解Shell/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 理解Shell - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          理解Shell
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-01
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Linux/">Linux</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#理解Shell"><span class="toc-text">理解Shell</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#shell类型"><span class="toc-text">shell类型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell的父子关系"><span class="toc-text">shell的父子关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#判断是否生成子shell"><span class="toc-text">判断是否生成子shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#探索后台模式"><span class="toc-text">探索后台模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#协程"><span class="toc-text">协程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#理解shell内建命令"><span class="toc-text">理解shell内建命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#外部命令"><span class="toc-text">外部命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#内建命令"><span class="toc-text">内建命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#history"><span class="toc-text">history</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#alias"><span class="toc-text">alias</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="理解Shell"><a href="#理解Shell" class="headerlink" title="理解Shell"></a>理解Shell</h2><h4 id="shell类型"><a href="#shell类型" class="headerlink" title="shell类型"></a>shell类型</h4><p>系统启动什么样的shell取决于个人ID配置，在/etc/passwd文件中,在用户ID记<br>录的第7个字段中列出了默认的shell程序。只要用户登录到某个虚拟控制台终端或是在GUI中启动终端仿真器,默认的shell程序就会开始运行。</p>
+<p>可以直接出入命令/bin/dash 启动dash shell . exit 返回。<br><a id="more"></a></p>
+<h3 id="shell的父子关系"><a href="#shell的父子关系" class="headerlink" title="shell的父子关系"></a>shell的父子关系</h3><p>在CLI提示符后输入 /bin/bash 命令或其他等效的 bash 命令时,会创建一个新的shell程序。这个shell程序被称为子shell。子shell也拥有CLI提示符,同样会等待命令输入。</p>
+<p>使用ps -f 命令来查看shell的进程。</p>
+<p>在生成子shell进程时，只有部分父进程的环境被复制到子shell中。</p>
+<h3 id="判断是否生成子shell"><a href="#判断是否生成子shell" class="headerlink" title="判断是否生成子shell"></a>判断是否生成子shell</h3><p>要想知道是否生成了子shell,得借助一个使用了环境变量的命令。这个命令就是echo $BASH_SUBSHELL。如果该命令返回0,就表明没有子shell。如果返回<br>1或者其他更大的数字,就表明存在子shell。</p>
+<h3 id="探索后台模式"><a href="#探索后台模式" class="headerlink" title="探索后台模式"></a>探索后台模式</h3><p>在后台模式中运行命令可以在处理命令的同时让出CLI,以供他用。演示后台模式的一个经典命令就是sleep。典命令就是sleep。sleep命令接受一个参数,该参数是你希望进程等待(睡眠)的秒数。这个命令在脚本中常用于引入一段时间的暂停。命令sleep 10会将会话暂停10秒钟,然后返回shell CLI提示符。</p>
+<p>要想将命令置入后台模式,<em>可以在命令末尾加上字符&amp;</em>。把sleep命令置入后台模式</p>
+<p>使用jobs命令来显示后台作业信息。jobs可以显示当前运行在后台模式中所有用户进程。jobs -i 还可以显示进程的PID。</p>
+<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>协程可以同时做两件事。它在后台生成一个子shell,并在这个子shell中执行命令。<br>要进行协程处理,得使用coproc命令,还有要在子shell中执行的命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> coproc sleep 10</span></span><br><span class="line">[1] 2544</span><br></pre></td></tr></table></figure>
+<p>除了会创建子shell之外,协程基本上就是将命令置入后台模式。当输入coproc命令及其参数之后,你会发现启用了一个后台作业。屏幕上会显示出后台作业号(1)以及进程ID(2544)。<br>jobs命令能够显示出协程的处理状态。</p>
+<h3 id="理解shell内建命令"><a href="#理解shell内建命令" class="headerlink" title="理解shell内建命令"></a>理解shell内建命令</h3><h4 id="外部命令"><a href="#外部命令" class="headerlink" title="外部命令"></a>外部命令</h4><p>也称为文件系统命令，是存在于bash shell之外的程序，他们并不是shell程序的一部分，外部命令程序通常位于/bin . /usr/bin /sbin/ 或者/usr/sbin中。</p>
+<p>ps 就是一个外部命令，可以使用which或者type找到它。</p>
+<p>当外部命令执行时,会创建出一个子进程。这种操作被称为衍生(forking)。外部命令ps很方便显示出它的父进程以及自己所对应的衍生子进程。</p>
+<p>作为外部命令，PS在执行时会创建出一个子进程。</p>
+<h4 id="内建命令"><a href="#内建命令" class="headerlink" title="内建命令"></a>内建命令</h4><p>内建命令和外部命令的区别在于前者不需要使用子进程来执行，他们已经和shell编译成了一体，作为shell工具的组成部分存在。不需要借助外部程序文件来运行。</p>
+<p>cd 和 exit 命令都内建于bash shell 可以利用type命令来了解某个命令是否时内建的。因为既不需要通过衍生出子进程来执行,也不需要打开程序文件,内建命令的执行速度要更快,效率也更高。要注意,有些命令有多种实现。例如echo和pwd 既有内建命令也有外部命令。两种实现略有不同。要查看命令的不同实现,使用type命令的-a选项。</p>
+<h5 id="history"><a href="#history" class="headerlink" title="history"></a>history</h5><p>一个有用的内建命令是history命令。bash shell会跟踪你用过的命令。你可以唤回这些命令并重新使用。</p>
+<h5 id="alias"><a href="#alias" class="headerlink" title="alias"></a>alias</h5><p>alias命令是另一个shell的内建命令。命令别名允许你为常用的命令(及其参数)创建另一个名称,从而将输入量减少到最低。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias li ='ls -li'</span><br></pre></td></tr></table></figure>
+<p>Linux发行版已经为你设置好了一些常用命令的别名。要查看当前可用的别名,使用alias命令以及选项-p。</p>
+<p>在定义好别名之后,你随时都可以在shell中使用它,就算在shell脚本中也没问题。因为命令别名属于内部命令,一个别名仅在它所被定义的shell进程中才有效。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/01/理解Shell/">https://corn1ng.github.io/2017/10/01/理解Shell/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/01/安装程序/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Linux程序安装</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/01/Linux 文件权限/">
+        <span class="next-text nav-default">Linux文件权限</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

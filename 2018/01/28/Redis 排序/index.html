@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Redis 排序"/>
+
+
+
+
+  <meta name="keywords" content="Redis, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/28/Redis 排序/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Redis 排序 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Redis 排序
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-28
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#有序集合的集合操作"><span class="toc-text">有序集合的集合操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sort命令"><span class="toc-text">sort命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#By参数"><span class="toc-text">By参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GET-参数"><span class="toc-text">GET 参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#STORE-参数"><span class="toc-text">STORE 参数</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="有序集合的集合操作"><a href="#有序集合的集合操作" class="headerlink" title="有序集合的集合操作"></a>有序集合的集合操作</h3><p>集合类型提供了强大的集合操作命令,但是如果需要排序就要用到有序集合类型.有序集合常见的使用场景是大数据排序,如玩家的排行榜,所以很少会需要获得键中的全部数据</p>
+<h3 id="sort命令"><a href="#sort命令" class="headerlink" title="sort命令"></a>sort命令</h3><p>sort命令可以对列表类型,集合类型,和有序集合类型键进行排序.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> sort mylist # 即可排序</span><br></pre></td></tr></table></figure>
+<p><strong>对有序集合类型进行排序时会忽略元素的分数,只针对元素自身的值进行排序.</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> ZADD myzset 50 2 40 3 20 1 60 5</span><br><span class="line">(integer)  4</span><br><span class="line"><span class="meta">redis&gt;</span> SORT myzset</span><br><span class="line">"1"</span><br><span class="line">"2"</span><br><span class="line">"3"</span><br><span class="line">"5"</span><br></pre></td></tr></table></figure>
+<p>sort还可以通过ALPHA参数实现按照字段顺序排序非数字元素</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> SORT myalphalist ALPHA</span><br></pre></td></tr></table></figure>
+<p>加入DESC进行倒序排列</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SORT mylist DESC</span><br></pre></td></tr></table></figure>
+<p>指定limit 参数来指定返回范围的结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SORT mylist DESC LIMIT 1 2 # 跳过第一个元素获取后面两个元素</span><br></pre></td></tr></table></figure>
+<h4 id="By参数"><a href="#By参数" class="headerlink" title="By参数"></a>By参数</h4><p>很多情况下列表,集合,有序集合中存储的都是代表对象的对象ID,单纯对这些ID排序意义不大,更有用的是根据ID对应的对象的某一个属性进行排序. 这时需要使用BY参数</p>
+<p>by参数的语法为<code>BY参考键</code>其中参考键可以是字符串类型键或者是散列类型键的某一个字段(表示为<code>散列键名-&gt;字段名</code>) 如果使用了BY参数,sort命令将不再按照元素自身的值进行排序,而是对每个元素使用元素的值替换参考键中的第一个<code>*</code>并获取其值,然后依据该值对元素排序.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> sort mylist BY post:*-&gt;time DESC</span><br><span class="line">假设mylist中有元素 12 26 6 2 ,</span><br><span class="line">那么将去寻找 post:12 ,post:26, post:6, post:2 这四个散列键中的time字段的值来决定mylist中元素的排序顺序.</span><br></pre></td></tr></table></figure>
+<p>参考键也可以是字符串类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> LPUSH sortbylist 2 1 3</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:1 50</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:2 100</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:3 75</span><br><span class="line"><span class="meta">redis&gt;</span> SORT sortbylist by item:* DESC</span><br><span class="line">输出 2 3 1</span><br></pre></td></tr></table></figure>
+<h4 id="GET-参数"><a href="#GET-参数" class="headerlink" title="GET 参数"></a>GET 参数</h4><p>GET 参数不影响排序,它的作用是使SORT命令的返回结果不再是元素自身的值,而是GET参数中指定的键值.GET参数的规则和BY参数一样,GET参数也支持字符串类型和散列类型的键,并使用”*” 作为占位符.</p>
+<p>要实现排序后直接返回排序用的值,可以这样</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> SORT mylist By post:*-&gt;time DESC GET post:*-&gt;time</span><br><span class="line"><span class="meta">#</span> 还可以有多个GET参数</span><br><span class="line"><span class="meta">redis&gt;</span> SORT mylist By post:*-&gt;time DESC GET post:*-&gt;time GET post:*-&gt;name</span><br></pre></td></tr></table></figure>
+<p>GET # 返回元素本身的值.</p>
+<h4 id="STORE-参数"><a href="#STORE-参数" class="headerlink" title="STORE 参数"></a>STORE 参数</h4><p>默认情况下 sort 会直接返回排序结果,如果希望保存排序结果,可以使用STORE 参数,</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/28/Redis 排序/">https://corn1ng.github.io/2018/01/28/Redis 排序/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/29/IO多路复用之select、poll、epoll详解/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">IO多路复用之select、poll、epoll</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/26/一致性哈希算法/">
+        <span class="next-text nav-default">一致性哈希算法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

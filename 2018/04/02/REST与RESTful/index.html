@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="REST与RESTful与RestTemplate"/>
+
+
+
+
+  <meta name="keywords" content="微服务, 计算机网络, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/02/REST与RESTful/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> REST与RESTful与RestTemplate - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          REST与RESTful与RestTemplate
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-02
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/微服务/">微服务</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#REST与RESTful与RestTemplate"><span class="toc-text">REST与RESTful与RestTemplate</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要用RESTful结构呢？"><span class="toc-text">为什么要用RESTful结构呢？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RestTemplate"><span class="toc-text">RestTemplate</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="REST与RESTful与RestTemplate"><a href="#REST与RESTful与RestTemplate" class="headerlink" title="REST与RESTful与RestTemplate"></a>REST与RESTful与RestTemplate</h2><p>REST – REpresentational State Transfer 直接翻译：表现层状态转移。</p>
+<p>用一句话概括：</p>
+<p><strong>URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</strong></p>
+<p>REST 不是rest这个单词，而是几个单词的缩写，</p>
+<ul>
+<li>REST描述的是网络中client和server的一种交互形式，REST本身不实用，实用的是如何设计RESTful API(REST风格的API)</li>
+<li>Server提供的RESTful API中，URL中只使用名词来指定资源，原则上不使用动词。“资源”是REST架构或者说是整个网络处理的核心。</li>
+<li>用HTTP协议里的动词来实现资源的添加，修改，删除等操作。即通过HTTP动词来实现资源的状态扭转：GET    用来获取资源，POST  用来新建资源（也可以用于更新资源），PUT    用来更新资源，DELETE  用来删除资源。</li>
+<li>Server和Client之间传递某资源的一个表现形式，比如用JSON，XML传输文本，或者用JPG，WebP传输图片等。当然还可以压缩HTTP传输时的数据（on-wire data compression）</li>
+<li>用 HTTP Status Code传递Server的状态信息。比如最常用的 200 表示成功，500 表示Server内部错误等。</li>
+</ul>
+<h4 id="为什么要用RESTful结构呢？"><a href="#为什么要用RESTful结构呢？" class="headerlink" title="为什么要用RESTful结构呢？"></a>为什么要用RESTful结构呢？</h4><p>“古代”网页是前端后端融在一起的，比如之前的PHP，JSP等。在之前的桌面时代问题不大，但是近年来移动互联网的发展，各种类型的Client层出不穷，RESTful可以通过一套统一的接口为 Web，iOS和Android提供服务。另外对于广大平台来说，比如Facebook platform，微博开放平台，微信公共平台等，它们不需要有显式的前端，只需要一套提供服务的接口，于是RESTful更是它们最好的选择。在RESTful架构下：<br><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2011-39-33%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=SojQ6cVvNFfAysn6k5O3k+L9od9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0ODg2ODA4JnQ9MTUyMjI5NDgwOCZyPTE4NTk4MDYxOTgmZj0vMjAxOC0wMy0yOSUyMDExLTM5LTMzJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
+<h3 id="RestTemplate"><a href="#RestTemplate" class="headerlink" title="RestTemplate"></a>RestTemplate</h3><p>借助RestTemplate, Spring应用能够方便地使用REST资源。Spring的RestTemplate访问使用了模板方法的设计模式。模版方法将过程中与特定实现相关的部分委托给接口,而这个接口的不同实现定义了接口的不同行为.</p>
+<p>RestTemplate定义了36个与REST资源交互的方法，其中的大多数都对应于HTTP的方法。 这里面只有11个独立的方法，其中有十个有三种重载形式，而第十一个则重载了六次，这样一共形成了36个方法。</p>
+<ul>
+<li><p><code>delete()</code> 在特定的URL上对资源执行HTTP DELETE操作</p>
+</li>
+<li><p><code>exchange()</code> 在URL上执行特定的HTTP方法，返回包含对象的ResponseEntity，这个对象是从响应体中 映射得到的</p>
+</li>
+<li><p><code>execute()</code> 在URL上执行特定的HTTP方法，返回一个从响应体映射得到的对象</p>
+</li>
+<li><p><strong><code>getForEntity()</code></strong> 发送一个HTTP GET请求，返回的ResponseEntity包含了响应体所映射成的对象</p>
+</li>
+<li><p><strong><code>getForObject()</code></strong> 发送一个HTTP GET请求，返回的请求体将映射为一个对象</p>
+</li>
+<li><p><strong><code>postForEntity()</code></strong> POST 数据到一个URL，返回包含一个对象的ResponseEntity，这个对象是从响应体中映射得 到的</p>
+</li>
+<li><p><strong><code>postForObject()</code></strong> POST 数据到一个URL，返回根据响应体匹配形成的对象</p>
+</li>
+<li><p><code>headForHeaders()</code> 发送HTTP HEAD请求，返回包含特定资源URL的HTTP头</p>
+</li>
+<li><p><code>optionsForAllow()</code> 发送HTTP OPTIONS请求，返回对特定URL的Allow头信息</p>
+</li>
+<li><p><code>postForLocation()</code> POST 数据到一个URL，返回新创建资源的URL</p>
+</li>
+<li><p><code>put()</code> PUT 资源到特定的URL.</p>
+<p>​</p>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://blog.csdn.net/itguangit/article/details/78825505" target="_blank" rel="noopener">https://blog.csdn.net/itguangit/article/details/78825505</a></p>
+<p><a href="https://www.zhihu.com/question/28557115/answer/48094438" target="_blank" rel="noopener">https://www.zhihu.com/question/28557115/answer/48094438</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/04/02/REST与RESTful/">https://corn1ng.github.io/2018/04/02/REST与RESTful/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/计算机网络/">计算机网络</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/03/ThreadLocal/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">ThreadLocal</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/04/01/Docker 配置国内加速器/">
+        <span class="next-text nav-default">Docker 配置国内加速器</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

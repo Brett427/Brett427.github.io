@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Linux环境变量"/>
+
+
+
+
+  <meta name="keywords" content="Linux, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/01/Linux 环境变量/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Linux环境变量 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Linux环境变量
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-01
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Linux/">Linux</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-环境变量"><span class="toc-text">Linux 环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是环境变量"><span class="toc-text">什么是环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#全局变量"><span class="toc-text">全局变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#局部环境变量"><span class="toc-text">局部环境变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置用户定义变量"><span class="toc-text">设置用户定义变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#设置局部用户自定义变量"><span class="toc-text">设置局部用户自定义变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置全局环境变量"><span class="toc-text">设置全局环境变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除环境变量"><span class="toc-text">删除环境变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置PATH环境变量"><span class="toc-text">设置PATH环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#添加新目录到path环境变量中"><span class="toc-text">添加新目录到path环境变量中</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境变量文件的更改"><span class="toc-text">环境变量文件的更改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境变量持久化"><span class="toc-text">环境变量持久化</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="Linux-环境变量"><a href="#Linux-环境变量" class="headerlink" title="Linux 环境变量"></a>Linux 环境变量</h1><p>很多程序和脚本都通过环境变量来获取系统信息，存储临时数据和配置信息。</p>
+<p>Ubuntu配置文件在 <code>/etc/profile/</code></p>
+<h3 id="什么是环境变量"><a href="#什么是环境变量" class="headerlink" title="什么是环境变量"></a>什么是环境变量</h3><p>bash shell 用一个叫做环境变量的特性来存储有关shell对话和工作环境的信息。这项特性允许你在内存存储数据，以便程序或者shell中运行的脚本能够轻松访问到他们。这也是存储持久数据的一种简便方法。</p>
+<p>两类环境变量</p>
+<ul>
+<li>全局变量</li>
+<li>局部变量</li>
+</ul>
+<a id="more"></a>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><p>全局环境变量对于shell会话和所有生成的子shell都是可见的，局部变量则只对创建他们的shell可见。</p>
+<p>系统在开始bash会话时就设置了一些全局环境变量，系统全局变量基本全是大写字母以进行区分。</p>
+<p>查看全部变量，可以使用<code>env</code>或者<code>printenv</code> 命令。显示特定的某个环境变量 <code>printenv 变量</code>。</p>
+<p>也可以使用echo 显示变量的值，这种方式必须在变量前加$. 这种方式还可以让变量变成参数。所以可以这样用<code>ls \$ HOME</code>  (没有反斜杠)</p>
+<h4 id="局部环境变量"><a href="#局部环境变量" class="headerlink" title="局部环境变量"></a>局部环境变量</h4><p>局部环境变量只能在定义他们的进程中可见。系统也默认定义了标准的局部环境变量，不过也可以定义自己的局部变量，这些变量被称为用户定义局部变量。</p>
+<p>set命令会显示为某个特定进程设置的所有环境变量，包括局部变量，全局变量以及用户定义变量。</p>
+<h3 id="设置用户定义变量"><a href="#设置用户定义变量" class="headerlink" title="设置用户定义变量"></a>设置用户定义变量</h3><h4 id="设置局部用户自定义变量"><a href="#设置局部用户自定义变量" class="headerlink" title="设置局部用户自定义变量"></a>设置局部用户自定义变量</h4><p>一旦启动了bash shell(或者执行一个shell脚本),就能创建在这个shell进程内可见的局部变量了。可以通过<em>等号</em>给环境变量赋值,值可以是数值或字符串。变量名、等号和值之间没有空格。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line"><span class="meta">$</span> my_variable="Hello" //有空格的时候必须加引号。</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line">Hello</span><br></pre></td></tr></table></figure>
+<h4 id="设置全局环境变量"><a href="#设置全局环境变量" class="headerlink" title="设置全局环境变量"></a>设置全局环境变量</h4><p>创建全局变量的方法时先创建一个局部环境变量，然后再把它导入到全局环境中。这个过程使用export命令来完成。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> my_variable="I am Global now"</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> export my_variable</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line">I am Global now</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> bash</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line">I am Global now</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> exit</span><br><span class="line">exit</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line">I am Global now</span><br><span class="line"><span class="meta">$</span></span><br></pre></td></tr></table></figure>
+<h4 id="删除环境变量"><a href="#删除环境变量" class="headerlink" title="删除环境变量"></a>删除环境变量</h4><p>使用unset命令删除环境变量。使用unset时，不使用$</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> echo $my_variable</span><br><span class="line">I am Global now</span><br><span class="line"><span class="meta">$</span> unset my_variable</span><br><span class="line"><span class="meta">$</span> echo $my_variable</span><br></pre></td></tr></table></figure>
+<h3 id="设置PATH环境变量"><a href="#设置PATH环境变量" class="headerlink" title="设置PATH环境变量"></a>设置PATH环境变量</h3><p>当你在shell命令行界面中输入一个外部命令时(参见第5章),shell必须搜索系统来找到对应的程序。PATH环境变量定义了用于进行命令和程序查找的目录。</p>
+<h5 id="添加新目录到path环境变量中"><a href="#添加新目录到path环境变量中" class="headerlink" title="添加新目录到path环境变量中"></a>添加新目录到path环境变量中</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">考下面的例子。</span><br><span class="line"><span class="meta">$</span> echo $PATH</span><br><span class="line">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:</span><br><span class="line">/sbin:/bin:/usr/games:/usr/local/games</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> PATH=$PATH:/home/christine/Scripts</span><br><span class="line"><span class="meta">$</span></span><br><span class="line"><span class="meta">$</span> echo $PATH</span><br><span class="line">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/ games:/usr/local/games:/home/christine/Scripts</span><br><span class="line"><span class="meta">$</span></span><br><span class="line">要想一直有，还是要导出。</span><br></pre></td></tr></table></figure>
+<p>注销或者重启可以使修改生效，如果要使添加的环境变量马上生效</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+<h3 id="环境变量文件的更改"><a href="#环境变量文件的更改" class="headerlink" title="环境变量文件的更改"></a>环境变量文件的更改</h3><p>可以直接添加到环境变量<code>PATH</code>中。<code>$PATH</code>表示变量<code>PATH</code>的值，包含已有的目录</p>
+<p>这种方法需要注意路径的顺序，如果遇到有同名的命令，那么<code>PATH</code>里面哪个目录先被查询，则那个目录下的命令就会被先执行<code>:表示分隔符</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 加到PATH末尾</span><br><span class="line">export PATH=$PATH:/path/to/your/dir</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 加到PATH开头</span><br><span class="line">export PATH=/path/to/your/dir:$PATH</span><br></pre></td></tr></table></figure>
+<h3 id="环境变量持久化"><a href="#环境变量持久化" class="headerlink" title="环境变量持久化"></a>环境变量持久化</h3><p>可以利用这些文件创建自己的永久性全局变量或局部变量。对全局环境变量来说(Linux系统中所有用户都需要使用的变量) ,可能更倾向于将新的或修改过的变量设置放在/etc/profile文件中,但这可不是什么好主意。如果你升级了所用的发行版。这个文件也会跟着更新,那你所有定制过的变量设置可就都没有了。<br>最好是在/etc/profile.d目录中创建一个以.sh结尾的文件。把所有新的或修改过的全局环境变量设置放在这个文件中。</p>
+<p>在大多数发行版中，存储个人用户永久性bash shell变量的地方是 HOME/.bashrc文件。这一点适用于所有类型的shell进程。但如果设置了 BASH_ENV 变量，那么记住，除非它指向的是$HOME/.bashrc,否则你应该将非交互式shell的用户变量放在别的地方。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/01/Linux 环境变量/">https://corn1ng.github.io/2017/10/01/Linux 环境变量/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/01/Linux 文件权限/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Linux文件权限</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/01/更多的bash shell命令/">
+        <span class="next-text nav-default">一些bash shell命令</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="创建高性能的索引"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/17/创建高性能的索引/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 创建高性能的索引 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          创建高性能的索引
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-17
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建高性能的索引"><span class="toc-text">创建高性能的索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#索引基础"><span class="toc-text">索引基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#索引的类型"><span class="toc-text">索引的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#B-tree-索引"><span class="toc-text">Ｂ-tree 索引</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#哈希索引"><span class="toc-text">哈希索引</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#索引的优点"><span class="toc-text">索引的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyISAM索引实现"><span class="toc-text">MyISAM索引实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#InnoDB索引实现"><span class="toc-text">InnoDB索引实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#高性能的索引策略"><span class="toc-text">高性能的索引策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#独立的列"><span class="toc-text">独立的列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#前缀索引和索引选择性"><span class="toc-text">前缀索引和索引选择性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多列索引"><span class="toc-text">多列索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#选择合适的索引列顺序"><span class="toc-text">选择合适的索引列顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#聚簇索引"><span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#覆盖索引"><span class="toc-text">覆盖索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用索引扫描来做排序"><span class="toc-text">使用索引扫描来做排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#压缩-前缀压缩-索引"><span class="toc-text">压缩(前缀压缩)索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#冗余和重复索引"><span class="toc-text">冗余和重复索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#索引和锁"><span class="toc-text">索引和锁</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="创建高性能的索引"><a href="#创建高性能的索引" class="headerlink" title="创建高性能的索引"></a>创建高性能的索引</h1><p>在数据之外,数据库系统还维护着特定结构,这些数据结构以某种方式引用指向数据,这样就可以在这些数据结构上实现高级查找算法,这种数据结构,就是索引.</p>
+<p>索引在MySQL中也叫做键,是存储引擎用于快速找到记录的一种数据结构,这是索引的基本功能</p>
+<p>索引对于良好的性能十分关键,尤其是当表中的数据量越来越大时,索引对性能的影响越来越大.</p>
+<p>索引优化是对查询性能优化最有效的手段了,索引能够轻易将查询性能提高好几个数量级.</p>
+<h3 id="索引基础"><a href="#索引基础" class="headerlink" title="索引基础"></a>索引基础</h3><p>在MySQL中,现在索引中找到对应值,然后根据匹配的索引记录找到对应的数据行</p>
+<p>索引可以包含一个或者多个列的值,如果索引包含多个列,列的顺序也十分重要,因为MySQL只能高效的使用索引的最左前缀列.</p>
+<a id="more"></a>
+<h4 id="索引的类型"><a href="#索引的类型" class="headerlink" title="索引的类型"></a>索引的类型</h4><p>索引有很多类型,可以在不同的场景提供更好的性能,在MySQL中,索引是存储引擎层而不是在服务层实现的,不同存储引擎的索引的工作方式也不一样,也不是所有的存储引擎都支持所有类型的索引,即使多个存储因剧情支持同一种类型的索引,其底层的实现也可能不同.</p>
+<h5 id="B-tree-索引"><a href="#B-tree-索引" class="headerlink" title="Ｂ-tree 索引"></a>Ｂ-tree 索引</h5><p>默认的索引类型，很多存储引擎使用Ｂ+树来存储数据</p>
+<p>存储引擎以不同的方式使用Ｂ-tree索引，性能也各有不同，各有优劣，例如MyISAM 使用前缀压缩技术使索引更小,但InnoDB则按照原数据格式进行存储,再如MYISAM索引通过数据的物理位置引用被索引的行,而InnoDB则根据主键引用被索引的行.</p>
+<p>B-Tree 通常意味着所有的值按顺序存储,并且每一个叶子页到根的距离相同,</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-17%2010-49-24.png" alt=""></p>
+<p>B-Tree索引能够加快访问数据的速度,因为存储引擎不需要进行全表扫描来获取需要的数据,取而代之的是从索引的根节点开始进行搜索,根节点的槽中存放了指向子节点的指针,存储引擎根据这些指针向下层查找,通过比较节点页的值和要查找的值可以找到合适的指针进入下层子节点,这些指针实际定义了子节点页中值的上限和下限,叶子节点比较特殊,他们的指针指向的是被索引的数据,而不是其他的节点页,</p>
+<font color="red"> B-Tree 对索引列是顺序组织存储的,索引适合查找范围数据*(虽然实际存储顺序不是顺序的,但是索引的底层实现可以看成是顺序的,所以用b_tree索引就可以顺序的找了)</font>
+
+<p><strong>可以使用B-Tree 索引的查询类型有</strong></p>
+<ul>
+<li>全值匹配,即对索引中的所有列进行匹配</li>
+<li>匹配最左前缀, 即只使用索引的第一列</li>
+<li>匹配列前缀 即只匹配某一列的值的开头部分</li>
+<li>匹配范围值</li>
+<li>精确匹配某一列并范围匹配另外一列</li>
+</ul>
+<p>因为索引数的节点是有序的,所以除了按值查找外,索引还可以用于查询中的Orderby 操作</p>
+<p><strong>B-Tree 索引的限制</strong></p>
+<ul>
+<li>如果不是按照索引的最左列开始查找,则无法使用索引</li>
+<li>不能跳过索引中的列,也就是姓 ,名,生日的三行索引,这种索引不能找姓为XX 生日为XX的人,因为没有指定名.</li>
+<li>如果查询中有某个列的范围查找</li>
+</ul>
+<p>有些限制不是B_tree本身导致的,而是MYSQL优化器和存储引擎使用索引的方式导致的.</p>
+<h5 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h5><p>哈希索引基于哈希表实现,只有精确匹配索引所有列的查询才有效,对于每一行数据,存储引擎会对所有的索引列计算一个哈希码, 哈希码是一个较小的值,并且不同键值的行计算出来的哈希码也不一样,哈希索引将所有的哈希码存储在索引中,同时在哈希表中保存指向每个数据行的指针.</p>
+<p>如果多个列的哈希值一样,索引会以链表的方式存放多个记录指针到同一个哈希条目中.</p>
+<p>因为索引自身只需存储对应的哈希值,所以索引的结构十分紧凑,也让哈希索引查找的速度十分块</p>
+<p>哈希索引的限制在于</p>
+<ul>
+<li>哈希索引只包含哈希值和行指针,而不存储字段值,所以不能使用索引中的值来比喵读取行.</li>
+<li>哈希索引数据不是按照索引值顺序存储的,所以也就无法用于排序</li>
+<li>哈希索引也不支持部分索引列匹配查找</li>
+<li>哈希索引只支持等值比较查询</li>
+<li>访问哈希索引的数据非常快,除非有很多哈希冲突</li>
+</ul>
+<p>所以,一旦适合哈希索引的话,带来的性能提升会十分的明显</p>
+<p><em>InnoDB 引擎有”自适应哈希索引,当InnoDB注意到某些索引值被使用的十分频繁时,会在内存中基于B-tree 索引之上再创建一个哈希索引,这样也让B-tree索引有了哈希索引的一些优点.,比如快速的查找.这是一个完全自动,内部的行为,用户无法控制或者配置,,用户可以关闭此功能”</em></p>
+<h3 id="索引的优点"><a href="#索引的优点" class="headerlink" title="索引的优点"></a>索引的优点</h3><ul>
+<li>索引大大减少了服务器需要扫描的数据量</li>
+<li>索引可以帮助服务器避免排序和临时表</li>
+<li>索引可以将随机IO变为顺序IO</li>
+</ul>
+<h2 id="MyISAM索引实现"><a href="#MyISAM索引实现" class="headerlink" title="MyISAM索引实现"></a>MyISAM索引实现</h2><p>MyISAM引擎使用B+Tree作为索引结构，叶节点的data域存放的是数据记录的地址。下图是MyISAM索引的原理图：</p>
+<p><img src="http://blog.codinglabs.org/uploads/pictures/theory-of-mysql-index/8.png" alt="img"></p>
+<p>图8</p>
+<p>这里设表一共有三列，假设我们以Col1为主键，则图8是一个MyISAM表的主索引（Primary key）示意。可以看出MyISAM的索引文件仅仅保存数据记录的地址。在MyISAM中，主索引和辅助索引（Secondary key）在结构上没有任何区别，只是主索引要求key是唯一的，而辅助索引的key可以重复。如果我们在Col2上建立一个辅助索引，则此索引的结构如下图所示：</p>
+<p><img src="http://blog.codinglabs.org/uploads/pictures/theory-of-mysql-index/9.png" alt="img"></p>
+<p>图9</p>
+<p>同样也是一颗B+Tree，data域保存数据记录的地址。因此，MyISAM中索引检索的算法为首先按照B+Tree搜索算法搜索索引，如果指定的Key存在，则取出其data域的值，然后以data域的值为地址，读取相应数据记录。</p>
+<p>MyISAM的索引方式也叫做“非聚集”的，之所以这么称呼是为了与InnoDB的聚集索引区分。</p>
+<h2 id="InnoDB索引实现"><a href="#InnoDB索引实现" class="headerlink" title="InnoDB索引实现"></a>InnoDB索引实现</h2><p>虽然InnoDB也使用B+Tree作为索引结构，但具体实现方式却与MyISAM截然不同。</p>
+<p>第一个重大区别是InnoDB的数据文件本身就是索引文件。从上文知道，MyISAM索引文件和数据文件是分离的，索引文件仅保存数据记录的地址。而在InnoDB中，表数据文件本身就是按B+Tree组织的一个索引结构，这棵树的叶节点data域保存了完整的数据记录。这个索引的key是数据表的主键，因此InnoDB表数据文件本身就是主索引。</p>
+<p><img src="http://blog.codinglabs.org/uploads/pictures/theory-of-mysql-index/10.png" alt="img"></p>
+<p>图10</p>
+<p>图10是InnoDB主索引（同时也是数据文件）的示意图，可以看到叶节点包含了完整的数据记录。这种索引叫做聚集索引。因为InnoDB的数据文件本身要按主键聚集，所以InnoDB要求表必须有主键（MyISAM可以没有），如果没有显式指定，则MySQL系统会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，则MySQL自动为InnoDB表生成一个隐含字段作为主键，这个字段长度为6个字节，类型为长整形。</p>
+<p>第二个与MyISAM索引的不同是InnoDB的辅助索引data域存储相应记录主键的值而不是地址。换句话说，InnoDB的所有辅助索引都引用主键作为data域。例如，图11为定义在Col3上的一个辅助索引：</p>
+<p><img src="http://blog.codinglabs.org/uploads/pictures/theory-of-mysql-index/11.png" alt="img"></p>
+<p>图11</p>
+<p>这里以英文字符的ASCII码作为比较准则。<strong>聚集索引这种实现方式使得按主键的搜索十分高效，但是辅助索引搜索需要检索两遍索引：首先检索辅助索引获得主键，然后用主键到主索引中检索获得记录。</strong></p>
+<p>了解不同存储引擎的索引实现方式对于正确使用和优化索引都非常有帮助，例如知道了InnoDB的索引实现后，就很容易明白为什么不建议使用过长的字段作为主键，因为所有辅助索引都引用主索引，过长的主索引会令辅助索引变得过大。再例如，用非单调的字段作为主键在InnoDB中不是个好主意，因为InnoDB数据文件本身是一颗B+Tree，非单调的主键会造成在插入新记录时数据文件为了维持B+Tree的特性而频繁的分裂调整，十分低效，而使用自增字段作为主键则是一个很好的选择。</p>
+<h3 id="高性能的索引策略"><a href="#高性能的索引策略" class="headerlink" title="高性能的索引策略"></a>高性能的索引策略</h3><h4 id="独立的列"><a href="#独立的列" class="headerlink" title="独立的列"></a>独立的列</h4><p>独立的列指的是索引列不能是表达式的一部分,也不能是函数的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select actor_id from actor where actor_id +1 =5</span><br></pre></td></tr></table></figure>
+<p>上面的查询就不能使用索引,因为MySQL无法解析这个方程式,索引应该简化where条件</p>
+<p>始终将索引列单独放在比较符号的一侧</p>
+<h4 id="前缀索引和索引选择性"><a href="#前缀索引和索引选择性" class="headerlink" title="前缀索引和索引选择性"></a>前缀索引和索引选择性</h4><p>通常可以索引开始的部分字符,这样可以大大的节约索引的空间,从而提高索引效率,但是这样也会降低索引的选择性.</p>
+<p>对于BLOB,TEXT 或者更长的VARCHAR类型的列,必须使用前缀索引,因为MySQL不允许索引这些列的完整长度</p>
+<h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>将where条件的所有列都建立索引这种话是非常错误的,在多个列上单独建立独立的单列索引大部分情况下并不会提高MySQL的查询性能</p>
+<h4 id="选择合适的索引列顺序"><a href="#选择合适的索引列顺序" class="headerlink" title="选择合适的索引列顺序"></a>选择合适的索引列顺序</h4><p>正确的顺序依赖于使用该索引的查询,并且同时需要考虑如何更好的满足排序和分组的需要,在一个多行的B-tree索引中,索引列的顺序意味着索引首先按照最左列进行排序,其次是第二列.</p>
+<h4 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h4><p>聚簇索引不是一种单独的索引类型,而是一种数据存储方式,具体的细节依赖于其实现方式,但是InnoDB的聚簇索引实际上在同一个结构中保存了BTree索引和数据行</p>
+<p>聚簇索引也称为聚集索引，聚类索引，簇集索引，聚簇索引确定表中数据的物理顺序。聚簇索引类似于电话簿，后者按姓氏排列数据。由于聚簇索引规定数据在表中的物理存储顺序，因此一个表只能包含一个聚簇索引。但该索引可以包含多个列（组合索引），就像电话簿按姓氏和名字进行组织一样。汉语字典也是聚簇索引的典型应用，在汉语字典里，索引项是字母+声调，字典正文也是按照先字母再声调的顺序排列。</p>
+<p><strong>聚集索引是根据数据行的键值在表中排序存储数据行。索引定义中包含聚集索引列。每个表只能有一个聚集索引。只有当表包含聚集索引时，表中的数据行才按排序顺序存储。如果表具有聚集索引，则该表称为聚集表。集索引决定了表数据的存储顺序,如果表没有聚集索引，则其数据行存储在一个称为堆的无序结构中。</strong></p>
+<p>也就是说,聚簇索引会按照主键值重新在磁盘中对数据进行排序,这样磁盘中的物理数据也是有序的了.</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-17%2015-33-47.png" alt=""></p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-17%2015-38-55.png" alt=""></p>
+<h4 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h4><p>如果一个索引包含(或者说覆盖)所有需要查询的字段的值,我们就成为覆盖索引</p>
+<p>不是所有类型的索引都可以成为覆盖索引,覆盖索引必须要存储索引列的值,而哈希索引,空间索引,和全文索引等都不存储索引列的值,索引MySQL只能使用Btree索引做覆盖索引.</p>
+<h4 id="使用索引扫描来做排序"><a href="#使用索引扫描来做排序" class="headerlink" title="使用索引扫描来做排序"></a>使用索引扫描来做排序</h4><p>MySQL有两种方式可以生成有序的结果,通过排序操作,或者按索引顺序扫描,如果EXPLAIN出来的type 列的值为index,则说明MySQL使用了索引扫描来做排序.</p>
+<h4 id="压缩-前缀压缩-索引"><a href="#压缩-前缀压缩-索引" class="headerlink" title="压缩(前缀压缩)索引"></a>压缩(前缀压缩)索引</h4><p>MyISAM 使用前缀压缩来减少索引的大小,从而让更多的索引可以放入内存中,这在某些情况下能极大的提高性能,默认只压缩字符串,但是通过参数设置也可以对整数做压缩</p>
+<h4 id="冗余和重复索引"><a href="#冗余和重复索引" class="headerlink" title="冗余和重复索引"></a>冗余和重复索引</h4><p>MYSQL允许在相同列上创建多个索引,无论有意还是无意的,MySQL需要单独维护重复的索引,并且优化器在优化查询的时候也需要逐个的进行考虑,这会影响性能</p>
+<p>重复索引是指在相同的列上按照相同的顺序创建的相同类型的索引,应该避免这样创建重复索引,发现也应该立即移除.</p>
+<h4 id="索引和锁"><a href="#索引和锁" class="headerlink" title="索引和锁"></a>索引和锁</h4><p>InnoDB只有在访问行的时候才会对其加锁,而索引能够减少InnoDB访问的行数,从而减少锁的数量</p>
+<blockquote>
+<p>&lt;高性能MySQL&gt;</p>
+<p>blog.csdn.net/a724888/article/details/68936953</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/17/创建高性能的索引/">https://corn1ng.github.io/2017/12/17/创建高性能的索引/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/17/查询性能优化/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">查询性能优化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/14/Mysql-优化指南/">
+        <span class="next-text nav-default">Mysql 优化指南</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

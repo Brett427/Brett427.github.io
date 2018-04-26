@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="项目总结"/>
+
+
+
+
+  <meta name="keywords" content="Spring, QA, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/22/项目总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 项目总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          项目总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-22
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#项目总结-不断更新"><span class="toc-text">项目总结(不断更新)</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="项目总结-不断更新"><a href="#项目总结-不断更新" class="headerlink" title="项目总结(不断更新)"></a>项目总结(不断更新)</h3><p>1 jsp文件在最上面加page指令</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=UTF-8"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</span><br></pre></td></tr></table></figure>
+<p>2 通过request 访问工程根路径</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%=request.getScheme()+ <span class="string">"://"</span> + request.getServerName()+<span class="string">":"</span>+request.getServerPort()+request.getContextPath()%&gt;</span><br></pre></td></tr></table></figure>
+<p>3 共通jsp</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;% </span><br><span class="line">	String basePath = request.getScheme() + <span class="string">"://"</span> + request.getServerName() + <span class="string">":"</span> + 		request.getServerPort() + request.getContextPath();</span><br><span class="line">	request.setAttribute(<span class="string">"basePath"</span>,basePath);</span><br><span class="line">%&gt;</span><br><span class="line"><span class="comment">// web.xml 有一个为所有页面引入其他页面的配置</span></span><br><span class="line"> &lt;jsp-config&gt;</span><br><span class="line">		&lt;jsp-property-group&gt;</span><br><span class="line">			&lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;</span><br><span class="line">			&lt;include-prelude&gt;/WEB-INF/jsp/system/common.jsp&lt;/include-prelude&gt;</span><br><span class="line">		&lt;/jsp-property-group&gt;</span><br><span class="line">&lt;/jsp-config&gt;</span><br></pre></td></tr></table></figure>
+<p>4 foreach 的使用</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:forEach items=<span class="string">"$&#123;list&#125;"</span> var=<span class="string">"item"</span> varStatus=<span class="string">"s"</span>&gt;</span><br><span class="line">									&lt;tr&gt;</span><br><span class="line">										&lt;td&gt;$&#123;s.index + 1&#125;&lt;/td&gt;</span><br><span class="line">										&lt;td&gt;$&#123;item.title&#125;&lt;/td&gt;</span><br><span class="line">										&lt;td&gt;$&#123;item.link&#125;&lt;/td&gt;</span><br><span class="line">									&lt;/tr&gt;</span><br><span class="line">&lt;/c:forEach&gt;</span><br></pre></td></tr></table></figure>
+<p>5 提交文件</p>
+<p>首先,DTO中有一个Spring 封装的类型字段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MultipartFile imgFile;</span><br></pre></td></tr></table></figure>
+<p>然后使用transferTo()方法,里面的参数是File f =new File() 的f</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adDto.getImgFile().transferTo();</span><br></pre></td></tr></table></figure>
+<p>6 真实部署环境</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/6B81C13616A6829F8CF3EC5CF07E1320.jpg" width="70%"></p>
+<p>用户通过app,先访问硬负载,然后访问nginx,nginx都过负载均衡把请求散发到接口服务集群,接口服务集群和数据库服务器之间有一个缓存服务器来避免大量的数据库访问,同时,后台管理服务器由于几乎没有并发可以直接访问数据库服务器,同时,静态资源直接通过nginx来访问来加快访问速度,后台服务器也可以直接访问静态资源,数据库服务器中只保存图片的地址.</p>
+<p>7 spring 读取配置文件的配置@Value注解.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;ad.path&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String path;</span><br></pre></td></tr></table></figure>
+<p>8 返回码的处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> PageCodeEnum &#123;</span><br><span class="line">    ADD_SUCCESS(<span class="number">1000</span>,<span class="string">"新增成功"</span>),</span><br><span class="line">    ADD_FAIL(<span class="number">1001</span>,<span class="string">"新增失败"</span>);</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY=<span class="string">"pageCode"</span>;</span><br><span class="line">    PageCodeEnum(Integer code,String msg)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>.code=code;</span><br><span class="line">        <span class="keyword">this</span>.msg=msg;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回码的思路,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//写入数据库后,同时写入model</span><br><span class="line">model.addAttribute(PageCodeEnum.KEY,PageCodeEnum.ADD_FAIL);</span><br><span class="line">还进入原来的页面,这个页面中有一个hidden,所以在jsp中埋得值接收到了,接收到后,前端js在页面加载前先判断hidden是否为空.就输出了.</span><br></pre></td></tr></table></figure>
+<p>9 缓存要处理的一些常见问题</p>
+<ul>
+<li>集群化部署单机内缓存共享</li>
+</ul>
+<p>1) 利用nginx 的转发规则,配置IPhash,根据请求用户的IP分配服务器</p>
+<p>2) 使用redis 共享缓存</p>
+<ul>
+<li>同一用户高并发的重复请求</li>
+<li>处理缓存失效</li>
+</ul>
+<p>10 Ajax 拿不到枚举类型的里面的值,只能拿到外面的字符串,要想前端ajax获取,可以再封装一层DTO,写一个新的构造函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ApiCodeDto</span><span class="params">(ApiCodeEnum apiCodeEnum)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.errno = apiCodeEnum.getErrno();</span><br><span class="line">		<span class="keyword">this</span>.msg = apiCodeEnum.getMsg();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>11 前后端都必须通过JSON格式传输数据. SpringMVC返回ajax 时一定记得加@ResponseBody</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"aaa"</span>,method = RequestMethod.POST)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AppleDto <span class="title">go</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        AppleDto appleDto =<span class="keyword">new</span> AppleDto(<span class="string">"apple"</span>,<span class="string">"red"</span>);</span><br><span class="line">        System.out.println(<span class="string">"1111"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> appleDto;</span><br><span class="line">		<span class="comment">//自动返回JSON</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">       $(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">"123"</span>)</span><br><span class="line">           $.ajax(&#123;</span><br><span class="line">               url: <span class="string">"/aaa"</span>,<span class="comment">//请求接口</span></span><br><span class="line">               type: <span class="string">"POST"</span>,<span class="comment">//请求方式</span></span><br><span class="line">               <span class="comment">//请求参数</span></span><br><span class="line">               dataType: <span class="string">"json"</span>,<span class="comment">//响应类型</span></span><br><span class="line">               success: <span class="function"><span class="keyword">function</span>(<span class="params">data, textStatus</span>)</span>&#123;<span class="comment">//访问成功的回调函数，参数是响应，描述状态的字符串</span></span><br><span class="line">                   <span class="built_in">console</span>.log(textStatus)</span><br><span class="line">                   <span class="built_in">console</span>.log(data.name);</span><br><span class="line">               &#125;,</span><br><span class="line">               error: <span class="function"><span class="keyword">function</span>(<span class="params">XMLHttpRequest, textStatus, errorThrown</span>)</span>&#123;<span class="comment">//访问失败的回调函数，参数是XMLHttpRequest对象、错误信息、捕获的错误对象(可选);</span></span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;);</span><br><span class="line">   &lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/22/项目总结/">https://corn1ng.github.io/2018/01/22/项目总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Spring/">Spring</a>
+            
+              <a href="/tags/QA/">QA</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/24/Mybatis总结/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Mybatis总结</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/20/leetcode24/">
+        <span class="next-text nav-default">24. Swap Nodes in Pairs</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

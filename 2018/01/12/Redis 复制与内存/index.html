@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Redis复制与内存"/>
+
+
+
+
+  <meta name="keywords" content="Redis, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/12/Redis 复制与内存/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Redis复制与内存 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Redis复制与内存
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-12
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-复制"><span class="toc-text">Redis 复制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#介绍"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#原理"><span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#复制过程"><span class="toc-text">复制过程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#部分重同步"><span class="toc-text">部分重同步</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拓扑结构"><span class="toc-text">拓扑结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-内存"><span class="toc-text">Redis 内存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#内存消耗划分"><span class="toc-text">内存消耗划分</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Redis-复制"><a href="#Redis-复制" class="headerlink" title="Redis 复制"></a>Redis 复制</h2><p>在分布式系统中为了解决单点问题， 通常会把数据复制多个副本部署到其他机器， 满足故障恢复和负载均衡等需求。 Redis也是如此， 它提供了复制功能， 实现了相同数据的多个Redis副本。 复制功能是高可用Redis的基础。</p>
+<h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><ul>
+<li><p>Redis 使用异步复制。 从 Redis 2.8 开始， 从服务器会以每秒一次的频率向主服务器报告复制流（replication stream）的处理进度。</p>
+</li>
+<li><p>一个主服务器可以有多个从服务器。</p>
+</li>
+<li><p>不仅主服务器可以有从服务器， 从服务器也可以有自己的从服务器， 多个从服务器之间可以构成一个图状结构。</p>
+</li>
+<li><p><strong>复制功能不会阻塞主服务器</strong>： 即使有一个或多个从服务器正在进行初次同步， 主服务器也可以继续处理命令请求。</p>
+</li>
+<li><p>复制功能也不会阻塞从服务器： 只要在 <code>redis.conf</code> 文件中进行了相应的设置， 即使从服务器正在进行初次同步， 服务器也可以使用旧版本的数据集来处理命令查询。不过， 在从服务器删除旧版本数据集并载入新版本数据集的那段时间内， 连接请求会被阻塞。</p>
+<p>还可以配置从服务器， 让它在与主服务器之间的连接断开时， 向客户端发送一个错误。</p>
+</li>
+<li><p>复制功能可以单纯地用于数据冗余（data redundancy）， 也可以通过让多个从服务器处理只读命令请求来提升扩展性（scalability）： 比如说， 繁重的 <a href="http://doc.redisfans.com/key/sort.html#sort" target="_blank" rel="noopener"><em>SORT</em></a> 命令可以交给附属节点去运行。</p>
+</li>
+<li><p>可以通过复制功能来让主服务器免于执行持久化操作： 只要关闭主服务器的持久化功能， 然后由从服务器去执行持久化操作即可。</p>
+</li>
+</ul>
+<p>Redis 使用复制功能非常容易,只需要在从数据库的配置文件中加入<code>slaveof 主库地址 主库端口</code>即可,主库无需进行任何配置.</p>
+<p>默认情况下,从数据库是只读的.</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><h5 id="复制过程"><a href="#复制过程" class="headerlink" title="复制过程"></a>复制过程</h5><p>当一个从数据库启动后,会向主数据库发送SYNC命令,同时主数据库收到SYNC命令后会开始在后台保存快照(即RDB持久化的过程)并在保存快照期间将收到的命令缓存起来,当快照完成后,Redis 会将快照文件和所有缓存的命令一起发给从数据库.从数据库收到后,会载入快照文件并执行收到的缓存命令,以上过程成为复制初始化.复制初始化结束后,主数据库每当收到写命令时就会将命令同步给从数据库.从而保障主从数据库数据库一致.</p>
+<p>当主从数据库连接断开重连后,2.6之前的版本会进行复制初始化这样效率就很低,所以2.8后的版本支持了有条件的增量数据传输.从库重新连接上主库后,只需要将断线期间执行的命令传送给从库,大大提高了复制的可用性.</p>
+<ul>
+<li>执行slaveof后从节点保存主节点信息</li>
+<li>从节点（ slave） 内部通过每秒运行的定时任务维护复制相关逻辑，当定时任务发现存在新的主节点后， 会尝试与该节点建立网络连接。</li>
+<li>从节点发送ping命令</li>
+<li>主节点进行权限验证</li>
+<li>同步数据集</li>
+<li>命令持续复制</li>
+</ul>
+<p>无论是初次连接还是重新连接， 当建立一个从服务器时， 从服务器都将向主服务器发送一个 <a href="http://doc.redisfans.com/server/sync.html#sync" target="_blank" rel="noopener"><em>SYNC</em></a> 命令。</p>
+<p>接到 <a href="http://doc.redisfans.com/server/sync.html#sync" target="_blank" rel="noopener"><em>SYNC</em></a> 命令的主服务器将开始执行 <a href="http://doc.redisfans.com/server/bgsave.html#bgsave" target="_blank" rel="noopener"><em>BGSAVE</em></a> ， 并在保存操作执行期间， 将所有新执行的写入命令都保存到一个缓冲区里面。</p>
+<p>当 <a href="http://doc.redisfans.com/server/bgsave.html#bgsave" target="_blank" rel="noopener"><em>BGSAVE</em></a> 执行完毕后， 主服务器将执行保存操作所得的 <code>.rdb</code> 文件发送给从服务器， 从服务器接收这个 <code>.rdb</code> 文件， 并将文件中的数据载入到内存中。</p>
+<p>之后主服务器会以 Redis 命令协议的格式， 将写命令缓冲区中积累的所有内容都发送给从服务器。</p>
+<p>即使有多个从服务器同时向主服务器发送 <a href="http://doc.redisfans.com/server/sync.html#sync" target="_blank" rel="noopener"><em>SYNC</em></a> ， 主服务器也只需执行一次 <a href="http://doc.redisfans.com/server/bgsave.html#bgsave" target="_blank" rel="noopener"><em>BGSAVE</em></a> 命令， 就可以处理所有这些从服务器的同步请求。</p>
+<p>Redis 采用了乐观复制的复制策略,允许一定时间内主从数据库的内容是不同的,但是两者的数据会最终同步.</p>
+<h4 id="部分重同步"><a href="#部分重同步" class="headerlink" title="部分重同步"></a>部分重同步</h4><p>从 Redis 2.8 开始， 在网络连接短暂性失效之后， 主从服务器可以尝试继续执行原有的复制进程（process）， 而不一定要执行完整重同步操作。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-28%2019-26-30.png" alt=""></p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-28%2019-26-39.png" alt=""></p>
+<h4 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h4><ul>
+<li>一主一从</li>
+<li>一主多从</li>
+<li>树状主从</li>
+</ul>
+<h2 id="Redis-内存"><a href="#Redis-内存" class="headerlink" title="Redis 内存"></a>Redis 内存</h2><p>Redis所有的数据都存在内存中， 当前内存虽然越来越便宜， 但跟廉价的硬盘相比成本还是比较昂贵， 因此如何高效利用Redis内存变得非常重要。 高效利用Redis内存首先需要理解Redis内存消耗在哪里， 如何管理内存， 最后才能考虑如何优化内存。</p>
+<h4 id="内存消耗划分"><a href="#内存消耗划分" class="headerlink" title="内存消耗划分"></a>内存消耗划分</h4><p>Redis进程内消耗主要包括： 自身内存+对象内存+缓冲内存+内存碎片。</p>
+<p>对象内存是Redis内存占用最大的一块， 存储着用户所有的数据。 Redis所有的数据都采用key-value数据类型， 每次创建键值对时， 至少创建两个类型对象： key对象和value对象。 对象内存消耗可以简单理解为sizeof（ keys）+sizeof（ values） 。 键对象都是字符串。 value对象更复杂些， 主要包含5种基本数据类型： 字符串、 列表、 哈希、 集合、 有序集合。 其他数据类型都是建立在这5种数据结构之上实现的。</p>
+<p>缓冲内存主要包括： 客户端缓冲、 复制积压缓冲区、 AOF缓冲区。</p>
+<p>客户端缓冲指的是所有接入到Redis服务器TCP连接的输入输出缓冲。输入缓冲无法控制， 最大空间为1G。复制积压缓冲区： Redis在2.8版本之后提供了一个可重用的固定大小缓冲区用于实现部分复制功能， 根据repl-backlog-size参数控制， 默认1MB。 对于复制积压缓冲区整个主节点只有一个， 所有的从节点共享此缓冲区。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/12/Redis 复制与内存/">https://corn1ng.github.io/2018/01/12/Redis 复制与内存/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/12/RDB 和AOF/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Redis 持久化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/12/哨兵与集群/">
+        <span class="next-text nav-default">Redis哨兵与集群</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

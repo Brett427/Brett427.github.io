@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java NIO"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/18/Java NIO/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java NIO - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java NIO
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-18
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#IO-与NIO"><span class="toc-text">IO 与NIO</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见I-O模型对比"><span class="toc-text">常见I/O模型对比</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#buffer的基本操作"><span class="toc-text">buffer的基本操作</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#深入缓冲区操作"><span class="toc-text">深入缓冲区操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建子缓冲区"><span class="toc-text">创建子缓冲区</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建只读缓冲区"><span class="toc-text">创建只读缓冲区</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通道-NIO把它支持的I-O对象抽象为Channel"><span class="toc-text">通道(NIO把它支持的I/O对象抽象为Channel)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FileChannel"><span class="toc-text">FileChannel</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件锁"><span class="toc-text">文件锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Selector"><span class="toc-text">Selector</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-NIO-Channels-and-Buffers"><span class="toc-text">Java NIO (Channels and Buffers)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Channel-和-Buffer"><span class="toc-text">Channel 和 Buffer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Selector-1"><span class="toc-text">Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Channel-流要写具体的流-才有getChannel方法-Channel-也是"><span class="toc-text">Channel(流要写具体的流,才有getChannel方法,Channel 也是)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Buffer"><span class="toc-text">Buffer</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#position-指向下一个可以读或者可以写的位置"><span class="toc-text">position(指向下一个可以读或者可以写的位置)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#limit-读模式下表示最多能读的数据-写模式下最多能写的数据"><span class="toc-text">limit(读模式下表示最多能读的数据,写模式下最多能写的数据)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Buffer的分配"><span class="toc-text">Buffer的分配</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#向Buffer中写数据"><span class="toc-text">向Buffer中写数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#flip-方法"><span class="toc-text">flip() 方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从Buffer中读取数据"><span class="toc-text">从Buffer中读取数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#rewind"><span class="toc-text">rewind()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#clear-和compact"><span class="toc-text">clear() 和compact()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Scatter-Gather"><span class="toc-text">Scatter/Gather</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通道之间的数据传输"><span class="toc-text">通道之间的数据传输</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Selector-2"><span class="toc-text">Selector</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#使用Selector的原因"><span class="toc-text">使用Selector的原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#用法"><span class="toc-text">用法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FileChannel-1"><span class="toc-text">FileChannel</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#打开FileChannel"><span class="toc-text">打开FileChannel</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从FileChannel读取数据"><span class="toc-text">从FileChannel读取数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#从FileChannel写数据"><span class="toc-text">从FileChannel写数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#关闭FileChannel"><span class="toc-text">关闭FileChannel</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#fileChannel的position-方法"><span class="toc-text">fileChannel的position 方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#size"><span class="toc-text">size()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#force"><span class="toc-text">force()</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p><a href="http://www.cnblogs.com/xdp-gacl/p/3634409.html" target="_blank" rel="noopener">http://www.cnblogs.com/xdp-gacl/p/3634409.html</a></p>
+<p>NIO 提供了一个全新的底层IO 模型，与最初Java.io包中面向流的概念不同，NIO采用了面向块的概念，在尽可能的情况下，将以大的数据块为单位进行操作，而不是每次一个字节或者一个字符。</p>
+<p>NIO 提供了与平台无关的非阻塞IO，与面向线程，阻塞式的IO 方式相比，多道通信，非阻塞IO可以使程序更有效的处理大量连接的情况。</p>
+<a id="more"></a>
+<h3 id="IO-与NIO"><a href="#IO-与NIO" class="headerlink" title="IO 与NIO"></a>IO 与NIO</h3><p>IO的各种流是阻塞的。这意味着，当一个线程调用read() 或 write()时，该线程被阻塞，直到有一些数据被读取，或数据完全写入。该线程在此期间不能再干任何事情了。 NIO的非阻塞模式，使一个线程从某通道发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取。而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。 线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。</p>
+<h2 id="常见I-O模型对比"><a href="#常见I-O模型对比" class="headerlink" title="常见I/O模型对比"></a>常见I/O模型对比</h2><p>所有的系统I/O都分为两个阶段：等待就绪和操作。举例来说，读函数，分为等待系统可读和真正的读；同理，写函数分为等待网卡可以写和真正的写。</p>
+<p>需要说明的是等待就绪的阻塞是不使用CPU的，是在“空等”；而真正的读写操作的阻塞是使用CPU的，真正在”干活”，而且这个过程非常快，属于memory copy，带宽通常在1GB/s级别以上，可以理解为基本不耗时。</p>
+<p>下图是几种常见I/O模型的对比：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-f47206d5b5e64448744b85eaf568f92d_hd.jpg" alt="img"></p>
+<p>以socket.read()为例子：</p>
+<p>传统的BIO里面socket.read()，如果TCP RecvBuffer里没有数据，函数会一直阻塞，直到收到数据，返回读到的数据。</p>
+<p>对于NIO，如果TCP RecvBuffer有数据，就把数据从网卡读到内存，并且返回给用户；反之则直接返回0，永远不会阻塞。</p>
+<p>最新的AIO(Async I/O)里面会更进一步：不但等待就绪是非阻塞的，就连数据从网卡到内存的过程也是异步的。</p>
+<p>换句话说，BIO里用户最关心“我要读”，NIO里用户最关心”我可以读了”，在AIO模型里用户更需要关注的是“读完了”。</p>
+<p>NIO一个重要的特点是：socket主要的读、写、注册和接收函数，在等待就绪阶段都是非阻塞的，真正的I/O操作是同步阻塞的（消耗CPU但性能非常高）。</p>
+<p>##缓冲区与Buffer</p>
+<p>基本IO 操作中所有操作都是直接以流的形式完成的，而<strong>在NIO中，所有操作都要使用到缓冲区处理</strong>，且所有的读写操作都是通过缓冲区完成的，缓冲区是一个线性的，有序的数据集，只能容纳某种特定的数据类型。可以把换冲区想象成一个水桶，总是水满了再进行和通道，内存交互，这样就减少了IO.详见<a href="http://www.cnblogs.com/xdp-gacl/p/3634409.html。" target="_blank" rel="noopener">http://www.cnblogs.com/xdp-gacl/p/3634409.html。</a></p>
+<p>NIO中针对每一种基本数据类型都有一种对应的缓冲区操作类.</p>
+<h5 id="buffer的基本操作"><a href="#buffer的基本操作" class="headerlink" title="buffer的基本操作"></a>buffer的基本操作</h5><p>Java.io.Buffer本身是一个抽象类</p>
+<p>buffer 类常用方法</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17101801.png" alt="buffer"></p>
+<p>新IO 针对每一种数据类型都有一种对应的缓冲区操作类，Java.nio.ByteBuffer java.nio.CharBuffer java.nio.ShortBuffer java.nio.IntBuffer java.nio.LongBuffer java.nio.FloatBuffer java.nio.DoubleBuffer</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17101802.png" alt="1"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.nio.IntBuffer;</span><br><span class="line"><span class="function"><span class="keyword">public</span> class <span class="title">BufferDemo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        IntBuffer buf  = InBuffer.allocate(<span class="number">10</span>);<span class="comment">//开辟10个大小缓冲区</span></span><br><span class="line">        System.out.println(<span class="string">"写入数据前的position limit capacity"</span>)     System.out.println(buf.position()+buf.limit()+buf.capacity())</span><br><span class="line">        <span class="keyword">int</span> temp[]=&#123;<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>&#125;;</span><br><span class="line">        buf.put(<span class="number">3</span>);<span class="comment">// 向缓冲区写入数据</span></span><br><span class="line">        buf.put(temp）;<span class="comment">//向缓冲区写入一组数据</span></span><br><span class="line">        System.out.println(<span class="string">"写入数据后的position limit capacity"</span>);   System.out.println(buf.position()+buf.limit()+buf.capacity();)</span><br><span class="line">        buf.flip();<span class="comment">// 重设缓冲区 执行后，limit设为position，position设为0</span></span><br><span class="line">        System.out.println(<span class="string">"准备输出数据时的position limit capacity"</span>);  System.out.println(buf.position()+buf.limit()+buf.capacity();)</span><br><span class="line">        System.out.println(<span class="string">"缓冲区的内容"</span>);</span><br><span class="line">        <span class="keyword">while</span>(buf.hasReamining())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> x = buf.get();</span><br><span class="line">            System.out.println(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>在每次写入之后position会有变化。而当调用flip()方法时，position 和limit发生变化。</strong></p>
+<h4 id="深入缓冲区操作"><a href="#深入缓冲区操作" class="headerlink" title="深入缓冲区操作"></a>深入缓冲区操作</h4><p>position 表示下一个缓冲区读取或者写入的操作指针，写入数据时，此指针就会改变。 limit 表示还有多少数据需要存储或者读取。limit指的是缓冲区中第一个不能读写的元素的数组下标索引，也可以认为是缓冲区中实际元素的数量(也就是上界)。position&lt;=limit。 capacity 表示缓冲区的最大容量。在分配缓冲区时设置，一般不会改变。</p>
+<h5 id="创建子缓冲区"><a href="#创建子缓冲区" class="headerlink" title="创建子缓冲区"></a>创建子缓冲区</h5><p>可以使用各个缓冲区类的slice() 方法从一个缓冲区创建一个新的子缓冲区，子缓冲区与原缓冲区中部分数据可以共享。</p>
+<h5 id="创建只读缓冲区"><a href="#创建只读缓冲区" class="headerlink" title="创建只读缓冲区"></a>创建只读缓冲区</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">IntBuffer buf =IntBuffer.allocate(<span class="number">10</span>);</span><br><span class="line">read =buf.asReadOnlyBuffer();</span><br></pre></td></tr></table></figure>
+<h3 id="通道-NIO把它支持的I-O对象抽象为Channel"><a href="#通道-NIO把它支持的I-O对象抽象为Channel" class="headerlink" title="通道(NIO把它支持的I/O对象抽象为Channel)"></a>通道(NIO把它支持的I/O对象抽象为Channel)</h3><p>(通道和流的区别之处在于通道是双向的,流是单向的.)</p>
+<p>通道可以用来读取和写入数据，通道类似于之前的输入输出流，程序不会直接操作通道，所有的内容都是先读到或者写入到缓冲区中，再通过缓冲区中取得或者写入的通道本身是双向操作的，既可以完成输入也可以输出。</p>
+<p>Channel 本身是一个接口,</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17101803.png" alt="12"></p>
+<h4 id="FileChannel"><a href="#FileChannel" class="headerlink" title="FileChannel"></a>FileChannel</h4><p>FileChannel 是Channel的子类，可以进行文件的读写操作，如果要使用FileChannel，则要依靠FileInputStream 或者FileOutputStream 类中的getChannel() 方法取得输入或者输出的通道。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> class <span class="title">Demo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        String info[] = &#123;<span class="string">"c"</span>,<span class="string">"python"</span>,<span class="string">"javascript"</span>,<span class="string">"markdown"</span>&#125;;<span class="comment">//待输出的数据</span></span><br><span class="line">        File  f =<span class="keyword">new</span> File(<span class="string">"/home/brett/Desktop/1.txt"</span>);</span><br><span class="line">        FileOutputStream output = <span class="keyword">new</span> FileOutputStream(File);<span class="comment">//实例化输出流</span></span><br><span class="line">        FileChannel fout =<span class="keyword">null</span>;<span class="comment">//声明输出的通道对象</span></span><br><span class="line">        fout = output.getChannel();<span class="comment">//得到输出的文件通道</span></span><br><span class="line">        ByteBuffer buf = ByteBuffer.allocate(<span class="number">1024</span>);<span class="comment">//开辟缓存。</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;info.length;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            buf.put(info[i].getBytes());<span class="comment">//向缓存写入数据</span></span><br><span class="line">        &#125;</span><br><span class="line">        buf.flip(); <span class="comment">//重设缓冲区，准备输出</span></span><br><span class="line">        fout.write(buf);<span class="comment">//输出</span></span><br><span class="line">        fout.close(); <span class="comment">//关闭输出通道</span></span><br><span class="line">        output.close() <span class="comment">//关闭输出流</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="comment">//以上程序使用输出通道将内容全部放到缓冲中，一次性写入到文件中的。</span></span><br></pre></td></tr></table></figure>
+<h3 id="文件锁"><a href="#文件锁" class="headerlink" title="文件锁"></a>文件锁</h3><h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><p>原来使用Io和socket构造网络服务时，所有的网络服务将使用阻塞的方式进行客户端的连接，而如果使用了新IO则可以构造一个非阻塞的网络服务。</p>
+<p><strong>要使用Selector，得向Selector注册Channel，然后调用它的select()方法。这个方法会一直阻塞到某个注册的通道有事件就绪。一旦这个方法返回，线程就可以处理这些事件，事件的例子有如新连接进来，数据接收等。</strong></p>
+<hr>
+<h1 id="Java-NIO-Channels-and-Buffers"><a href="#Java-NIO-Channels-and-Buffers" class="headerlink" title="Java NIO (Channels and Buffers)"></a>Java NIO (Channels and Buffers)</h1><p>标准的IO基于字节流和字符流进行操作的，而NIO是基于通道（Channel）和 缓冲区（Buffer） 进行操作，数据总是从通道读到缓冲区，或者从缓冲区读写到通道中。NIO 还可以让你使用非阻塞的IO。NIO还引入了选择器的概念，选择器用于监听多个通道的事件。NIO的核心API就是Channel Buffer Selector </p>
+<h4 id="Channel-和-Buffer"><a href="#Channel-和-Buffer" class="headerlink" title="Channel 和 Buffer"></a>Channel 和 Buffer</h4><p>基本上，所有的NIO都是从一个Channel开始，<em>Channel 有点像流</em>，数据可以从Channel读到Buffer中，也可以从Buffer写到Channel 中，</p>
+<h4 id="Selector-1"><a href="#Selector-1" class="headerlink" title="Selector"></a>Selector</h4><p>selector 允许单线程处理多个Channel，如果一个应用打开了多个Channel，但是每个Channel的流量都很低。使用Selector会很方便。下图是一个单线程中使用一个Selector处理三个Channel的图示</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17101804.png" alt="12"></p>
+<h4 id="Channel-流要写具体的流-才有getChannel方法-Channel-也是"><a href="#Channel-流要写具体的流-才有getChannel方法-Channel-也是" class="headerlink" title="Channel(流要写具体的流,才有getChannel方法,Channel 也是)"></a>Channel(流要写具体的流,才有getChannel方法,Channel 也是)</h4><p>通道类似于流，但又有些不同。既可以从通道中读取数据，又可以写数据到通道，而流的读写通常是单向的。通道可以异步的读写，通道中的数据总是要先读到一个Buffer，或者从一个Buffer中写入。具体的实现类有 FileChannel，DatagramChannel通过UDP读写网络中的数据,  SocketChannel 能通过TCP 读写网络中的数据，ServerSocketChannel 以监听新进来的TCP连接，像Web服务器那样。对每一个新进来的连接都会创建一个SocketChannel。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        RandomAccessFile aFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"data/nio-data.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">        FileChannel inChannel = aFile.getChannel();</span><br><span class="line">        ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);</span><br><span class="line">        <span class="keyword">int</span> bytesRead = inChannel.read(buf);</span><br><span class="line">        <span class="keyword">while</span> (bytesRead != -<span class="number">1</span>) &#123;</span><br><span class="line">        System.out.println(<span class="string">"Read "</span> + bytesRead);</span><br><span class="line">        buf.flip();</span><br><span class="line">        <span class="keyword">while</span>(buf.hasRemaining())&#123;</span><br><span class="line">        System.out.print((<span class="keyword">char</span>) buf.get());</span><br><span class="line">        &#125;</span><br><span class="line">        buf.clear();</span><br><span class="line">        bytesRead = inChannel.read(buf);</span><br><span class="line">        &#125;</span><br><span class="line">        aFile.close();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h4><p>NIO 中的Buffer用于和NIO通道进行交互，缓冲区本质上是一块可以写入数据，然后可以从中读取数据的<strong>内存</strong>。这块内存被包装为NIO Buffer 对象，并提供一组方法，进行方便的访问。</p>
+<p>使用Buffer 读写数据一般需要遵循以下四个步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 写入数据到Buffer </span><br><span class="line">2. 调用flip() 方法，</span><br><span class="line">3. 从buffer中读取数据，</span><br><span class="line">4 .调用clear() 方法或者compact()方法。</span><br></pre></td></tr></table></figure>
+<p>当向Buffer写入数据时，buffer会记录写入了多少数据，一旦需要读取数据，就<strong>需要通过flip()方法将Buffer从写模式切换为读模式，在读模式下，就可以读取之前写入到Buffer的所有数据。</strong></p>
+<p>一旦读完了所有的数据，就需要清空缓冲区，让它可以再次被写入。有两种方法可以清空缓冲区，调用clear() 或者compact() 方法，clear() 方法会清空整个缓冲区，compact()方法只会清除已经读过的数据。任何未读的数据都会被移到缓冲区的起始处，新写入的数据会放到缓冲区未读数据的后面。</p>
+<p>Buffer的三个工作属性 capacity position limit</p>
+<p>Position 和limit的含义取决于Buffer在读模式还是写模式，</p>
+<h5 id="position-指向下一个可以读或者可以写的位置"><a href="#position-指向下一个可以读或者可以写的位置" class="headerlink" title="position(指向下一个可以读或者可以写的位置)"></a>position(指向下一个可以读或者可以写的位置)</h5><p>当你写数据到Buffer中时，position表示当前的位置。初始的position值为0写数据后，position会移动到下一个可以写的位置。当切换到读模式的时候，position会被重置为0.当从Buffer的position出读取数据时，position向前移动到下一个可读的位置。</p>
+<h5 id="limit-读模式下表示最多能读的数据-写模式下最多能写的数据"><a href="#limit-读模式下表示最多能读的数据-写模式下最多能写的数据" class="headerlink" title="limit(读模式下表示最多能读的数据,写模式下最多能写的数据)"></a>limit(读模式下表示最多能读的数据,写模式下最多能写的数据)</h5><p>写模式下，Buffer的limit表示最多可以往里面写多少数据，所以写模式下，limit等于capacity。当切换到读模式时，limit表示你最多能读多少数据，因此，当切换到读模式时，limit设置成写模式的position。换句话说，你可以读到之前写入的所有数据。</p>
+<h5 id="Buffer的分配"><a href="#Buffer的分配" class="headerlink" title="Buffer的分配"></a>Buffer的分配</h5><p>要想获得一个Buffer首先要分配，每一个Buffer都有一个allocate方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);<span class="comment">//分配一个48字节的Buffer。</span></span><br></pre></td></tr></table></figure>
+<h5 id="向Buffer中写数据"><a href="#向Buffer中写数据" class="headerlink" title="向Buffer中写数据"></a>向Buffer中写数据</h5><p>两种方式，从Channel写到Buffer 、通过Buffer的put()方法写到Buffer里。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> bytesRead = inChannel.read(buf);<span class="comment">//从Channel写待Buffer</span></span><br><span class="line">buf.put(<span class="number">127</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="flip-方法"><a href="#flip-方法" class="headerlink" title="flip() 方法"></a>flip() 方法</h5><p>flip将写模式转换为读模式，调用flip()方法将会将position设回0，limit设置成原来的position。</p>
+<h5 id="从Buffer中读取数据"><a href="#从Buffer中读取数据" class="headerlink" title="从Buffer中读取数据"></a>从Buffer中读取数据</h5><p>两种方式，1，从Buffer读数据到Channel 2. 使用get() 从Buffer读取数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> byteWritten =inChannel.write(buf);</span><br><span class="line"><span class="keyword">byte</span> abyte =buf.get();</span><br></pre></td></tr></table></figure>
+<h5 id="rewind"><a href="#rewind" class="headerlink" title="rewind()"></a>rewind()</h5><p>Buffer.rewind()将position设回0，所以可以重读Buffer中的所有数据limit保持不变，仍然表示能从Buffer中读取多少元素。</p>
+<h5 id="clear-和compact"><a href="#clear-和compact" class="headerlink" title="clear() 和compact()"></a>clear() 和compact()</h5><h3 id="Scatter-Gather"><a href="#Scatter-Gather" class="headerlink" title="Scatter/Gather"></a>Scatter/Gather</h3><p>Java NIO开始支持scatter/gather.</p>
+<p>Scatter/gather用于描述从Channel中读取或者写入到channel的操作</p>
+<p>分散scatter 从Channel中读取是指在读操作时将读取的数据写入到多个Buffer中。</p>
+<p>聚集 gather 写入Channel指在写操作时将多个Buffer的数据写到同一个Channel，因此，Channel将多个Buffer中的数据聚集后发送到Channel。</p>
+<p>scatter/gather 经常用于需要将传输的数据分开处理的场合，例如传输一个消息头消息体组成的消息，这样将消息体消息头分散到不同的Buffer中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//scatter read</span></span><br><span class="line">ByteBuffer header = ByteBuffer.allocate(<span class="number">128</span>);</span><br><span class="line">Byteuffer body =ByteBuffer.allocate(<span class="number">256</span>);</span><br><span class="line">ByteBuffer[] bytes =&#123;header,body&#125;;</span><br><span class="line">channel.read(bytes)</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//gather write</span></span><br><span class="line">ByteBuffer header = ByteBuffer.allocate(<span class="number">128</span>);</span><br><span class="line">ByteBuffer body   = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">ByteBuffer[] bufferArray = &#123; header, body &#125;;</span><br><span class="line">channel.write(bufferArray);</span><br></pre></td></tr></table></figure>
+<h4 id="通道之间的数据传输"><a href="#通道之间的数据传输" class="headerlink" title="通道之间的数据传输"></a>通道之间的数据传输</h4><p>在NIO中，如果两个通道中一个是FileChannel，那你可以直接将数据从一个Channel传输到另外一个Channel中。</p>
+<p>FileChannel的<code>transferFrom()</code>方法可以将数据从源通道传输到FileChannel中。</p>
+<p><code>transferTo()</code>方法将数据从FileChannel传输到其它Channel中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"fromFile.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">FileChannel      fromChannel = fromFile.getChannel();</span><br><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"toFile.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">FileChannel      toChannel = toFile.getChannel();</span><br><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">long</span> count = fromChannel.size();</span><br><span class="line">toChannel.transferFrom(fromChannel,position,count);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"fromFile.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">FileChannel      fromChannel = fromFile.getChannel();</span><br><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"toFile.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">FileChannel      toChannel = toFile.getChannel();</span><br><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">long</span> count = fromChannel.size();</span><br><span class="line">fromChannel.transferTo(,position, count,toChannel);</span><br></pre></td></tr></table></figure>
+<h4 id="Selector-2"><a href="#Selector-2" class="headerlink" title="Selector"></a>Selector</h4><blockquote>
+<p><a href="https://www.ibm.com/developerworks/cn/education/java/j-nio/j-nio.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/education/java/j-nio/j-nio.html</a></p>
+</blockquote>
+<p>Selector是NIO中能够检测一到多个NIO通道，并能够知晓通道是否为诸如读写事件做好准备的组件。这样，一个单独的线程就可以管理多个Channel，从而管理多个网络连接。</p>
+<p><strong>Selector提供选择已经就绪的任务的能力</strong></p>
+<p>一个Selector实例可以同时检查一组信道的I/O状态。用专业术语来说，选择器就是一个多路开关选择器，因为一个选择器能够管理多个信道上的I/O操作。然而如果用传统的方式来处理这么多客户端，使用的方法是循环地一个一个地去检查所有的客户端是否有I/O操作，如果当前客户端有I/O操作，则可能把当前客户端扔给一个线程池去处理，如果没有I/O操作则进行下一个轮询，当所有的客户端都轮询过了又接着从头开始轮询；这种方法是非常笨而且也非常浪费资源，因为大部分客户端是没有I/O操作，我们也要去检查；而Selector就不一样了，它在内部可以同时管理多个I/O，当一个信道有I/O操作的时候，他会通知Selector，Selector就是记住这个信道有I/O操作，并且知道是何种I/O操作，是读呢？是写呢？还是接受新的连接；所以如果使用Selector，它返回的结果只有两种结果，一种是0，即在你调用的时刻没有任何客户端需要I/O操作，另一种结果是一组需要I/O操作的客户端，这是你就根本不需要再检查了，<strong>因为它返回给你的肯定是你想要的</strong>。这样一种通知的方式比那种主动轮询的方式要高效得多！</p>
+<p>简单的说,selector就是多路复用器.Selector 会不断的轮询注册在其上的Channel,如果某个channel上面发生读或者写事件,这个Channel就会处于就绪状态,会被selector轮询出来,然后通过selectionKey可以获取到就绪Channel的集合,进行后续的IO操作.</p>
+<p>一个多路复用器selector可以同时轮询多个Channel,由于JDK使用了epoll()代替传统的select实现,所以它没有最大连接句柄1024/2048的限制,这意味着只需要一个线程负责selector的轮询,就可以接入成千上万客户端.</p>
+<h5 id="使用Selector的原因"><a href="#使用Selector的原因" class="headerlink" title="使用Selector的原因"></a>使用Selector的原因</h5><p>用单个线程来处理多个channel的好处是 只需要更少的线程来处理通道。所以使用selector 能够处理多个通道。</p>
+<p>一个线程轮询selector ,当有IO时,从线程池中取出线程进行处理.</p>
+<p>并且不必为每个连接都创建一个线程，不用去维护多个线程，</p>
+<h5 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h5><p>我们需要做的第一件事就是创建一个 <code>Selector</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Selector selector = Selector.open();</span><br></pre></td></tr></table></figure>
+<p>然后，我们将对不同的通道对象调用 <code>register()</code> 方法，以便注册我们对这些对象中发生的 I/O 事件的兴趣。<code>register()</code> 的第一个参数总是这个 <code>Selector</code>。</p>
+<p>为了接收连接，我们需要一个 <code>ServerSocketChannel</code>。事实上，我们要监听的每一个端口都需要有一个 <code>ServerSocketChannel</code> 。对于每一个端口，我们打开一个 <code>ServerSocketChannel</code>，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ServerSocketChannel ssc = ServerSocketChannel.open();</span><br><span class="line">ssc.configureBlocking( <span class="keyword">false</span> );</span><br><span class="line"> </span><br><span class="line">ServerSocket ss = ssc.socket();</span><br><span class="line">InetSocketAddress address = <span class="keyword">new</span> InetSocketAddress( ports[i] );</span><br><span class="line">ss.bind( address );</span><br></pre></td></tr></table></figure>
+<p>第一行创建一个新的 <code>ServerSocketChannel</code> ，最后三行将它绑定到给定的端口。第二行将 <code>ServerSocketChannel</code> 设置为 <em>非阻塞的 </em>。我们必须对每一个要使用的套接字通道调用这个方法，否则异步 I/O 就不能工作。</p>
+<p>下一步是将新打开的 <code>ServerSocketChannels</code> 注册到 <code>Selector</code>上。为此我们使用 ServerSocketChannel.register() 方法，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectionKey key = ssc.register( selector, SelectionKey.OP_ACCEPT );</span><br></pre></td></tr></table></figure>
+<p><code>register()</code> 的第一个参数总是这个 <code>Selector</code>。第二个参数是 <code>OP_ACCEPT</code>，这里它指定我们想要监听 <em>accept</em> 事件，也就是在新的连接建立时所发生的事件。这是适用于 <code>ServerSocketChannel</code> 的唯一事件类型。</p>
+<p>请注意对 <code>register()</code> 的调用的返回值。 <code>SelectionKey</code> 代表这个通道在此 <code>Selector</code> 上的这个注册。当某个 <code>Selector</code> 通知您某个传入事件时，它是通过提供对应于该事件的 <code>SelectionKey</code> 来进行的。<code>SelectionKey</code> 还可以用于取消通道的注册。</p>
+<p>现在已经注册了我们对一些 I/O 事件的兴趣，下面将进入主循环。使用 <code>Selectors</code> 的几乎每个程序都像下面这样使用内部循环：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = selector.select();</span><br><span class="line">Set selectedKeys = selector.selectedKeys(); <span class="comment">//!!!!关键在这里,直接返回的都是有IO请求的,所以就不用像IO一样一个一个轮询,只用轮询有请求的通道.</span></span><br><span class="line">Iterator it = selectedKeys.iterator();</span><br><span class="line"><span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">     SelectionKey key = (SelectionKey)it.next();</span><br><span class="line">     <span class="comment">// ... deal with I/O event ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先，我们调用 <code>Selector</code> 的 <code>select()</code> 方法。这个方法会阻塞，直到至少有一个已注册的事件发生。当一个或者更多的事件发生时， <code>select()</code> 方法将返回所发生的事件的数量。</p>
+<p>接下来，我们调用 <code>Selector</code> 的 <code>selectedKeys()</code> 方法，它返回发生了事件的 <code>SelectionKey</code> 对象的一个 <code>集合</code>。</p>
+<p>我们通过迭代 <code>SelectionKeys</code> 并依次处理每个 <code>SelectionKey</code> 来处理事件。对于每一个 <code>SelectionKey</code>，您必须确定发生的是什么 I/O 事件，以及这个事件影响哪些 I/O 对象。</p>
+<h4 id="FileChannel-1"><a href="#FileChannel-1" class="headerlink" title="FileChannel"></a>FileChannel</h4><p>Java NIO中的FileChannel是一个连接到文件的通道。可以通过文件通道读写文件。<strong>FileChannel无法设置为非阻塞模式，它总是运行在阻塞模式下。</strong>所以无法使用selector</p>
+<h5 id="打开FileChannel"><a href="#打开FileChannel" class="headerlink" title="打开FileChannel"></a>打开FileChannel</h5><p>使用FileChannel前，必须先打开它，但是无法直接打开，必须通过使用一个InputStream OutputStream RandomAccessFile来获取一个FileChannel实例。下面是通过RandomAccessFile打开FileChannel的示例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile aFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">"data/nio-data.txt"</span>, <span class="string">"rw"</span>);</span><br><span class="line">FileChannel inChannel = aFile.getChannel();</span><br></pre></td></tr></table></figure>
+<h5 id="从FileChannel读取数据"><a href="#从FileChannel读取数据" class="headerlink" title="从FileChannel读取数据"></a>从FileChannel读取数据</h5><p>调用多个read()方法从FileChannel读取数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);</span><br><span class="line"><span class="keyword">int</span> bytesread =inChannel.read(buf);</span><br></pre></td></tr></table></figure>
+<p>首先，分配一个Buffer。从FileChannel中读取的数据将被读到Buffer中。然后，调用FileChannel.read()方法。该方法将数据从FileChannel读取到Buffer中。read()方法返回的int值表示了有多少字节被读到了Buffer中。如果返回-1，表示到了文件末尾。</p>
+<h5 id="从FileChannel写数据"><a href="#从FileChannel写数据" class="headerlink" title="从FileChannel写数据"></a>从FileChannel写数据</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String newData = <span class="string">"New String to write to file..."</span> + System.currentTimeMillis();</span><br><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">48</span>);</span><br><span class="line">buf.clear();</span><br><span class="line">buf.put(newData.getBytes());</span><br><span class="line">buf.flip();</span><br><span class="line"><span class="keyword">while</span>(buf.hasRemaining()) &#123;</span><br><span class="line">	channel.write(buf);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意FileChannel.write()是在while循环中调用的。因为无法保证write()方法一次能向FileChannel写入多少字节，因此需要重复调用write()方法，直到Buffer中已经没有尚未写入通道的字节。</p>
+<h5 id="关闭FileChannel"><a href="#关闭FileChannel" class="headerlink" title="关闭FileChannel"></a>关闭FileChannel</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.close();</span><br></pre></td></tr></table></figure>
+<h5 id="fileChannel的position-方法"><a href="#fileChannel的position-方法" class="headerlink" title="fileChannel的position 方法"></a>fileChannel的position 方法</h5><p>特定位置进行读写，也可以调用position(Long pos)方法 设置FileChannel当前位置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> pos = channel.position();</span><br><span class="line">channel.position(pos +<span class="number">123</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="size"><a href="#size" class="headerlink" title="size()"></a>size()</h5><p>FileChannel实例的size()方法将返回该实例所关联文件的大小。如:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> filesize = channel.size();</span><br></pre></td></tr></table></figure>
+<h5 id="force"><a href="#force" class="headerlink" title="force()"></a>force()</h5><p>FileChannel.force()方法将通道里尚未写入磁盘的数据强制写到磁盘上。出于性能方面的考虑，操作系统会将数据缓存在内存中，所以无法保证写入到FileChannel里的数据一定会即时写到磁盘上。要保证这一点，需要调用force()方法。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/18/Java NIO/">https://corn1ng.github.io/2017/10/18/Java NIO/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/21/集合/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java集合</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/17/logback/">
+        <span class="next-text nav-default">Logback 常用配置</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

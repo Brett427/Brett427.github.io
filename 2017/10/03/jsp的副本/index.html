@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="JSP EL JSTL"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/10/03/jsp的副本/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> JSP EL JSTL - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JSP EL JSTL
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-10-03
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/前端/">前端</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#jsp-处理"><span class="toc-text">jsp 处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-生命周期"><span class="toc-text">JSP 生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#属性范围"><span class="toc-text">属性范围</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-语法"><span class="toc-text">JSP 语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-声明"><span class="toc-text">JSP 声明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-表达式"><span class="toc-text">JSP 表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP注释"><span class="toc-text">JSP注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-指令"><span class="toc-text">JSP 指令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-行为"><span class="toc-text">JSP 行为</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-隐藏对象"><span class="toc-text">JSP 隐藏对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MIME"><span class="toc-text">MIME</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSP-标准标签库-（JSTL）和EL表达式"><span class="toc-text">JSP 标准标签库 （JSTL）和EL表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#EL表达式的主要作用"><span class="toc-text">EL表达式的主要作用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#EL表达式运算符"><span class="toc-text">EL表达式运算符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#EL的11个隐式对象"><span class="toc-text">EL的11个隐式对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JSTL"><span class="toc-text">JSTL</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Core-标签库"><span class="toc-text">Core 标签库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#核心标签"><span class="toc-text">核心标签</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#格式化标签"><span class="toc-text">格式化标签</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;title&gt;jsp&lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;%</span><br><span class="line">    	out.println(<span class="string">"hello,world"</span>);</span><br><span class="line">    %&gt;</span><br><span class="line">  &lt;/body&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="jsp-处理"><a href="#jsp-处理" class="headerlink" title="jsp 处理"></a>jsp 处理</h4><a id="more"></a>
+<ul>
+<li>浏览器发送HTTP请求给服务器</li>
+<li>服务器识别出这是对JSP的请求，并将该请求传递给JSP引擎，</li>
+<li>JSP引擎从磁盘载入JSP文件，然后将他们转换为Servlet。</li>
+<li>JSP引擎将servlet编译成可执行类，并且将原始请求传递给Servlet引擎。</li>
+<li>Web 服务器的某组件将会调用 Servlet 引擎，然后载入并执行 Servlet 类。在执行过程中，Servlet 产生 HTML 格式的输出并将其内嵌于 HTTP response 中上交给 Web 服务器。</li>
+<li><p>Web 服务器以静态 HTML 网页的形式将 HTTP response 返回到您的浏览器中。</p>
+<!-- more-->
+<h4 id="JSP-生命周期"><a href="#JSP-生命周期" class="headerlink" title="JSP 生命周期"></a>JSP 生命周期</h4></li>
+<li><p><strong>编译阶段：</strong></p>
+<p>servlet容器编译servlet源文件，生成servlet类</p>
+</li>
+<li><p>初始化阶段：</p>
+<p>加载与JSP对应的servlet类，创建其实例，并调用它的初始化方法</p>
+</li>
+<li><p>执行阶段：</p>
+<p>调用与JSP对应的servlet实例的服务方法</p>
+</li>
+<li><p>销毁阶段：</p>
+<p>调用与JSP对应的servlet实例的销毁方法，然后销毁servlet实例</p>
+</li>
+</ul>
+<h4 id="属性范围"><a href="#属性范围" class="headerlink" title="属性范围"></a>属性范围</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">page： 只在一个页面中保存属性，跳转之后无效。</span><br><span class="line">request： 只在一次请求中保存，服务器跳转后依然有效。（地址没变就是一次请求）</span><br><span class="line">session： 在一次会话范围内， 无论何种跳转都可以使用，但是新开浏览器就无法使用了。</span><br><span class="line">application： 在整个服务器上保存，所有用户都可以使用。</span><br></pre></td></tr></table></figure>
+<h4 id="JSP-语法"><a href="#JSP-语法" class="headerlink" title="JSP 语法"></a>JSP 语法</h4><p>脚本程序的语法格式&lt;% 代码片段 %&gt;</p>
+<p>如果要正常显示中文，在JSP 文件头添加</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html"</span>; charset=UTF-<span class="number">8</span> pageCoding=<span class="string">"UTF-8"</span>%&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="JSP-声明"><a href="#JSP-声明" class="headerlink" title="JSP 声明"></a>JSP 声明</h4><p>一个声明语句可以声明一个或者多个变量方法，供后面Java代码使用</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%! declaration; [ declaration; ]+ ... %&gt;</span><br><span class="line">&lt;%! <span class="keyword">int</span> i=<span class="number">0</span>;%&gt;</span><br><span class="line">&lt;%! Book book = <span class="keyword">new</span> Book(); %&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="JSP-表达式"><a href="#JSP-表达式" class="headerlink" title="JSP 表达式"></a>JSP 表达式</h4><p>JSP的表达式先被转化为String, 然后插入到表达式出现的地方 不用分号结束表式。</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%= 表达式%&gt;</span><br><span class="line">&lt;%= (<span class="keyword">new</span> java.util.Date()).toString()%&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="JSP注释"><a href="#JSP注释" class="headerlink" title="JSP注释"></a>JSP注释</h4><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%--zhushi--%&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="JSP-指令"><a href="#JSP-指令" class="headerlink" title="JSP 指令"></a>JSP 指令</h4><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ directive attribute=<span class="string">"value"</span>%&gt;</span><br><span class="line">&lt;%@ page attribute=<span class="string">"value"</span> %&gt;</span><br><span class="line">&lt;%@ include file=<span class="string">"文件相对 url 地址"</span> %&gt;</span><br><span class="line">&lt;%@ taglib uri=<span class="string">"uri"</span> prefix=<span class="string">"prefixOfTag"</span> %&gt;<span class="comment">//URI确定标签库位置，prefix确定标签库前缀。</span></span><br></pre></td></tr></table></figure>
+<h4 id="JSP-行为"><a href="#JSP-行为" class="headerlink" title="JSP 行为"></a>JSP 行为</h4><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jsp:action_name attribute=<span class="string">"value"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="JSP-隐藏对象"><a href="#JSP-隐藏对象" class="headerlink" title="JSP 隐藏对象"></a>JSP 隐藏对象</h4><p>七大对象</p>
+<p>Request Response Out Session Application Config PageContext Page Exception</p>
+<h4 id="MIME"><a href="#MIME" class="headerlink" title="MIME"></a>MIME</h4><p>(<em>M</em>ultipurpose <em>I</em>nternet <em>M</em>ail <em>E</em>xtensions) 是描述消息内容类型的因特网标准。MIME 消息能包含文本、图像、音频、视频以及其他应用程序专用的数据。</p>
+<h4 id="JSP-标准标签库-（JSTL）和EL表达式"><a href="#JSP-标准标签库-（JSTL）和EL表达式" class="headerlink" title="JSP 标准标签库 （JSTL）和EL表达式"></a>JSP 标准标签库 （JSTL）和EL表达式</h4><p>EL(Expression Language) 表示式语言</p>
+<h5 id="EL表达式的主要作用"><a href="#EL表达式的主要作用" class="headerlink" title="EL表达式的主要作用"></a>EL表达式的主要作用</h5><ul>
+<li><strong>获取数据</strong> 。EL 表达式主要用于替换JSP页面的脚本表达式，以从各种类型WEB作用域中检索Java对象，获取数据</li>
+<li><em>执行运算</em>。利用EL 表达式进行基本的关系运算，逻辑运算 ，算术运算。</li>
+<li>获取WEB 开发常用对 。EL 表达式定义了一些隐式对象。</li>
+</ul>
+<p>EL表达式以${ }定义 结构如下</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;expression&#125;         $&#123;x+y&#125;</span><br></pre></td></tr></table></figure>
+<p>EL 表达式可以返回任意类型的值，如果返回一个带属性的值，用 .  或者 [ ] 访问其属性。如果 class.propertyName 的propertyname不是Java变量名，则只能使用[]运算符。要访问HTTPSession 可以 /获取HTTpsession的Id</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;pageContext.session&#125;   $&#123;pageContext.session.id&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="EL表达式运算符"><a href="#EL表达式运算符" class="headerlink" title="EL表达式运算符"></a>EL表达式运算符</h5><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">+ - * / % &amp;&amp;和and ||和or !和not == != &gt;= &lt;= &lt; &gt;  </span><br><span class="line">关系运算符返回<span class="keyword">boolean</span> 值 $&#123;<span class="number">1</span>==<span class="number">2</span>&#125; 返回<span class="keyword">false</span> </span><br><span class="line">$&#123;statement ?A:B&#125; 正确A 错误B</span><br><span class="line">empty 用来检测作用域中该变量是否存在， 例：$&#123;empty  username&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="EL的11个隐式对象"><a href="#EL的11个隐式对象" class="headerlink" title="EL的11个隐式对象"></a>EL的11个隐式对象</h5><ul>
+<li>pageContext JSp的上下文对象</li>
+<li>param 一个包含所有请求参数并用参数名做key的map  ${param.name} 取出参数</li>
+<li>paramValues一个包含所有请求参数并用参数名做key的map 检索一个字符串数组而不是单个的值</li>
+<li>header 包含请求标题 并用标题名做key 的map</li>
+<li>headerValues 包含请求标题 并用标题名做key 的map 是个数组</li>
+<li>cookie 包含当前请求对象cookie对象的map</li>
+<li>initparam 包含所有环境初始化参数</li>
+<li>pagescope map 包含页面域内所有属性</li>
+<li>requestscope map 包含请求域内所有属性</li>
+<li>Sessionscope map 包含会话域内所有属性</li>
+<li>applicationscope map 包含应用程序上下文域内的所有属性</li>
+</ul>
+<h5 id="JSTL"><a href="#JSTL" class="headerlink" title="JSTL"></a>JSTL</h5><p>有五个类别，分别是 核心标签（包含web常见工作，循环，输入输出等），格式化标签（语言区域，消息，数字，日期格式化），SQL 标签（访问数据库），XML标签（访问xml文件），函数标签（集合长度 字符串操作）</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ taglib prefix=<span class="string">"c"</span>uri=<span class="string">"http://java.sun.com/jsp/jstl/core"</span>%&gt;</span><br></pre></td></tr></table></figure>
+<p>通过上述方式引入标签</p>
+<h5 id="Core-标签库"><a href="#Core-标签库" class="headerlink" title="Core 标签库"></a>Core 标签库</h5><p>14个标签被分成4类</p>
+<ul>
+<li>多用途核心标签 &lt;c:out&gt; &lt;c:set&gt; &lt;c:remove&gt; &lt;c:catch&gt; </li>
+<li>条件控制标签 &lt;c:if&gt; &lt;c:choose&gt;&lt;c:when&gt; &lt;c:otherwise&gt;</li>
+<li>循环控制标签 &lt;c:foreach&gt; &lt;c:fortokens&gt;</li>
+<li>URL相关标签 &lt;c:import&gt; &lt;c:url&gt;&lt;c:redirect&gt;&lt;c:param&gt;</li>
+</ul>
+<p>#####&lt;c:out&gt; 用于显示数据</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:out value=$&#123;sessionScope.username&#125; <span class="keyword">default</span>=<span class="string">"游客"</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:set&gt; 为变量赋值</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var 表示创建的变量名 </span><br><span class="line">&lt;c:set var=<span class="string">"username"</span> value=<span class="string">"wkn"</span> scope=<span class="string">"page"</span>/&gt;</span><br><span class="line">target 要被赋值的javabean实例名称 property javabean  属性名称</span><br><span class="line">&lt;c:set target=$&#123;pagescope.user&#125; property=<span class="string">"username"</span> value=<span class="string">"w"</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:remove&gt; 删除scope中的值</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:remove var=<span class="string">"username"</span> scopre=<span class="string">"page"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:if&gt; 对条件进行测试</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test 判断条件 var 保存判断结果的变量名为<span class="keyword">true</span>或者<span class="keyword">false</span> scope 范围</span><br><span class="line">&lt;c:<span class="keyword">if</span>  test=<span class="string">"$&#123;param.loginmae=='wkn'&amp;&amp; param.pass=='123'&#125;"</span>&gt;</span><br><span class="line">  成功</span><br><span class="line">&lt;/c:if&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:choose&gt;     &lt;c:when&gt;     &lt;c:otherwise&gt;</p>
+<p>复杂的判断条件用上面三个 choose只作为父标签存在，另外两个是子标签</p>
+<p>when标签等价于if标签</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:choose&gt;</span><br><span class="line">  &lt;c:when test=<span class="string">"$&#123;param.loignname==‘w’&#125;"</span>&gt;</span><br><span class="line">    success</span><br><span class="line">  &lt;/c:when&gt;</span><br><span class="line">  &lt;c:otherwise&gt;</span><br><span class="line">    fail</span><br><span class="line">  &lt;/c:otherwise&gt;</span><br><span class="line">&lt;/c:choose&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:foreach&gt; 循环控制</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">begin 开始条件 end 结束条件  step 步长 items集合的遍历对象</span><br><span class="line">var 循环集合中元素的变量名 </span><br><span class="line">varstatus=<span class="string">'status'</span> 保持循环状态的变量  (该绑定值封装了当前遍历的状态，比如，可以从该对象上查看是遍历到了第几个元素：$&#123;status.count&#125;</span><br><span class="line">$&#123;status.index&#125; 查看序列号$&#123;status.first&#125;返回bool(是否是首个)</span><br><span class="line"></span><br><span class="line">遍历list</span><br><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr&gt;</span><br><span class="line">    &lt;c:foreach items=$&#123;requestscope.booklist&#125; var=<span class="string">"book"</span>&gt;</span><br><span class="line">    &lt;td&gt;$&#123;book&#125;&lt;/td&gt;</span><br><span class="line">    &lt;/c:foreach&gt;</span><br><span class="line">  &lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr&gt;&lt;td&gt;编号&lt;/td&gt;&lt;td&gt;名字&lt;/td&gt;&lt;td&gt;作者&lt;/td&gt;&lt;/tr&gt;</span><br><span class="line">    &lt;c:foreach items=$&#123;requestscope.booklist&#125; var=<span class="string">"book"</span>&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">      &lt;td&gt;$&#123;book.id&#125;&lt;/td&gt;&lt;td&gt;$&#123;book.name&#125;&lt;/td&gt;&lt;td&gt;book.au&lt;/td&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">    &lt;/c:foreach&gt;</span><br><span class="line">&lt;/table&gt;</span><br><span class="line"></span><br><span class="line">map</span><br><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr&gt;&lt;td&gt;key&lt;/td&gt;&lt;td&gt;编号&lt;/td&gt;&lt;td&gt;名字&lt;/td&gt;&lt;/tr&gt;</span><br><span class="line">    &lt;c:foreach items=$&#123;requestscope.bookmap&#125; var=<span class="string">"book"</span>&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">      &lt;td&gt;$&#123;book.key&#125;&lt;/td&gt;&lt;td&gt;$&#123;book.value.id&#125;&lt;/td&gt;&lt;td&gt;book.value.name&lt;/td&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">    &lt;/c:foreach&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:fortokens&gt;使用分隔符分隔指定的字符串</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">delims 分隔符</span><br><span class="line">&lt;c:fortokens items=<span class="string">"aa,bb,cc,dd"</span> delims=<span class="string">","</span> var=<span class="string">"s"</span>&gt;</span><br><span class="line">$&#123;s&#125;</span><br><span class="line">&lt;/c:fortokens&gt;</span><br></pre></td></tr></table></figure>
+<p>&lt;c:import&gt;包含另一个标签</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:<span class="keyword">import</span> url=<span class="string">"title.jsp"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>c:url 组合一个正确的url地址</p>
+<h5 id="核心标签"><a href="#核心标签" class="headerlink" title="核心标签"></a>核心标签</h5><p>是最常用的JSTL 标签， 引用核心标签库的语法如下</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:out&gt; 在JSP 中显示数据 &lt;c:set&gt; 用于保存数据 &lt;c:remove&gt; 删除数据</span><br><span class="line">&lt;c:<span class="keyword">catch</span>&gt;处理异常  &lt;c:<span class="keyword">import</span>&gt;检索URI,并传给页面&lt;c:forEach&gt; 基础迭代标签 &lt;c:param&gt;给包含或重定向的页面传递参数&lt;c:redirect&gt;重定向一个新的URL &lt;c:url&gt;使用可选参数创造一个URL</span><br></pre></td></tr></table></figure>
+<h5 id="格式化标签"><a href="#格式化标签" class="headerlink" title="格式化标签"></a>格式化标签</h5><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ taglib prefix=<span class="string">"fmt"</span> </span><br><span class="line">           uri=<span class="string">"http://java.sun.com/jsp/jstl/fmt"</span> %&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/10/03/jsp的副本/">https://corn1ng.github.io/2017/10/03/jsp的副本/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/04/Jackson 的使用/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Jackson 的使用</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/10/02/Static和-Final-关键字/">
+        <span class="next-text nav-default">Static和 Final 关键字</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

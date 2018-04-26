@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java多线程之Executor框架"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/19/Executor框架/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java多线程之Executor框架 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java多线程之Executor框架
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-19
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/多线程/">多线程</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Executor-框架简介"><span class="toc-text">Executor 框架简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor的两级调度模型"><span class="toc-text">Executor的两级调度模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor框架的结构与成员"><span class="toc-text">Executor框架的结构与成员</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#使用流程"><span class="toc-text">使用流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架成员"><span class="toc-text">框架成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FutureTask-详解"><span class="toc-text">FutureTask 详解</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p>Java的线程既是工作单元,也是执行机制。从JDK 5开始,把工作单元与执行机制分离开<br>来。工作单元包括Runnable和Callable,而执行机制由Executor框架提供。</p>
+<a id="more"></a>
+<h3 id="Executor-框架简介"><a href="#Executor-框架简介" class="headerlink" title="Executor 框架简介"></a>Executor 框架简介</h3><h5 id="Executor的两级调度模型"><a href="#Executor的两级调度模型" class="headerlink" title="Executor的两级调度模型"></a>Executor的两级调度模型</h5><p>在HotSpot VM的线程模型中,Java线程(java.lang.Thread)被一对一映射为本地操作系统线程。Java线程启动时会创建一个本地操作系统线程;当该Java线程终止时,这个操作系统线程也会被回收。操作系统会调度所有线程并将它们分配给可用的CPU。</p>
+<p>在上层,Java多线程程序通常把<strong>应用分解为若干个任务,然后使用用户级的调度器(Executor框架)将这些任务映射为固定数量的线程</strong>;在底层,操作系统内核将这些线程映射到硬件处理器上。这种两级调度模型的示意图如下图所示。从图中可以看出,应用程序通过Executor框架控制上层的调度;而下层的调度由操作系统内核控制,下层的调度不受应用程序的控制。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/171116.png" width="50%"></p>
+<h5 id="Executor框架的结构与成员"><a href="#Executor框架的结构与成员" class="headerlink" title="Executor框架的结构与成员"></a>Executor框架的结构与成员</h5><p>首先是结构: Executor 框架主要由三大部分组成</p>
+<ul>
+<li>任务。包括被执行任务需要实现的接口:Runnable接口或Callable接口。</li>
+<li>任务的执行。包括任务执行机制的核心接口Executor,以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口(ThreadPoolExecutor和ScheduledThreadPoolExecutor)。</li>
+<li>异步计算的结果。包括接口Future和实现Future接口的FutureTask类。</li>
+</ul>
+<p>下面是类和接口的简介</p>
+<ul>
+<li>Executor是一个接口,它是Executor框架的基础,它将任务的提交与任务的执行分离开来。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然Executor是一个简单的接口,那是它为灵活且强大的异步任务执行框架提供了基础,它提供了一种标准的方法把任务的提交过程和执行过程解耦开来.</p>
+<ul>
+<li>ThreadPoolExecutor是线程池的核心实现类,用来执行被提交的任务</li>
+<li>ScheduledThreadPoolExecutor是一个实现类,可以在给定的延迟后运行命令,或者定期执行命令。ScheduledThreadPoolExecutor比Timer更灵活,功能更强大。</li>
+<li>Future接口和实现Future接口的FutureTask类,代表异步计算的结果。</li>
+<li>Runnable接口和Callable接口的实现类,都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。</li>
+</ul>
+<p>使用示意图如下:</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/1711161.png" width="60%"></p>
+<h6 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h6><p>主线程首先要创建实现Runnable或者Callable接口的任务对象。工具类Executors可以把一个Runnable对象封装为一个Callable对象(<code>Executors.callable(Runnable task)</code>或<br><code>Executors.callable(Runnable task,Object resule)</code>)。<br>然后可以把Runnable对象直接交给ExecutorService执行(<code>ExecutorService.execute(Runnable command)</code>);或者也可以把Runnable对象或Callable对象提交给ExecutorService执行(<code>ExecutorService.submit(Runnable task)</code>或<code>ExecutorService.submit(Callable&lt;T&gt;task)</code>)。<br>如果执行<code>ExecutorService.submit(...)</code>,ExecutorService将返回一个实现Future接口的对象(到目前为止的JDK中,返回的是FutureTask对象)。由于FutureTask实现了Runnable,程序员也可以创建FutureTask,然后直接交给ExecutorService执行。<br>最后,主线程可以执行FutureTask.get()方法来等待任务执行完成。主线程也可以执行<code>FutureTask.cancel(boolean mayInterruptIfRunning)</code>来取消此任务的执行。</p>
+<h3 id="框架成员"><a href="#框架成员" class="headerlink" title="框架成员"></a>框架成员</h3><p>介绍Executor框架的主要成员:ThreadPoolExecutor, ScheduledThreadPoolExecutor、Future接口、Runnable接口、Callable接口和Executors。</p>
+<ul>
+<li>ThreadPoolExecutor</li>
+</ul>
+<p>ThreadPoolExecutor通常使用工厂类Executors来创建。Executors可以创建3种类型的ThreadPoolExecutor:SingleThreadExecutor、FixedThreadPool和CachedThreadPool。</p>
+<p>其中,FixedThreadPool是创建固定线程数的API,FixedThreadpool适用于为了满足资源管理的需求,而需要限制当前线程数量的应用场景,适用于负载较重的服务器.</p>
+<p>singleThreadExecutor是创建单个线程的SingleThreadExecutor的API</p>
+<p>CachedThreadPool。下是Executors提供的,创建一个会根据需要创建新线程的<br>CachedThreadPool的API。CachedThreadPool 是大小无界的线程池,适用于执行很多的短期异步任务的小程序,或者是负载较轻的服务器</p>
+<ul>
+<li>ScheduledThreadPoolExecutor</li>
+</ul>
+<p>ScheduledThreadPoolExecutor通常使用工厂类Executors来创建。Executors可以创建2种类型的ScheduledThreadPoolExecutor,如下。<br>1)ScheduledThreadPoolExecutor。包含若干个线程的ScheduledThreadPoolExecutor。<br>2)SingleThreadScheduledExecutor。只包含一个线程的ScheduledThreadPoolExecutor。</p>
+<p>ScheduledThreadPoolExecutor适用于需要多个后台线程执行周期任务,同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景。</p>
+<ul>
+<li>Future接口</li>
+</ul>
+<p>Future接口和实现Future接口的FutureTask类用来表示异步计算的结果。当我们把Runnable接口或Callable接口的实现类提交(submit)给ThreadPoolExecutor或<br>ScheduledThreadPoolExecutor时,ThreadPoolExecutor或ScheduledThreadPoolExecutor会向我们返回一个FutureTask对象。下面是对应的API。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span></span></span><br><span class="line"><span class="function">&lt;T&gt; Future&lt;T&gt; <span class="title">submit</span><span class="params">(Runnable task,T result)</span></span></span><br><span class="line"><span class="function">Future&lt;&gt; <span class="title">submit</span><span class="params">(Runnable task)</span></span></span><br></pre></td></tr></table></figure>
+<p>Java仅仅保证返回的是一个实现了Future接口的对象.返回的可能不一定是FutureTask。</p>
+<ul>
+<li>Runnable 接口和Callable 接口</li>
+</ul>
+<p>Runnable接口和Callable接口的实现类,都可以被ThreadPoolExecutor或Scheduled-<br>ThreadPoolExecutor执行。它们之间的区别是Runnable不会返回结果,而Callable可以返回结果。<br>除了可以自己创建实现Callable接口的对象外,还可以使用工厂类Executors来把一个<br>Runnable包装成一个Callable。</p>
+<h3 id="FutureTask-详解"><a href="#FutureTask-详解" class="headerlink" title="FutureTask 详解"></a>FutureTask 详解</h3><p>Future接口和实现Future接口的FutureTask类,代表异步计算的结果。</p>
+<h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>FutureTask除了实现Future接口外,还实现了Runnable接口。因此,FutureTask可以交给Executor执行,也可以由调用线程直接执行(FutureTask.run())。根FutureTask.run()方法被执行的时机,FutureTask可以处于下面3种状态。<br>1)未启动。FutureTask.run()方法还没有被执行之前,FutureTask处于未启动状态。当创建一个FutureTask,且没有执行FutureTask.run()方法之前,这个FutureTask处于未启动状态。<br>2)已启动。FutureTask.run()方法被执行的过程中,FutureTask处于已启动状态。<br>3)已完成。FutureTask.run()方法执行完后正常结束,或被取消(FutureTask.cancel(…)),或执行FutureTask.run()方法时抛出异常而异常结束,FutureTask处于已完成状态。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-20%2019-37-03.png" width="60%"></p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-16%2022-30-14.png" alt=""></p>
+<blockquote>
+<p>参考文献:Java并发编程的艺术</p>
+</blockquote>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/19/Executor框架/">https://corn1ng.github.io/2018/01/19/Executor框架/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/19/并发包和内存模型/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">并发包和内存模型</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/19/并发包之Future/">
+        <span class="next-text nav-default">并发包之Future</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="查询性能优化"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/17/查询性能优化/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 查询性能优化 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          查询性能优化
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-17
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#查询性能优化"><span class="toc-text">查询性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么查询会慢"><span class="toc-text">为什么查询会慢</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#慢查询基础-优化数据访问"><span class="toc-text">慢查询基础:优化数据访问</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#是否向数据库请求了不需要的数据"><span class="toc-text">是否向数据库请求了不需要的数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MYSQL是否在扫描额外的记录"><span class="toc-text">MYSQL是否在扫描额外的记录</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重构查询的方式"><span class="toc-text">重构查询的方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#一个复杂查询还是多个简单查询"><span class="toc-text">一个复杂查询还是多个简单查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#切分查询"><span class="toc-text">切分查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#分解关联查询"><span class="toc-text">分解关联查询</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询执行的基础"><span class="toc-text">查询执行的基础</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL客户端-服务器通信协议"><span class="toc-text">MySQL客户端/服务器通信协议</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询状态"><span class="toc-text">查询状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询缓存"><span class="toc-text">查询缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询优化处理"><span class="toc-text">查询优化处理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查询执行引擎"><span class="toc-text">查询执行引擎</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#返回结果给客户端"><span class="toc-text">返回结果给客户端</span></a></li></ol></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="查询性能优化"><a href="#查询性能优化" class="headerlink" title="查询性能优化"></a>查询性能优化</h1><p>建立索引对高性能来说,必不可少,但这些还不够,还需要合理的设计查询,如果查询写的很糟糕,即使数据库表结构再合理,索引再合适,也无法实现高性能</p>
+<h3 id="为什么查询会慢"><a href="#为什么查询会慢" class="headerlink" title="为什么查询会慢"></a>为什么查询会慢</h3><p>通常来说,查询的生命周期可以按照顺序来看,从客户端,到服务器,然后在服务器上进行解析,生成执行计划,执行,并返回结果给客户端,其中,执行可以认为是整个生命周期中最重要的阶段,这其中包括了大量为了检索数据到存储引擎的调用以及调用后的数据处理,包括排序,分组</p>
+<a id="more"></a>
+<h3 id="慢查询基础-优化数据访问"><a href="#慢查询基础-优化数据访问" class="headerlink" title="慢查询基础:优化数据访问"></a>慢查询基础:优化数据访问</h3><p>查询性能低下最基本的原因是访问的数据太多,某些查询可能不可避免的需要筛选大量数据,但这并不常见,大部分性能低下的查询都可以通过减少访问的数据量的方式进行优化</p>
+<h5 id="是否向数据库请求了不需要的数据"><a href="#是否向数据库请求了不需要的数据" class="headerlink" title="是否向数据库请求了不需要的数据"></a>是否向数据库请求了不需要的数据</h5><p>有些查询会请求超过实际需要的数据,然后这些多余的数据会被应用程序丢弃,这会给MySQL服务器带来额外的负担,并增加网络开销,同时也会消耗应用服务器的cpu和内存资源</p>
+<h5 id="MYSQL是否在扫描额外的记录"><a href="#MYSQL是否在扫描额外的记录" class="headerlink" title="MYSQL是否在扫描额外的记录"></a>MYSQL是否在扫描额外的记录</h5><p>在确定查询只返回需要的数据后,接下来应该看看查询为了返回结果是否扫描了过多的数据,对于MySQL,三个简单的衡量开销的指标1相应时间,2扫描的行数,3返回的行数</p>
+<h3 id="重构查询的方式"><a href="#重构查询的方式" class="headerlink" title="重构查询的方式"></a>重构查询的方式</h3><h5 id="一个复杂查询还是多个简单查询"><a href="#一个复杂查询还是多个简单查询" class="headerlink" title="一个复杂查询还是多个简单查询"></a>一个复杂查询还是多个简单查询</h5><p>是否需要将一个复杂的查询分成多个简单的查询,</p>
+<p>MySQL从设计上让连接和断开连接都很轻量级,在返回一个小的查询结果方面很高效,有时候,将一个大查询分解成多个小查询是很有必要的.</p>
+<h5 id="切分查询"><a href="#切分查询" class="headerlink" title="切分查询"></a>切分查询</h5><p>有时候对于一个大查询我们需要分而治之,将大查询切分成小查询,每个查询功能完全一样,只完成一部分,每次只返回一小部分查询结果</p>
+<p>删除旧数据就是一个很好的例子,定期的清除大量数据时,如果用一个大的语句一次性完成的话,可能需要一次锁住很多数据,占满整个事务日志,耗尽系统资源,阻塞很多小的但是重要的操作,将一个大的delete语句切分成很多小的,可以尽可能小的印象MySQL性能,还可以减少MySQL复制的延迟.</p>
+<h5 id="分解关联查询"><a href="#分解关联查询" class="headerlink" title="分解关联查询"></a>分解关联查询</h5><p>很多高性能的应用都会对关联查询进行分解,简单的,可以对每一个表进行一次单表查询,然后将结果在应用程序中进行关联. 这样做的好处有 让缓存的效率更高,执行单个查询减少对锁的竞争,在应用层关联,可以更容易对数据库进行拆分,更容易做到高性能和可拓展,查询本身的效率也会有所提升,较少冗余记录的查询</p>
+<h3 id="查询执行的基础"><a href="#查询执行的基础" class="headerlink" title="查询执行的基础"></a>查询执行的基础</h3><p>当向MySQL发送一个请求的时候,MySQL到底做了什么.</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-17%2019-42-49.png" alt=""></p>
+<p>1 客户端发送一条查询给服务器</p>
+<p>2 服务器先检查缓存,如果命中了缓存,则立刻返回存储在缓存中的结果,否则进入下一阶段</p>
+<p>3 服务器端进行sql解析,预处理,再由优化器生成对应的执行计划</p>
+<p>4 MySQL根据优化器生成的执行计划,调用存储引擎的API来执行查询</p>
+<p>5 将结果返回客户端</p>
+<h5 id="MySQL客户端-服务器通信协议"><a href="#MySQL客户端-服务器通信协议" class="headerlink" title="MySQL客户端/服务器通信协议"></a>MySQL客户端/服务器通信协议</h5><p>MySQL客户端和服务器之间的通信协议是半双工的,这意味着,在任何一个时刻,要么由客户端向服务端发送数据,要么反过来,这两个动作不能同时发生.</p>
+<p>这种协议让MySQL简单快速,但是也在很多地方限制了MySQL,比如无法进行流量控制.</p>
+<h5 id="查询状态"><a href="#查询状态" class="headerlink" title="查询状态"></a>查询状态</h5><p>对于一个MySQL连接,任何时刻都有一个状态,该状态表示了MySQL正在做什么,可以使用<code>show full processlist</code> ,常见的状态有</p>
+<ul>
+<li>sleep 线程正在等待客户端发送新的请求</li>
+<li>query 线程正在执行查询或者正在将结果发送给客户端</li>
+<li>locked 在MySQL服务器层,表示正在等待表锁</li>
+<li>analyzing and statistics 线程正在收集存储引擎的统计信息,并生成查询的执行计划</li>
+<li>copying to tmp table 正在执行查询,并将结果复制到一个临时表中</li>
+<li>sorting result 对结果集进行排序</li>
+<li>sending data  线程多个状态之间传送数据</li>
+</ul>
+<h5 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h5><p>在解析一个查询语句前,如果查询缓存是打开的,那么MySQL会优先检查这个查询是否命中查询缓存中的数据,这个检查通过一个对大小写敏感的哈希查找实现的.一个字节不同都不会匹配结果</p>
+<p>命中缓存后还要检查用户权限,如果权限没问题,直接返回缓存中的数据</p>
+<h5 id="查询优化处理"><a href="#查询优化处理" class="headerlink" title="查询优化处理"></a>查询优化处理</h5><p>查询的声明周期的下一步是将一个sql转化成一个执行计划,MySQL再按照这个执行计划和存储引擎进行交互,包括多个子阶段,解析sql,预处理,优化SQL执行计划,这个过程中有任何错误都会终止查询.</p>
+<ul>
+<li>语法解析器和预处理</li>
+</ul>
+<p>首先通过关键字将SQL进行解析,生成解析树, 预处理器根据一些SQL规则进一步检查结息树是否合法,下一步会进行验证权限,权限验证通常很快</p>
+<ul>
+<li>查询优化器</li>
+</ul>
+<p>现在的语法树已经合法,将由优化器转化成执行计划,一条查询可以有很多种执行方式,最后都返回相同的结果,优化器的作用就是找出这里面最好的执行计划</p>
+<p>MySQL使用基于成本的优化器,将尝试预测一个查询使用某种执行计划的成本,并选择其中成本最小的一个</p>
+<h5 id="查询执行引擎"><a href="#查询执行引擎" class="headerlink" title="查询执行引擎"></a>查询执行引擎</h5><p>在解析和优化阶段,MySQL将生成对应的执行计划,MySQL的查询执行引擎则根据这个执行计划来完成整个查询.</p>
+<p>查询执行阶段,只是简单的根据执行计划给出的指令逐步执行,在根据计划逐步执行的过程中,大量操作需要调用存储引擎实现的接口完成,</p>
+<p>存储引擎接口有很丰富的功能,但是底层接口只有几十个,这些接口像搭积木一样能够完成查询的大部分操作.</p>
+<h5 id="返回结果给客户端"><a href="#返回结果给客户端" class="headerlink" title="返回结果给客户端"></a>返回结果给客户端</h5><p>查询执行的最后一步是将结果返回给客户端.即使查询不需要返回结果给客户端,MySQL仍然会返回这个查询的一些信息,如该查询影响的行数.</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/17/查询性能优化/">https://corn1ng.github.io/2017/12/17/查询性能优化/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/18/leetcode43/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">43. Multiply Strings</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/17/创建高性能的索引/">
+        <span class="next-text nav-default">创建高性能的索引</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

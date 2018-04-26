@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java基础积累"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/09/29/Java 常用基础知识/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java基础积累 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java基础积累
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-09-29
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-常用基础知识"><span class="toc-text">Java 常用基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Java中阻塞和等待的区别"><span class="toc-text">Java中阻塞和等待的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#阻塞与等待的区别"><span class="toc-text">阻塞与等待的区别</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-抽象类"><span class="toc-text">Java 抽象类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-泛型类"><span class="toc-text">Java 泛型类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java中String-StringBuilder-StringBuffer的区别"><span class="toc-text">Java中String,StringBuilder,StringBuffer的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#运行速度"><span class="toc-text">运行速度</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h1 id="Java-常用基础知识"><a href="#Java-常用基础知识" class="headerlink" title="Java 常用基础知识"></a>Java 常用基础知识</h1><p>各种数字类型转换成字符串型： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s = String.valueOf( value); <span class="comment">// 其中 value 为任意一种数字类型。</span></span><br></pre></td></tr></table></figure>
+<p>字符串型转换成各种数字类型： </p>
+<a id="more"></a>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">"169"</span>; </span><br><span class="line"><span class="keyword">byte</span> b = Byte.parseByte( s ); </span><br><span class="line"><span class="keyword">short</span> t = Short.parseShort( s ); </span><br><span class="line"><span class="keyword">int</span> i = Integer.parseInt( s ); </span><br><span class="line"><span class="keyword">long</span> l = Long.parseLong( s ); </span><br><span class="line">Float f = Float.parseFloat( s ); </span><br><span class="line">Double d = Double.parseDouble( s );</span><br></pre></td></tr></table></figure>
+<h5 id="Java中阻塞和等待的区别"><a href="#Java中阻塞和等待的区别" class="headerlink" title="Java中阻塞和等待的区别"></a>Java中阻塞和等待的区别</h5><h5 id="阻塞与等待的区别"><a href="#阻塞与等待的区别" class="headerlink" title="阻塞与等待的区别"></a>阻塞与等待的区别</h5><p>阻塞：当一个线程试图获取对象锁（非java.util.concurrent库中的锁，即synchronized），而该锁被其他线程持有，则该线程进入阻塞状态。它的特点是<strong>使用简单，由JVM调度器来决定唤醒自己，而不需要由另一个线程来显式唤醒自己，不响应中断</strong>。<br>等待：当一个线程等待另一个线程通知调度器一个条件时，该线程进入等待状态。它的特点是<strong>需要等待另一个线程显式地唤醒自己，实现灵活，语义更丰富，可响应中断</strong>。例如调用：Object.wait()、Thread.join()以及等待Lock或Condition。</p>
+<p>　　需要强调的是虽然synchronized和JUC里的Lock都实现锁的功能，但线程进入的状态是不一样的。<strong>synchronized会让线程进入阻塞态，而JUC里的Lock是用LockSupport.park()/unpark()来实现阻塞/唤醒的，会让线程进入等待态</strong>。但话又说回来，虽然等锁时进入的状态不一样，但被唤醒后又都进入runnable态，从行为效果来看又是一样的。</p>
+<h3 id="Java-抽象类"><a href="#Java-抽象类" class="headerlink" title="Java 抽象类"></a>Java 抽象类</h3><p>包含抽象方法的类成为抽象类,但是并不意味着抽象类中只能有抽象方法,它和普通类一样,同样可以拥有成员变量和普通的成员方法 抽象类和普通类的区别主要有三种:</p>
+<ul>
+<li>抽象方法必须为public或者protect,(如果是private,则子类不能继承)</li>
+<li>抽象类不能用来创建对象</li>
+<li>如果一个类继承于一个抽象类,则子类必须实现父类的抽象方法,如果子类没有实现父类的抽象方法,则必须将子类也定义为抽象类.</li>
+</ul>
+<h3 id="Java-泛型类"><a href="#Java-泛型类" class="headerlink" title="Java 泛型类"></a>Java 泛型类</h3><p>泛型类型用于类的定义中，被称为泛型类。通过泛型可以完成对一组类的操作对外开放相同的接口。最典型的就是各种容器类，如：List、Set、Map。</p>
+<p>举例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Generic</span>&lt;<span class="title">T</span>&gt;</span>&#123; </span><br><span class="line">    <span class="comment">//key这个成员变量的类型为T,T的类型由外部指定  </span></span><br><span class="line">    <span class="keyword">private</span> T key;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Generic</span><span class="params">(T key)</span> </span>&#123; <span class="comment">//泛型构造方法形参key的类型也为T，T的类型由外部指定</span></span><br><span class="line">        <span class="keyword">this</span>.key = key;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getKey</span><span class="params">()</span></span>&#123; <span class="comment">//泛型方法getKey的返回值类型为T，T的类型由外部指定</span></span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//泛型的类型参数只能是类类型（包括自定义类），不能是简单类型</span></span><br><span class="line"><span class="comment">//传入的实参类型需与泛型的类型参数类型相同，即为Integer.</span></span><br><span class="line">Generic&lt;Integer&gt; genericInteger = <span class="keyword">new</span> Generic&lt;Integer&gt;(<span class="number">123456</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//传入的实参类型需与泛型的类型参数类型相同，即为String.</span></span><br><span class="line">Generic&lt;String&gt; genericString = <span class="keyword">new</span> Generic&lt;String&gt;(<span class="string">"key_vlaue"</span>);</span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + genericInteger.getKey());</span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + genericString.getKey());</span><br></pre></td></tr></table></figure>
+<p>定义的泛型类，就一定要传入泛型类型实参么？并不是这样，在使用泛型的时候如果传入泛型实参，则会根据传入的泛型实参做相应的限制，此时泛型才会起到本应起到的限制作用。如果不传入泛型类型实参的话，在泛型类中使用泛型的方法或成员变量定义的类型可以为任何的类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Generic generic = <span class="keyword">new</span> Generic(<span class="string">"111111"</span>);</span><br><span class="line">Generic generic1 = <span class="keyword">new</span> Generic(<span class="number">4444</span>);</span><br><span class="line">Generic generic2 = <span class="keyword">new</span> Generic(<span class="number">55.55</span>);</span><br><span class="line">Generic generic3 = <span class="keyword">new</span> Generic(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + generic.getKey());</span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + generic1.getKey());</span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + generic2.getKey());</span><br><span class="line">Log.d(<span class="string">"泛型测试"</span>,<span class="string">"key is "</span> + generic3.getKey());</span><br><span class="line"></span><br><span class="line">D/泛型测试: key is <span class="number">111111</span></span><br><span class="line">D/泛型测试: key is <span class="number">4444</span></span><br><span class="line">D/泛型测试: key is <span class="number">55.55</span></span><br><span class="line">D/泛型测试: key is <span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="Java中String-StringBuilder-StringBuffer的区别"><a href="#Java中String-StringBuilder-StringBuffer的区别" class="headerlink" title="Java中String,StringBuilder,StringBuffer的区别"></a>Java中String,StringBuilder,StringBuffer的区别</h2><p>这三个类之间的区别主要是在两个方面，即运行速度和线程安全这两方面。</p>
+<h4 id="运行速度"><a href="#运行速度" class="headerlink" title="运行速度"></a>运行速度</h4><ol>
+<li><strong>这方面运行速度快慢为：StringBuilder &gt; StringBuffer &gt; String</strong></li>
+</ol>
+<p>String最慢的原因：String为字符串常量，而StringBuilder和StringBuffer均为字符串变量，即String对象一旦创建之后该对象是不可更改的，但后两者的对象是变量，是可以更改的。以下面一段代码为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String str =<span class="string">"abc"</span>;</span><br><span class="line">System.out.println(str);</span><br><span class="line">str =str+<span class="string">"de"</span>;</span><br><span class="line">System.out.println(str);</span><br></pre></td></tr></table></figure>
+<p>如果运行这段代码会发现先输出“abc”，然后又输出“abcde”，好像是str这个对象被更改了，其实，这只是一种假象罢了，JVM对于这几行代码是这样处理的，首先创建一个String对象str，并把“abc”赋值给str，然后在第三行中，其实JVM又创建了一个新的对象也名为str，然后再把原来的str的值和“de”加起来再赋值给新的str，而原来的str就会被JVM的垃圾回收机制（GC）给回收掉了，所以，str实际上并没有被更改，也就是前面说的String对象一旦创建之后就不可更改了。所以，Java中对String对象进行的操作实际上是一个不断创建新的对象并且将旧的对象回收的一个过程，所以执行速度很慢。</p>
+<p>而StringBuilder和StringBuffer的对象是变量，对变量进行操作就是直接对该对象进行更改，而不进行创建和回收的操作，所以速度要比String快很多。</p>
+<p>另外，有时候我们会这样对字符串进行赋值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String str=<span class="string">"abc"</span>+<span class="string">"de"</span>;</span><br><span class="line">StringBuilder stringBuilder=<span class="keyword">new</span> StringBuilder().append(<span class="string">"abc"</span>).append(<span class="string">"de"</span>);</span><br><span class="line">System.out.println(str);</span><br><span class="line">System.out.println(stringBuilder.toString());</span><br></pre></td></tr></table></figure>
+<p>　　这样输出结果也是“abcde”和“abcde”，但是String的速度却比StringBuilder的反应速度要快很多，这是因为第1行中的操作和 <code>String str=&quot;abcde&quot;</code>;是完全一样的，所以会很快，而如果写成下面这种形式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String str1=<span class="string">"abc"</span>;</span><br><span class="line">String str2=<span class="string">"de"</span>;</span><br><span class="line">String str=str1+str2;</span><br></pre></td></tr></table></figure>
+<p>　　那么JVM就会像上面说的那样，不断的创建、回收对象来进行这个操作了。速度就会很慢。</p>
+<ul>
+<li>线程安全</li>
+</ul>
+<p><strong>在线程安全上，StringBuilder是线程不安全的，而StringBuffer是线程安全的</strong></p>
+<p>如果一个StringBuffer对象在字符串缓冲区被多个线程使用时，StringBuffer中很多方法可以带有synchronized关键字，所以可以保证线程是安全的，但StringBuilder的方法则没有该关键字，所以不能保证线程安全，有可能会出现一些错误的操作。所以如果要进行的操作是多线程的，那么就要使用StringBuffer，但是在单线程的情况下，还是建议使用速度比较快的StringBuilder。</p>
+<ol start="3">
+<li>总结一下</li>
+</ol>
+<p>String：适用于少量的字符串操作的情况</p>
+<p>StringBuilder：适用于单线程下在字符缓冲区进行大量操作的情况</p>
+<p>StringBuffer：适用多线程下在字符缓冲区进行大量操作的情况</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/09/29/Java 常用基础知识/">https://corn1ng.github.io/2017/09/29/Java 常用基础知识/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/10/01/sql/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">sql 语句总结 </span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/09/26/git上传/">
+        <span class="next-text nav-default">git 提交方法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

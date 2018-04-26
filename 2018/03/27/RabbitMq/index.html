@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="RabbitMq入门"/>
+
+
+
+
+  <meta name="keywords" content="微服务, 分布式, RabbitMq, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/03/27/RabbitMq/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> RabbitMq入门 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          RabbitMq入门
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-03-27
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMq"><span class="toc-text">RabbitMq</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Hello-world"><span class="toc-text">Hello world</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#work-queues"><span class="toc-text">work queues</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#准备"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#循环调度"><span class="toc-text">循环调度</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#消息确认"><span class="toc-text">消息确认</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#忘记确认"><span class="toc-text">忘记确认</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#消息持久化"><span class="toc-text">消息持久化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#公平调度"><span class="toc-text">公平调度</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发布订阅"><span class="toc-text">发布订阅</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#临时队列"><span class="toc-text">临时队列</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#绑定"><span class="toc-text">绑定</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#绑定列表"><span class="toc-text">绑定列表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#路由"><span class="toc-text">路由</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#绑定-1"><span class="toc-text">绑定</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#直连交换机"><span class="toc-text">直连交换机</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多个绑定"><span class="toc-text">多个绑定</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#发送日志"><span class="toc-text">发送日志</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#订阅"><span class="toc-text">订阅</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#主题交换机"><span class="toc-text">主题交换机</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="RabbitMq"><a href="#RabbitMq" class="headerlink" title="RabbitMq"></a>RabbitMq</h2><p>RabbitMq 是一个消息队列，它接受并传递消息，可以认为它是一个邮局，但是它不传递纸，传递的是二进制的数据块，也就是消息。</p>
+<p>有一些rabbitMq的术语，生产者值得是发送消息的人，队列指的是rabbitMq里面的一个消息盒子，消息都存储在这个队列里，队列受主机的内存和硬盘限制。实质上就是一个很大的消息缓冲区。许多生产者可以把消息都放入这个队列中，需要消费者可以从这个队列中取出消息。通常情况下，消费者，生产者，和消息队列三者都不在一个主机上。</p>
+<h4 id="Hello-world"><a href="#Hello-world" class="headerlink" title="Hello world"></a>Hello world</h4><p>这里写两个程序，生产者发送一个单个的消息，然后消费者接受消息然后把他们打印。</p>
+<p>RabbitMq支持许多种协议，这里使用的是AMQP 0-9-1,是一个开源的广泛使用的消息协议。<code>The RabbitMQ Java client is also in the central Maven repository, with the groupId **com.rabbitmq** and the artifactId **amqp-client**</code>.</p>
+<p>下面用send代表生产者，用recv代表消费者。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Send</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String QUEUE_NAME = <span class="string">"hello"</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] argv)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">    <span class="comment">//设定RabbitMq的主机名</span></span><br><span class="line">    factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">    <span class="comment">//创建一个连接</span></span><br><span class="line">    Connection connection = factory.newConnection();</span><br><span class="line">    <span class="comment">//创建一个通道</span></span><br><span class="line">    Channel channel = connection.createChannel();</span><br><span class="line">    <span class="comment">//指定一个队列</span></span><br><span class="line">        <span class="comment">//参数1 queue ：队列名</span></span><br><span class="line">        <span class="comment">// 参数2 durable ：是否持久化</span></span><br><span class="line">        <span class="comment">// 参数3 exclusive ：仅创建者可以使用的私有队列，断开后自动删除</span></span><br><span class="line">        <span class="comment">// 参数4 autoDelete : 当所有消费客户端连接断开后，是否自动删除队列</span></span><br><span class="line">        <span class="comment">// 参数5 arguments</span></span><br><span class="line">    channel.queueDeclare(QUEUE_NAME, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br><span class="line">    String message = <span class="string">"Hello World!"</span>;</span><br><span class="line">     <span class="comment">// basicPublish(String exchange, String routingKey, BasicProperties props, byte[] body)</span></span><br><span class="line">        <span class="comment">// 参数1 exchange ：交换器</span></span><br><span class="line">        <span class="comment">// 参数2 routingKey ： 路由键</span></span><br><span class="line">        <span class="comment">// 参数3 props ： 消息的其他参数</span></span><br><span class="line">        <span class="comment">// 参数4 body ： 消息体</span></span><br><span class="line">    channel.basicPublish(<span class="string">""</span>, QUEUE_NAME, <span class="keyword">null</span>, message.getBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line">    System.out.println(<span class="string">" [x] Sent '"</span> + message + <span class="string">"'"</span>);</span><br><span class="line">    channel.close();</span><br><span class="line">    connection.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分开介绍：</p>
+<p>建立一个到服务器的连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">Connection connection = factory.newConnection();</span><br><span class="line">Channel channel = connection.createChannel();</span><br></pre></td></tr></table></figure>
+<p>Connection抽象了socket连接，主要帮助我们关心协议的版本沟通和认证。这里连接到的队列是本地的机器，如果想连接其他的机器的话应该填写具体的名字或者是IP地址。</p>
+<p>接下来，创建一个通道(channel),绝大部分API方法需要通过调用它来完成。</p>
+<p>为了发送信息，我们需要声明一个queue来帮助我们发送，然后我们就开始发送信息了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">channel.queueDeclare(QUEUE_NAME, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br><span class="line">String message = <span class="string">"Hello World!"</span>;</span><br><span class="line">channel.basicPublish(<span class="string">""</span>, QUEUE_NAME, <span class="keyword">null</span>, message.getBytes());</span><br><span class="line">System.out.println(<span class="string">" [x] Sent '"</span> + message + <span class="string">"'"</span>);</span><br></pre></td></tr></table></figure>
+<p>声明一个队列是幂等的，它只会在不存在的时候创建，消息的内容是一个二进制的数组，最后关闭通道(channel)和连接(connection)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">channel.close();</span><br><span class="line">connection.close();</span><br></pre></td></tr></table></figure>
+<p>以上就是我们的发送者。RabbitMQ会把消息推送给接收者，所以不同于只发了一条信息的发送者，我们会让接收者一直监听消息并打印出来。</p>
+<p>下面是消息的接收者，消费者从rabbitmq中拉取消息，需要持续的监听队列并打印其中的消息。</p>
+<p>和生产者一样，我们打开一个连接和一个channel，然后声明一个我们将要去消费的队列，需要注意的是要和生产者生产的队列对应。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.rabbitmq.client.*;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Recv</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> String QUEUE_NAME = <span class="string">"hello"</span>;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] argv)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">    factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line">    Connection connection = factory.newConnection();</span><br><span class="line">    Channel channel = connection.createChannel();</span><br><span class="line"></span><br><span class="line">    channel.queueDeclare(QUEUE_NAME, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br><span class="line">    System.out.println(<span class="string">" [*] Waiting for messages. To exit press CTRL+C"</span>);</span><br><span class="line"></span><br><span class="line">    Consumer consumer = <span class="keyword">new</span> DefaultConsumer(channel) &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleDelivery</span><span class="params">(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, <span class="keyword">byte</span>[] body)</span></span></span><br><span class="line"><span class="function">          <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        String message = <span class="keyword">new</span> String(body, <span class="string">"UTF-8"</span>);</span><br><span class="line">        System.out.println(<span class="string">" [x] Received '"</span> + message + <span class="string">"'"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    channel.basicConsume(QUEUE_NAME, <span class="keyword">true</span>, consumer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="work-queues"><a href="#work-queues" class="headerlink" title="work queues"></a>work queues</h4><p>创建一个工作队列来分发任务到不同的执行单元中。</p>
+<p>工作队列的主要思想就是避免避免占资源的任务的长时间阻塞，导致后面的任务的长时间等待。我们安排这个任务一会再做。我们把任务概述成信息然后发送到消息队列中，一个后台的工作单元将会取出这个任务然后执行它。当有许多个工作单元时，任务在他们之间是分享的。这个概念在Web应用中十分的有用。</p>
+<h5 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h5><p>前面部分中我们发送了一个Helloworld,现在我们发送字符串来代表复杂的信息，并用<code>Thread.sleep</code>来代替复杂的信息。我们用字符串后面的<code>.</code>的个数来代替这个任务需要执行的时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">String message = getMessage(argv);</span><br><span class="line">channel.basicPublish(<span class="string">""</span>, <span class="string">"hello"</span>, <span class="keyword">null</span>, message.getBytes());</span><br><span class="line">System.out.println(<span class="string">" [x] Sent '"</span> + message + <span class="string">"'"</span>);</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getMessage</span><span class="params">(String[] strings)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (strings.length &lt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello World!"</span>;</span><br><span class="line">    <span class="keyword">return</span> joinStrings(strings, <span class="string">" "</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">joinStrings</span><span class="params">(String[] strings, String delimiter)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> length = strings.length;</span><br><span class="line">    <span class="keyword">if</span> (length == <span class="number">0</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    StringBuilder words = <span class="keyword">new</span> StringBuilder(strings[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; length; i++) &#123;</span><br><span class="line">        words.append(delimiter).append(strings[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> words.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改进后的消费者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Consumer consumer = <span class="keyword">new</span> DefaultConsumer(channel) &#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleDelivery</span><span class="params">(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, <span class="keyword">byte</span>[] body)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String message = <span class="keyword">new</span> String(body, <span class="string">"UTF-8"</span>);</span><br><span class="line">    System.out.println(<span class="string">" [x] Received '"</span> + message + <span class="string">"'"</span>);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      doWork(message);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">" [x] Done"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">boolean</span> autoAck = <span class="keyword">true</span>; <span class="comment">// acknowledgment is covered below</span></span><br><span class="line">channel.basicConsume(TASK_QUEUE_NAME, autoAck, consumer);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doWork</span><span class="params">(String task)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> ch: task.toCharArray()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ch == <span class="string">'.'</span>) Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="循环调度"><a href="#循环调度" class="headerlink" title="循环调度"></a>循环调度</h5><p>使用工作队列的一个好处就是它能够并行的处理队列。如果堆积了很多任务，我们只需要添加更多的工作者（workers）就可以了，扩展很简单。</p>
+<p>首先，我们先同时运行两个 worker实例，它们都会从队列中获取消息，到底是不是这样呢？我们看看。</p>
+<p>然后需要打开三个终端，两个用来运行 worker程序，这两个终端就是我们的两个消费者(consumers)—C1 和 C2。</p>
+<p>默认来说，RabbitMQ 会按顺序得把消息发送给每个消费者（consumer）。平均每个消费者都会收到同等数量得消息。这种发送消息得方式叫做——轮询（round-robin）。试着添加三个或更多得工作者（workers）。</p>
+<h5 id="消息确认"><a href="#消息确认" class="headerlink" title="消息确认"></a>消息确认</h5><p>当处理一个比较耗时得任务的时候，你也许想知道消费者（consumers）是否运行到一半就挂掉。当前的代码中，当消息被 RabbitMQ 发送给消费者（consumers）之后，马上就会在内存中移除。这种情况，你只要把一个工作者（worker）停止，正在处理的消息就会丢失。同时，所有发送到这个工作者的还没有处理的消息都会丢失。</p>
+<p>我们不想丢失任何任务消息。<strong>如果一个工作者（worker）挂掉了，我们希望任务会重新发送给其他的工作者（worker）</strong>。</p>
+<p><strong>为了防止消息丢失，RabbitMQ 提供了消息响应（acknowledgments）</strong>。消费者会通过一个 ack（响应），告诉RabbitMQ已经收到并处理了某条消息，然后RabbitMQ就会释放并删除这条消息。</p>
+<p>如果消费者（consumer）挂掉了，没有发送响应，RabbitMQ 就会认为消息没有被完全处理，然后重新发送给其他消费者（consumer）。这样，及时工作者（workers）偶尔的挂掉，也不会丢失消息。</p>
+<p><strong>消息是没有超时这个概念的</strong>；当工作者与它断开的时候，RabbitMQ 会重新发送消息。这样在处理一个耗时非常长的消息任务的时候就不会出问题了。</p>
+<p>消息响应默认是开启的。之前的例子中我们可以使用 no_ack=True 标识把它关闭。当它为false时，当工作者（worker）完成了任务，就发送一个响应。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">channel.basicQos(<span class="number">1</span>); <span class="comment">// accept only one unack-ed message at a time (see below)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> Consumer consumer = <span class="keyword">new</span> DefaultConsumer(channel) &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleDelivery</span><span class="params">(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, <span class="keyword">byte</span>[] body)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String message = <span class="keyword">new</span> String(body, <span class="string">"UTF-8"</span>);</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">" [x] Received '"</span> + message + <span class="string">"'"</span>);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      doWork(message);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      System.out.println(<span class="string">" [x] Done"</span>);</span><br><span class="line">      channel.basicAck(envelope.getDeliveryTag(), <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">boolean</span> autoAck = <span class="keyword">false</span>;</span><br><span class="line">channel.basicConsume(TASK_QUEUE_NAME, autoAck, consumer);</span><br></pre></td></tr></table></figure>
+<p>运用上面的代码，即使杀死一个任务，也不会丢失消息。</p>
+<h5 id="忘记确认"><a href="#忘记确认" class="headerlink" title="忘记确认"></a>忘记确认</h5><p>一个很容易犯的错误就是忘了 basic_ack，后果很严重。消息在你的程序退出之后就会重新发送，如果它不能够释放没响应的消息，RabbitMQ 就会占用越来越多的内存。</p>
+<p>为了排除这种错误，你可以使用 rabbitmqctl 命令，输出 messages_unacknowledged 字段：</p>
+<h5 id="消息持久化"><a href="#消息持久化" class="headerlink" title="消息持久化"></a>消息持久化</h5><p>如果你没有特意告诉 RabbitMQ，那么在它退出或者崩溃的时候，将会丢失所有队列和消息。为了确保信息不会丢失，有两个事情是需要注意的：我们必须把“队列”和“消息”设为持久化。</p>
+<p>首先，为了不让队列消失，需要把队列声明为持久化（durable）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> durable = <span class="keyword">true</span>;</span><br><span class="line">channel.queueDeclare(<span class="string">"hello"</span>, durable, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>尽管这行代码本身是正确的，但是仍然不会正确运行。因为我们已经定义过一个叫hello 的非持久化队列。RabbitMq 不允许你使用不同的参数重新定义一个队列，它会返回一个错误。但我们现在使用一个快捷的解决方法——用不同的名字，例如task_queue。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> durable = <span class="keyword">true</span>;</span><br><span class="line">channel.queueDeclare(<span class="string">"task_queue"</span>, durable, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>这个queue_declare必须在生产者（producer）和消费者（consumer）对应的代码中修改。这时候，我们就可以确保在 RabbitMq 重启之后 queue_declare 队列不会丢失。另外，我们需要把我们的消息也要设为持久化——将 delivery_mode 的属性设为2。</p>
+<h5 id="公平调度"><a href="#公平调度" class="headerlink" title="公平调度"></a>公平调度</h5><p>你应该已经发现，它仍旧没有按照我们期望的那样进行分发。比如有两个工作者（workers），处理奇数消息的比较繁忙，处理偶数消息的比较轻松。然而RabbitMQ 并不知道这些，它仍然一如既往的派发消息。</p>
+<p>这是因为 RabbitMQ 只管分发进入队列的消息，不会关心有多少消费者(consumer)没有作出响应。它盲目的把第 n-th 条消息发给第 n-th 个消费者。</p>
+<p>我们可以使用 basic.qos 方法，并设置 prefetch_count=1。这样是告诉RabbitMQ，再同一时刻，不要发送超过1条消息给一个工作者（worker），直到它已经处理了上一条消息并且作出了响应。这样，RabbitMQ 就会把消息分发给下一个空闲的工作者（worker）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.basicQos(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h3><p>分发一个消息给多个消费者（consumers）。这种模式被称为“发布／订阅”。</p>
+<p>为了描述这种模式，将会构建一个简单的日志系统。它包括两个程序，第一个程序负责发送日志消息，第二个程序负责获取消息并输出内容。</p>
+<p>在我们的这个日志系统中，所有正在运行的接收方程序都会接受消息。我们用其中一个接收者（receiver）把日志写入硬盘中，另外一个接受者（receiver）把日志输出到屏幕上。</p>
+<p>最终，日志消息被广播给所有的接受者（receivers）。</p>
+<p><strong>RabbitMQ 消息模型的核心理念是</strong>：发布者（producer）不会直接发送任何消息给队列。事实上，发布者（producer）甚至不知道消息是否已经被投递到队列。</p>
+<p>发布者（producer）只需要把消息发送给一个<strong>交换机（exchange）</strong>。交换机非常简单，它一边从发布者方接收消息，一边把消息推送到队列。交换机必须知道如何处理它接收到的消息，是应该推送到指定的队列还是是多个队列，或者是直接忽略消息。这些规则是通过交换机类型（exchange type）来定义的。</p>
+<p>有几个可供选择的交换机类型：直连交换机(direct), 主题交换机(topic), 头交换机(headers)和 扇型交换机(fanout)。我们在这里主要说明最后一个—-扇型交换机（fanout）。先创建一个fanout类型的交换机，命名为logs：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.exchangeDeclare(<span class="string">"logs"</span>, <span class="string">"fanout"</span>);</span><br></pre></td></tr></table></figure>
+<p>扇型交换机（fanout）很简单，它把消息发送给它所知道的所有队列。这正是我们的日志系统所需要的。</p>
+<p>现在，我们就可以发送消息到一个具名交换机了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.basicPublish( <span class="string">"logs"</span>, <span class="string">""</span>, <span class="keyword">null</span>, message.getBytes());</span><br></pre></td></tr></table></figure>
+<h5 id="临时队列"><a href="#临时队列" class="headerlink" title="临时队列"></a>临时队列</h5><p>给一个队列命名是很重要的——我们需要把工作者（workers）指向正确的队列。如果你打算在发布者（producers）和消费者（consumers）之间共享同队列的话，给队列命名是十分重要的。</p>
+<p>但是这并不适用于我们的日志系统。我们打算接收所有的日志消息，而不仅仅是一小部分。我们关心的是最新的消息而不是旧的。为了解决这个问题，我们需要做两件事情。</p>
+<p>首先，当我们连接上 RabbitMQ 的时候，我们需要一个全新的、空的队列。我们可以手动创建一个随机的队列名，或者让服务器为我们选择一个随机的队列名（推荐）。我们只需要在调用 queueDeclare 方法的时候，不提供 queue 参数就可以了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String queueName = channel.queueDeclare().getQueue();</span><br></pre></td></tr></table></figure>
+<p>这时候我们可以通过 result.method.queue 获得已经生成的随机队列名。它可能是这样子的：amq.gen-U0srCoW8TsaXjNh73pnVAw==。</p>
+<p>第二步，当与消费者（consumer）断开连接的时候，这个队列应当被立即删除。exclusive 标识符即可达到此目的.</p>
+<h5 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h5><p>我们已经创建了一个扇型交换机（fanout）和一个队列。现在我们需要告诉交换机如何发送消息给我们的队列。交换器和队列之间的联系我们称之为绑定(binding)。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.queueBind(queueName, <span class="string">"logs"</span>, <span class="string">""</span>);</span><br></pre></td></tr></table></figure></p>
+<p>现在，logs 交换机将会把消息添加到我们的队列中。</p>
+<h5 id="绑定列表"><a href="#绑定列表" class="headerlink" title="绑定列表"></a>绑定列表</h5><p>你可以使用 <code>rabbitmqctl list_bindings</code> 列出所有现存的绑定。</p>
+<hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">交换器与队列之间的连接叫做绑定，每一个绑定都有一个绑定键，叫做binding key，当消息发送过来时，消息会带有一个路由的标识，叫做routing key，交换器会根据这两个值来决定将消息发给哪个队列。</span><br><span class="line">- direct 根据生产者传过来的路由键是否等于绑定键，来决定发送的队列</span><br><span class="line">- topic 根据生产者传过来的路由键是否匹配一定的表达式，来决定</span><br><span class="line">- fanout 发送给知道的全部队列，会忽略路由键。</span><br><span class="line">- headers 根据消息的头信息来决定消息发送给哪个队列。</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><p>我们打算新增一个功能 —— 使得它能够只订阅消息的一个子集。例如，我们只需要把严重的错误日志信息写入日志文件（存储到磁盘），但同时仍然把所有的日志信息输出到控制台中。</p>
+<h4 id="绑定-1"><a href="#绑定-1" class="headerlink" title="绑定"></a>绑定</h4><p>前面的例子，我们已经创建过绑定（bindings），代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">channel.queue_bind(exchange=exchange_name,queue=queue_name)</span><br></pre></td></tr></table></figure>
+<p>绑定（binding）是指交换机（exchange）和队列（queue）的关系。可以简单理解为：这个队列（queue）对这个交换机（exchange）的消息感兴趣。</p>
+<p>绑定的时候可以带上一个额外的 routing_key 参数。为了避免与basic_publish的参数混淆，我们把它叫做绑定键（binding key）。以下是如何创建一个带绑定键的绑定。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">channel.queue_bind(exchange=exchange_name,</span><br><span class="line">                   queue=queue_name,</span><br><span class="line">                   routing_key=<span class="string">'black'</span>)</span><br></pre></td></tr></table></figure>
+<p>绑定键的意义取决于交换机（exchange）的类型。我们之前使用过的扇型交换机（fanout exchanges）会忽略这个值。</p>
+<h5 id="直连交换机"><a href="#直连交换机" class="headerlink" title="直连交换机"></a>直连交换机</h5><p>我们的日志系统广播所有的消息给所有的消费者（consumers）。我们打算扩展它，使其基于日志的严重程度进行消息过滤。例如我们也许只是希望将比较严重的错误（error）日志写入磁盘，以免在警告（warning）或者信息（info）日志上浪费磁盘空间。</p>
+<p>我们使用的扇型交换机（fanout exchange）没有足够的灵活性 —— 它能做的仅仅是广播。</p>
+<p>我们将会使用直连交换机（direct exchange）来代替。路由的算法很简单 —— 交换机将会对绑定键（binding key）和路由键（routing key）进行精确匹配，从而确定消息该分发到哪个队列。</p>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-27%2016-55-10%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=X2MAXP8ssLktyMD9BBHes0qsvCxhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0NzMyOTQ0JnQ9MTUyMjE0MDk0NCZyPTEyNTYyMTg3MTAmZj0vMjAxOC0wMy0yNyUyMDE2LTU1LTEwJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
+<p>在这个场景中，我们可以看到直连交换机 X 和两个队列进行了绑定。第一个队列使用 orange 作为绑定键，第二个队列有两个绑定，一个使用 black 作为绑定键，另外一个使用 green。</p>
+<p>这样以来，当路由键为 orange 的消息发布到交换机，就会被路由到队列 Q1。路由键为 black 或者 green 的消息就会路由到 Q2。其他的所有消息都将会被丢弃。</p>
+<h4 id="多个绑定"><a href="#多个绑定" class="headerlink" title="多个绑定"></a>多个绑定</h4><p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-27%2017-02-39%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=BX5GArkS2warxv6ICYDEzrvxq51hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0NzMzMzgzJnQ9MTUyMjE0MTM4MyZyPTE5NDg0NTAwMzImZj0vMjAxOC0wMy0yNyUyMDE3LTAyLTM5JUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
+<p>多个队列使用相同的绑定键是合法的。这个例子中，我们可以添加一个 X 和 Q1 之间的绑定，使用 black 绑定键。这样一来，直连交换机就和扇型交换机的行为一样，会将消息广播到所有匹配的队列。带有 black 路由键的消息会同时发送到 Q1 和 Q2。</p>
+<h5 id="发送日志"><a href="#发送日志" class="headerlink" title="发送日志"></a>发送日志</h5><p>我们将会发送消息到一个直连交换机，把日志级别作为路由键。这样接收日志的脚本就可以根据严重级别来选择它想要处理的日志。我们先看看发送日志。我们需要创建一个交换机（exchange）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">channel.exchange_declare(exchange=<span class="string">'direct_logs'</span>,</span><br><span class="line">                         exchange_type=<span class="string">'direct'</span>)</span><br></pre></td></tr></table></figure>
+<p>然后我们发送一则消息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">channel.basic_publish(exchange=<span class="string">'direct_logs'</span>,</span><br><span class="line">                      routing_key=severity,</span><br><span class="line">                      body=message)</span><br></pre></td></tr></table></figure>
+<p>我们先假设 “severity” 的值是 info、warning、error 中的一个。</p>
+<h5 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h5><p>处理接收消息的方式和之前差不多，只有一个例外，我们将会为我们感兴趣的每个严重级别分别创建一个新的绑定。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">result = channel.queue_declare(exclusive=True)</span><br><span class="line">queue_name = result.method.queue</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> severity in severities:</span><br><span class="line">    channel.queue_bind(exchange=<span class="string">'direct_logs'</span>,</span><br><span class="line">                       queue=queue_name,</span><br><span class="line">                       routing_key=severity)</span><br></pre></td></tr></table></figure>
+<h3 id="主题交换机"><a href="#主题交换机" class="headerlink" title="主题交换机"></a>主题交换机</h3><p>我们改进了我们的日志系统。我们使用直连交换机替代了扇型交换机，从只能盲目的广播消息改进为有可能选择性的接收日志。</p>
+<p>尽管直连交换机能够改善我们的系统，但是它也有它的限制—-没办法基于多个标准执行路由操作。</p>
+<p>在我们的日志系统中，我们不只希望订阅基于严重程度的日志，同时还希望订阅基于发送来源的日志。Unix 工具 <a href="http://en.wikipedia.org/wiki/Syslog" target="_blank" rel="noopener">syslog</a>就是同时基于严重程度 -severity (info/warn/crit…) 和 设备 -facility (auth/cron/kern…) 来路由日志的。</p>
+<p>如果这样的话，将会给予我们非常大的灵活性，我们既可以监听来源于 “cron” 的严重程度为 “critical errors” 的日志，也可以监听来源于 “kern” 的所有日志。</p>
+<p>为了实现这个目的，接下来我们学习如何使用另一种更复杂的交换机 —— 主题交换机。</p>
+<p>发送到主题交换机（topic exchange）的消息不可以携带随意什么样子的路由键（routing_key），它的路由键必须是一个由.分隔开的词语列表。这些单词随便是什么都可以，但是最好是跟携带它们的消息有关系的词汇。以下是几个推荐的例子：”stock.usd.nyse”, “nyse.vmw”, “quick.orange.rabbit”。词语的个数可以随意，但是不要超过 255 字节。</p>
+<p>绑定键也必须拥有同样的格式。主题交换机背后的逻辑跟直连交换机很相似 —— 一个携带着特定路由键的消息会被主题交换机投递给绑定键与之想匹配的队列。但是它的绑定键和路由键有两个特殊应用方式：</p>
+<ul>
+<li>星号用来表示一个单词</li>
+<li>井号用来表示任意数量的单词</li>
+</ul>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-27%2017-10-21%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=GR5WD6Fevzoj0mkBDiqNz/gnybVhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0NzMzODM0JnQ9MTUyMjE0MTgzNCZyPTEzMTU2MjkyNDUmZj0vMjAxOC0wMy0yNyUyMDE3LTEwLTIxJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
+<p>这个例子里，我们发送的所有消息都是用来描述小动物的。发送的消息所携带的路由键是由三个单词所组成的，这三个单词被两个.分割开。路由键里的第一个单词描述的是动物的手脚的利索程度，第二个单词是动物的颜色，第三个是动物的种类。所以它看起来是这样的： <code>&lt;celerity&gt;.&lt;colour&gt;.&lt;species&gt;</code></p>
+<p>我们创建了三个绑定：Q1 的绑定键为<code>.orange.</code>，Q2 的绑定键为 <code>..rabbit</code> 和 <code>lazy.#</code> 。</p>
+<p>这三个绑定键被可以总结为：</p>
+<ul>
+<li>Q1 对所有的桔黄色动物都感兴趣。</li>
+<li>Q2 则是对所有的兔子和所有懒惰的动物感兴趣。</li>
+</ul>
+<p>一个携带有 <code>quick.orange.rabbit</code> 的消息将会被分别投递给这两个队列。携带着 <code>lazy.orange.elephant</code> 的消息同样也会给两个队列都投递过去。另一方面携带有 <code>quick.orange.fox</code>的消息会投递给第一个队列，携带有 <code>lazy.brown.fox</code> 的消息会投递给第二个队列。携带有 <code>lazy.pink.rabbit</code> 的消息只会被投递给第二个队列一次，即使它同时匹配第二个队列的两个绑定。携带着 <code>quick.brown.fox</code> 的消息不会投递给任何一个队列。</p>
+<p>如果我们违反约定，发送了一个携带有一个单词或者四个单词<code>orange</code> or <code>quick.orange.male.rabbit</code>的消息时，发送的消息不会投递给任何一个队列，而且会丢失掉。</p>
+<p>但是另一方面，即使 <code>lazy.orange.male.rabbit</code> 有四个单词，他还是会匹配最后一个绑定，并且被投递到第二个队列中。</p>
+<p>主题交换机是很强大的，它可以表现出跟其他交换机类似的行为</p>
+<p>当一个队列的绑定键为 “#”（井号） 的时候，这个队列将会无视消息的路由键，接收所有的消息。</p>
+<p>当 * (星号) 和 # (井号) 这两个特殊字符都未在绑定键中出现的时候，此时主题交换机就拥有的直连交换机的行为。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/03/27/RabbitMq/">https://corn1ng.github.io/2018/03/27/RabbitMq/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+              <a href="/tags/RabbitMq/">RabbitMq</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/03/28/服务治理 Spring Cloud Eureka/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">服务治理 Spring Cloud Eureka</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/03/26/Linux 安装ZooKeeper/">
+        <span class="next-text nav-default">Linux 安装ZooKeeper</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

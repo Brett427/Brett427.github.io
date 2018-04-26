@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Requests 总结"/>
+
+
+
+
+  <meta name="keywords" content="爬虫, Python库, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/05/Requests-总结学习/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Requests 总结 - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Requests 总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-05
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Python/">Python</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#发送请求"><span class="toc-text">发送请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#传递参数"><span class="toc-text">传递参数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#打印URL"><span class="toc-text">打印URL</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相应内容"><span class="toc-text">相应内容</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#二进制相应内容"><span class="toc-text">二进制相应内容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JSON相应内容"><span class="toc-text">JSON相应内容</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#原始相应内容"><span class="toc-text">原始相应内容</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定制请求头"><span class="toc-text">定制请求头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更加复杂POST请求"><span class="toc-text">更加复杂POST请求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#POST-Multipart-Encoded-的文件"><span class="toc-text">POST Multipart-Encoded)的文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相应头"><span class="toc-text">相应头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cookie"><span class="toc-text">Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#访问cookie"><span class="toc-text">访问cookie</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#发送cookie"><span class="toc-text">发送cookie</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="发送请求"><a href="#发送请求" class="headerlink" title="发送请求"></a>发送请求</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests <span class="comment"># 导入库</span></span><br><span class="line"><span class="comment"># 尝试获取某个网页</span></span><br><span class="line">r =requests.get(<span class="string">'https://www.baidu.com'</span>)</span><br></pre></td></tr></table></figure>
+<p>r 是一个response对象，从这个对象可以获取想要的信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">r = requests.post(<span class="string">'http://httpbin.org/post'</span>)</span><br><span class="line">r = requests.put(<span class="string">"http://httpbin.org/put"</span>)</span><br><span class="line">r = requests.delete(<span class="string">"http://httpbin.org/delete"</span>)</span><br><span class="line">r = requests.head(<span class="string">"http://httpbin.org/get"</span>)</span><br><span class="line">r = requests.options(<span class="string">"http://httpbin.org/get"</span>)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><p>当传递参数的时候，若手动构建，那么数据会以键/值对的形式置于 URL 中，跟在一个问号的后面。例如， <code>httpbin.org/get?key=val</code>。</p>
+<p> Requests 允许你使用 <code>params</code> 关键字参数，以一个字符串字典来提供这些参数。举例来说，如果你想传递 <code>key1=value1</code> 和 <code>key2=value2</code> 到 <code>httpbin.org/get</code> ，那么你可以使用如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">myparam=&#123;<span class="string">'key1'</span>:<span class="string">'value1'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;</span><br><span class="line">r = requests.get(<span class="string">"http://httpbin.org/get"</span>, params=myparam)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将列表作为值传入</span></span><br><span class="line">payload = &#123;<span class="string">'key1'</span>: <span class="string">'value1'</span>, <span class="string">'key2'</span>: [<span class="string">'value2'</span>, <span class="string">'value3'</span>]&#125;</span><br><span class="line">r = requests.get(<span class="string">'http://httpbin.org/get'</span>, params=payload)</span><br><span class="line">print(r.url)</span><br><span class="line"><span class="comment"># http://httpbin.org/get?key1=value1&amp;key2=value2&amp;key2=value3</span></span><br></pre></td></tr></table></figure>
+<h5 id="打印URL"><a href="#打印URL" class="headerlink" title="打印URL"></a>打印URL</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(r.url)</span><br></pre></td></tr></table></figure>
+<h3 id="相应内容"><a href="#相应内容" class="headerlink" title="相应内容"></a>相应内容</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取服务器相应内容</span></span><br><span class="line">r = requests.get(<span class="string">'https://github.com/timeline.json'</span>)</span><br><span class="line">r.text</span><br><span class="line"><span class="comment"># Requests 会自动解码来自服务器的内容。大多数 unicode 字符集都能被无缝地解码。</span></span><br><span class="line"><span class="comment"># 改变输出编码</span></span><br><span class="line">r.encoding = <span class="string">'ISO-8859-1'</span></span><br></pre></td></tr></table></figure>
+<h5 id="二进制相应内容"><a href="#二进制相应内容" class="headerlink" title="二进制相应内容"></a>二进制相应内容</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 非文本请求</span></span><br><span class="line">r.content</span><br><span class="line">Requests 会自动为你解码 gzip 和 deflate 传输编码的响应数据。</span><br><span class="line">例如，以请求返回的二进制数据创建一张图片，你可以使用如下代码：</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line">i = Image.open(BytesIO(r.content))</span><br></pre></td></tr></table></figure>
+<h5 id="JSON相应内容"><a href="#JSON相应内容" class="headerlink" title="JSON相应内容"></a>JSON相应内容</h5><p>requests内置JSON解码器，帮助处理JSON数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line">r = requests.get(<span class="string">'https://github.com/timeline.json'</span>)</span><br><span class="line">r.json()</span><br><span class="line"><span class="comment"># [&#123;u'repository': &#123;u'open_issues': 0, u'url': 'https://github.com/...</span></span><br></pre></td></tr></table></figure>
+<h5 id="原始相应内容"><a href="#原始相应内容" class="headerlink" title="原始相应内容"></a>原始相应内容</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">r = requests.get(<span class="string">'https://github.com/timeline.json'</span>, stream=<span class="keyword">True</span>)</span><br><span class="line">r.raw</span><br><span class="line">&lt;requests.packages.urllib3.response.HTTPResponse object at <span class="number">0x101194810</span>&gt;</span><br><span class="line">r.raw.read(<span class="number">10</span>)</span><br><span class="line"><span class="string">'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\x03'</span></span><br></pre></td></tr></table></figure>
+<h3 id="定制请求头"><a href="#定制请求头" class="headerlink" title="定制请求头"></a>定制请求头</h3><p>如果你想为请求添加 HTTP 头部，只要简单地传递一个 <code>dict</code> 给 <code>headers</code> 参数就可以了。</p>
+<p>例如，在前一个示例中我们没有指定 content-type:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url = <span class="string">'https://api.github.com/some/endpoint'</span></span><br><span class="line">headers = &#123;<span class="string">'user-agent'</span>: <span class="string">'my-app/0.0.1'</span>&#125;</span><br><span class="line">r = requests.get(url, headers=headers)</span><br></pre></td></tr></table></figure>
+<h3 id="更加复杂POST请求"><a href="#更加复杂POST请求" class="headerlink" title="更加复杂POST请求"></a>更加复杂POST请求</h3><p>你想要发送一些编码为表单形式的数据——非常像一个 HTML 表单。要实现这个，只需简单地传递一个字典给 data 参数。你的数据字典在发出请求时会自动编码为表单形式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload = &#123;<span class="string">'key1'</span>: <span class="string">'value1'</span>, <span class="string">'key2'</span>: <span class="string">'value2'</span>&#125;</span><br><span class="line">r = requests.post(<span class="string">"http://httpbin.org/post"</span>, data=payload)</span><br><span class="line">print(r.text)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"form"</span>: &#123;</span><br><span class="line">    <span class="string">"key2"</span>: <span class="string">"value2"</span>,</span><br><span class="line">    <span class="string">"key1"</span>: <span class="string">"value1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="POST-Multipart-Encoded-的文件"><a href="#POST-Multipart-Encoded-的文件" class="headerlink" title="POST Multipart-Encoded)的文件"></a>POST Multipart-Encoded)的文件</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'http://httpbin.org/post'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>files = &#123;<span class="string">'file'</span>: open(<span class="string">'report.xls'</span>, <span class="string">'rb'</span>)&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.post(url, files=files)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">"files"</span>: &#123;</span><br><span class="line">    <span class="string">"file"</span>: <span class="string">"&lt;censored...binary...data&gt;"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###　状态响应码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检测相应状态码</span></span><br><span class="line">r = requests.get(<span class="string">'http://httpbin.org/get'</span>)</span><br><span class="line">r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="comment"># 为方便引用，Requests还附带了一个内置的状态码查询对象：</span></span><br><span class="line">r.status_code == requests.codes.ok</span><br><span class="line"><span class="keyword">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="相应头"><a href="#相应头" class="headerlink" title="相应头"></a>相应头</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">我们可以查看以一个 Python 字典形式展示的服务器响应头：</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.headers</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">'content-encoding'</span>: <span class="string">'gzip'</span>,</span><br><span class="line">    <span class="string">'transfer-encoding'</span>: <span class="string">'chunked'</span>,</span><br><span class="line">    <span class="string">'connection'</span>: <span class="string">'close'</span>,</span><br><span class="line">    <span class="string">'server'</span>: <span class="string">'nginx/1.0.4'</span>,</span><br><span class="line">    <span class="string">'x-runtime'</span>: <span class="string">'148ms'</span>,</span><br><span class="line">    <span class="string">'etag'</span>: <span class="string">'"e1ca502697e5c9317743dc078f67693f"'</span>,</span><br><span class="line">    <span class="string">'content-type'</span>: <span class="string">'application/json'</span></span><br><span class="line">&#125;</span><br><span class="line">因此，我们可以使用任意大写形式来访问这些响应头字段：</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.headers[<span class="string">'Content-Type'</span>]</span><br><span class="line"><span class="string">'application/json'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.headers.get(<span class="string">'content-type'</span>)</span><br><span class="line"><span class="string">'application/json'</span></span><br></pre></td></tr></table></figure>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><h5 id="访问cookie"><a href="#访问cookie" class="headerlink" title="访问cookie"></a>访问cookie</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果某个响应中包含一些 cookie，你可以快速访问它们：</span></span><br><span class="line">url = <span class="string">'http://example.com/some/cookie/setting/url'</span></span><br><span class="line">r = requests.get(url)</span><br><span class="line">r.cookies[<span class="string">'example_cookie_name'</span>]</span><br><span class="line"><span class="string">'example_cookie_value'</span></span><br></pre></td></tr></table></figure>
+<h5 id="发送cookie"><a href="#发送cookie" class="headerlink" title="发送cookie"></a>发送cookie</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 要想发送你的cookies到服务器，可以使用 cookies 参数：</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'http://httpbin.org/cookies'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>cookies = dict(cookies_are=<span class="string">'working'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(url, cookies=cookies)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line"><span class="string">'&#123;"cookies": &#123;"cookies_are": "working"&#125;&#125;'</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/05/Requests-总结学习/">https://corn1ng.github.io/2017/12/05/Requests-总结学习/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/爬虫/">爬虫</a>
+            
+              <a href="/tags/Python库/">Python库</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/05/Beautiful Soup/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Beautiful Soup</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/05/Python-多线程/">
+        <span class="next-text nav-default">Python 多线程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>

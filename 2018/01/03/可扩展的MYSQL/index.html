@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="可扩展的MYSQL"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/03/可扩展的MYSQL/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 可扩展的MYSQL - Corn1ng's Blog </title>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          可扩展的MYSQL
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-03
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#可扩展的MYSQL"><span class="toc-text">可扩展的MYSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展MySQL"><span class="toc-text">扩展MySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#向上扩展"><span class="toc-text">向上扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#向外扩展"><span class="toc-text">向外扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#按功能拆分"><span class="toc-text">按功能拆分</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#数据分片"><span class="toc-text">数据分片</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过多实例扩展"><span class="toc-text">通过多实例扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过集群扩展"><span class="toc-text">通过集群扩展</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#向内扩展"><span class="toc-text">向内扩展</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡"><span class="toc-text">负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#应用与MySQL直接相连"><span class="toc-text">应用与MySQL直接相连</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#复制上的读写分离"><span class="toc-text">复制上的读写分离</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引入中间件"><span class="toc-text">引入中间件</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="可扩展的MYSQL"><a href="#可扩展的MYSQL" class="headerlink" title="可扩展的MYSQL"></a>可扩展的MYSQL</h2><p>容量是一个和可拓展性相关的概念,系统容量表示在一定时间内能够完成的工作量,容量必须是可以有效利用的,系统的最大吞吐量不等同于容量</p>
+<p>可拓展性的定义: 可拓展性是当增加资源以处理负载和增加容量时系统能够获得的投资产出率.</p>
+<a id="more"></a>
+<h3 id="扩展MySQL"><a href="#扩展MySQL" class="headerlink" title="扩展MySQL"></a>扩展MySQL</h3><p>如果将应用所有的数据简单的放到单个MySQL服务器实例上,则无法很好的扩展,迟早会遇到性能瓶颈.传统的解决方法是购买更多强悍的机器,也就是常说的”垂直扩展”或者”向上扩展”,另外一个与之相反的方法是将任务分配到多台计算机上,通常称为”水平扩展”或者”向外扩展”,另外,大部分应用还会有一些很少或者从来不需要的数据,这些数据可以被清理或者归档,将这个方案称为”向内扩展”.</p>
+<p>通常在无法满足增加的负载时会考虑可扩展性,具体表现为工作负载从CPU密集型变成IO密集型,并发查询的竞争,以及不断增大的延迟.</p>
+<h4 id="向上扩展"><a href="#向上扩展" class="headerlink" title="向上扩展"></a>向上扩展</h4><p>向上扩展意味着购买更多的硬件,向上扩展的策略可能能够持续一段时间,实际上很多应用是达不到天花板的,但是如果应用十分庞大,向上扩展可能就没有办法了,</p>
+<h4 id="向外扩展"><a href="#向外扩展" class="headerlink" title="向外扩展"></a>向外扩展</h4><p>可以把向外扩展策略划分为三个部分,复制,拆分,以及数据分片.</p>
+<p>最简单最常见的向外扩展的方法是通过复制将数据分发到多个服务器上,然后将备库用于读查询,这种技术对于以读为主的应用很有效,但是缺点也很明显,例如重复缓存,</p>
+<p>另外一个比较常见的向外扩展方法是将工作负载分布到多个节点,具体如果分布工作负载是一个复杂的话题,在MySQL架构中,一个节点就是一个功能部件,如果没有规划冗余和高可用性,那么一个节点可能就是一个服务器,如果设计的是能够故障转移的冗余系统,那么一个节点可能是1)一个主主复制的双机结构,2)一个主库和多个备库3)一个主动服务器,并使用分布式复制块设备作为备用服务器4)一个基于存储区域网络的集群</p>
+<p>大多数情况下,一个节点内的所有服务器应该拥有相同的数据,</p>
+<h5 id="按功能拆分"><a href="#按功能拆分" class="headerlink" title="按功能拆分"></a>按功能拆分</h5><p>按功能拆分,或者按职责拆,意味着不同的节点执行不同的任务,例如一个网站,各个部分无需共享数据,那么可以按照网站的功能区域进行划分,</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-03%2020-18-51.png" alt=""></p>
+<p>如果应用很大,每个功能区域还可以拥有其专用的web服务器.但是一旦采用了按功能划分,以后就不好进行更具扩展性的设计了.</p>
+<h5 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h5><p>在目前扩展大型MySQL应用的方案中,数据分片是最通用,最成功的方法,它把数据分割成一小片,或者说一块,然后存储到不同的节点中,</p>
+<p>数据分片在和某些类型的按功能划分联合使用时非常有用,大多数分片系统也有一些全局的数据不会被分片.全局数据一般存储在单个节点上. 事实上,大部分应用只会对需要的数据做分片,—通常是那些会增长的非常庞大的数据,</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-03%2020-34-25.png" alt=""></p>
+<h4 id="通过多实例扩展"><a href="#通过多实例扩展" class="headerlink" title="通过多实例扩展"></a>通过多实例扩展</h4><p>不要在一个性能很强的服务器上只运行一个服务器实例,我们还有别的选择,可以让数据分片足够小,以使每台机器上都能放置多个分片,每台服务器上运行多个实例,然后划分服务器的硬件资源,将其分配给每个实例.</p>
+<h4 id="通过集群扩展"><a href="#通过集群扩展" class="headerlink" title="通过集群扩展"></a>通过集群扩展</h4><p>理想的扩展方案是单一逻辑数据库能够存储尽可能多的数据,处理尽可能多的查询,并且如期望的那样增长,随着云计算的流行,自动扩展-根据负载或者数据大小动态地在集群中增加/移除服务器越来越多.</p>
+<h4 id="向内扩展"><a href="#向内扩展" class="headerlink" title="向内扩展"></a>向内扩展</h4><p>处理不断增加的数据和负载最简单的方法是对不再需要的数据进行归档和清理,这种操作可能带来显著的成效,具体取决于工作负载和数据特性,这种做法并不用来代替其他策略,但是可以作为争取时间的短期策略,也可以作为处理大数据量的长期计划之一.</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>首先,集群和分布式的区别</p>
+<p>分布式：一个业务分拆多个子业务，部署在不同的服务器上<br>集群：同一个业务，部署在多个服务器上</p>
+<p>负载均衡的思路很简单,在一个服务器集群中尽可能的平均负载量,通常的做法是在服务器前端设置一个负载均衡器(一般是专门的硬件设备),然后负载均衡器将请求的连接路由到最空闲的可用服务器,下图是一个大型网站的负载均衡设置,其中一个负载均衡器用于http流量,另一个用于MySQL访问</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-03%2020-54-11.png" alt=""></p>
+<p> 负载均衡的主要目的有可扩展性,高效性,可用性,透明性,一致性.</p>
+<p>在与MySQL相关的领域中,负载均衡通常与数据分片及复制紧密相关.可以把负载均衡和高可用性结合在一起,部署到应用的任一层次上.</p>
+<h4 id="应用与MySQL直接相连"><a href="#应用与MySQL直接相连" class="headerlink" title="应用与MySQL直接相连"></a>应用与MySQL直接相连</h4><h5 id="复制上的读写分离"><a href="#复制上的读写分离" class="headerlink" title="复制上的读写分离"></a>复制上的读写分离</h5><p>MySQL复制产生了多个数据副本,由于备库复制是异步的,因此难点在于如何处理备库上的脏数据,应该将备库用作只读的,而主库可以同时处理读和写查询.</p>
+<h4 id="引入中间件"><a href="#引入中间件" class="headerlink" title="引入中间件"></a>引入中间件</h4><p>许多负载均衡方案都会引入一个中间件,作为网络通信的代理,它一边接受所有的通信请求,另一边将这些请求派发到指定的服务器上,然后把执行结果发送回请求的机器上.中间件可以是硬件设备或是软件,</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-03%2021-27-51.png" alt=""></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/03/可扩展的MYSQL/">https://corn1ng.github.io/2018/01/03/可扩展的MYSQL/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/04/MYSQL的锁/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MYSQL的锁</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/03/复制/">
+        <span class="next-text nav-default">MySQL复制</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
+  </span>
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+  </body>
+</html>
