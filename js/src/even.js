@@ -131,7 +131,7 @@
 
     function updateVisits(dom, time) {
       var text = dom.text() + ' ' + time;
-      dom.text(text).css('visibility', 'visible');
+      dom.text(text);
     }
 
     function addCounter(Counter) {

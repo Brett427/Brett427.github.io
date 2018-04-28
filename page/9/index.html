@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,446 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
+    
+
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/20/leetcode24/">24. Swap Nodes in Pairs</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-20
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-              <a href="/categories/算法题/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><ol>
-<li><p>Given a linked list, swap every two adjacent nodes and return its head.</p>
-<p>For example,<br>Given <code>1-&gt;2-&gt;3-&gt;4</code>, you should return the list as <code>2-&gt;1-&gt;4-&gt;3</code>.</p>
-<p>Your algorithm should use only constant space. You may <strong>not</strong> modify the values in the list, only nodes itself can be changed.</p>
-</li>
-</ol>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>改变相邻两个节点的顺序.<br>
-          <div class="read-more">
-            <a href="/2018/01/20/leetcode24/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/20/leetcode19/">19. Remove Nth Node From End of List</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-20
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2018-01-20
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a linked list, remove the <em>n</em>th node from the end of list and return its head.</p>
-<p>For example,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Given linked list: 1-&gt;2-&gt;3-&gt;4-&gt;5, and n = 2.</span><br><span class="line"></span><br><span class="line">After removing the second node from the end, the linked list becomes 1-&gt;2-&gt;3-&gt;5.</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong><br>Given <em>n</em> will always be valid.<br>Try to do this in one pass.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>给一个链表,n代表从后往前数,删除这个节点,返回删除后的链表.<br>
-          <div class="read-more">
-            <a href="/2018/01/20/leetcode19/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包和内存模型/">并发包和内存模型</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h2 id="Current包的实现"><a href="#Current包的实现" class="headerlink" title="Current包的实现"></a>Current包的实现</h2><p>由于java的CAS同时具有 volatile 读和volatile写的内存语义，因此Java线程之间的通信现在有了下面四种方式：</p>
-<ol>
-<li>A线程写volatile变量，随后B线程读这个volatile变量。</li>
-<li>A线程写volatile变量，随后B线程用CAS更新这个volatile变量。</li>
-<li>A线程用CAS更新一个volatile变量，随后B线程用CAS更新这个volatile变量。</li>
-<li>A线程用CAS更新一个volatile变量，随后B线程读这个volatile变量。</li>
-</ol>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包和内存模型/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/Executor框架/">Java多线程之Executor框架</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+        <span class="archive-post-title">
+          <a href="/2018/01/20/leetcode24/" class="archive-post-link">
+            24. Swap Nodes in Pairs
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <p>Java的线程既是工作单元,也是执行机制。从JDK 5开始,把工作单元与执行机制分离开<br>来。工作单元包括Runnable和Callable,而执行机制由Executor框架提供。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/Executor框架/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包之Future/">并发包之Future</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+            2018-01-20
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h2 id="Future-模式"><a href="#Future-模式" class="headerlink" title="Future 模式"></a>Future 模式</h2><p>Future模式是多线程开发中一种常见的设计模式,核心思想是异步调用.</p>
-<p>当我们需要调用一个函数方法时,如果这个函数执行很慢,我们就需要等待,但是有时候,可能并不急着要结果,因此,可以先让被调者立即返回.让它在后台慢慢的处理这个请求,对于调用者来说,则可以先处理一些其他任务,在真正需要数据的场合再去尝试获得需要的数据.</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包之Future/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包之FutureTask/">并发包之FutureTask</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+        <span class="archive-post-title">
+          <a href="/2018/01/20/leetcode19/" class="archive-post-link">
+            19. Remove Nth Node From End of List
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><p>Future接口和实现Future接口的FutureTask类,代表异步计算的结果.</p>
-<h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>在Java中一般通过继承Thread类或者实现Runnable接口这两种方式来创建多线程，但是这两种方式都有个缺陷，就是不能在执行完成后获取执行的结果，因此Java 1.5之后提供了Callable和Future接口，通过它们就可以在任务执行完毕之后得到任务的执行结果。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包之FutureTask/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/Java-多线程(四) AQS/">Java多线程之AQS</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+            2018-01-19
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h2 id="队列同步器"><a href="#队列同步器" class="headerlink" title="队列同步器"></a>队列同步器</h2><p>队列同步器 AbstractQueuedSynchronizer ，是用来构建锁或者其他同步组件的基础框架，它使用了int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。</p>
-<p>同步器的主要使用方式是继承，子类通过继承同步器并实现它的抽象方法来管理同步状态。</p>
-<p>同步器是实现锁（也可以是任意同步组件）的关键，在锁的实现中聚合同步器，利用同步器实现锁的语义。可以这样理解，锁是面向使用者的，它定义了使用者于锁交互的接口，隐藏了实现细节，同步器面向的是锁的实现者，它简化了锁的实现方式，屏蔽了同步状态管理，线程的排队，等待，唤醒等底层操作，锁与同步器很好的隔离了使用者和实现者所需要关注的领域。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/Java-多线程(四) AQS/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/锁的升级与对比/">锁的升级与对比</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包和内存模型/" class="archive-post-link">
+            并发包和内存模型
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h1 id="锁的升级与对比"><a href="#锁的升级与对比" class="headerlink" title="锁的升级与对比"></a>锁的升级与对比</h1><p>Java SE 1.6为了减少获得锁和释放锁带来的性能消耗,引入了“偏向锁”和“轻量级锁”,在Java SE 1.6中,<strong>锁一共有4种状态,级别从低到高依次是:无锁状态、偏向锁状态、轻量级锁状态和重量级锁状态</strong>,这几个状态会随着竞争情况逐渐升级。锁可以升级但不能降级,意味着偏向锁升级成轻量级锁后不能降级成偏向锁。这种锁升级却不能降级的策略,目的是为了提高获得锁和释放锁的效率。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/锁的升级与对比/" class="read-more-link">Read more..</a>
-          </div>
-        
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/Executor框架/" class="archive-post-link">
+            Java多线程之Executor框架
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包之Future/" class="archive-post-link">
+            并发包之Future
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包之FutureTask/" class="archive-post-link">
+            并发包之FutureTask
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/Java-多线程(四) AQS/" class="archive-post-link">
+            Java多线程之AQS
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/锁的升级与对比/" class="archive-post-link">
+            锁的升级与对比
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -661,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -720,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -777,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

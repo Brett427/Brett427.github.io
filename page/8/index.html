@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,710 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
     
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/28/Redis 排序/">Redis 排序</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-28
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h3 id="有序集合的集合操作"><a href="#有序集合的集合操作" class="headerlink" title="有序集合的集合操作"></a>有序集合的集合操作</h3><p>集合类型提供了强大的集合操作命令,但是如果需要排序就要用到有序集合类型.有序集合常见的使用场景是大数据排序,如玩家的排行榜,所以很少会需要获得键中的全部数据</p>
-<h3 id="sort命令"><a href="#sort命令" class="headerlink" title="sort命令"></a>sort命令</h3><p>sort命令可以对列表类型,集合类型,和有序集合类型键进行排序.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> sort mylist # 即可排序</span><br></pre></td></tr></table></figure>
-<p><strong>对有序集合类型进行排序时会忽略元素的分数,只针对元素自身的值进行排序.</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> ZADD myzset 50 2 40 3 20 1 60 5</span><br><span class="line">(integer)  4</span><br><span class="line"><span class="meta">redis&gt;</span> SORT myzset</span><br><span class="line">"1"</span><br><span class="line">"2"</span><br><span class="line">"3"</span><br><span class="line">"5"</span><br></pre></td></tr></table></figure>
-<p>sort还可以通过ALPHA参数实现按照字段顺序排序非数字元素</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> SORT myalphalist ALPHA</span><br></pre></td></tr></table></figure>
-<p>加入DESC进行倒序排列</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SORT mylist DESC</span><br></pre></td></tr></table></figure>
-<p>指定limit 参数来指定返回范围的结果</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SORT mylist DESC LIMIT 1 2 # 跳过第一个元素获取后面两个元素</span><br></pre></td></tr></table></figure>
-<h4 id="By参数"><a href="#By参数" class="headerlink" title="By参数"></a>By参数</h4><p>很多情况下列表,集合,有序集合中存储的都是代表对象的对象ID,单纯对这些ID排序意义不大,更有用的是根据ID对应的对象的某一个属性进行排序. 这时需要使用BY参数</p>
-<p>by参数的语法为<code>BY参考键</code>其中参考键可以是字符串类型键或者是散列类型键的某一个字段(表示为<code>散列键名-&gt;字段名</code>) 如果使用了BY参数,sort命令将不再按照元素自身的值进行排序,而是对每个元素使用元素的值替换参考键中的第一个<code>*</code>并获取其值,然后依据该值对元素排序.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> sort mylist BY post:*-&gt;time DESC</span><br><span class="line">假设mylist中有元素 12 26 6 2 ,</span><br><span class="line">那么将去寻找 post:12 ,post:26, post:6, post:2 这四个散列键中的time字段的值来决定mylist中元素的排序顺序.</span><br></pre></td></tr></table></figure>
-<p>参考键也可以是字符串类型</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> LPUSH sortbylist 2 1 3</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:1 50</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:2 100</span><br><span class="line"><span class="meta">redis&gt;</span> SET item:3 75</span><br><span class="line"><span class="meta">redis&gt;</span> SORT sortbylist by item:* DESC</span><br><span class="line">输出 2 3 1</span><br></pre></td></tr></table></figure>
-<h4 id="GET-参数"><a href="#GET-参数" class="headerlink" title="GET 参数"></a>GET 参数</h4><p>GET 参数不影响排序,它的作用是使SORT命令的返回结果不再是元素自身的值,而是GET参数中指定的键值.GET参数的规则和BY参数一样,GET参数也支持字符串类型和散列类型的键,并使用”*” 作为占位符.</p>
-<p>要实现排序后直接返回排序用的值,可以这样</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span> SORT mylist By post:*-&gt;time DESC GET post:*-&gt;time</span><br><span class="line"><span class="meta">#</span> 还可以有多个GET参数</span><br><span class="line"><span class="meta">redis&gt;</span> SORT mylist By post:*-&gt;time DESC GET post:*-&gt;time GET post:*-&gt;name</span><br></pre></td></tr></table></figure>
-<p>GET # 返回元素本身的值.</p>
-<h4 id="STORE-参数"><a href="#STORE-参数" class="headerlink" title="STORE 参数"></a>STORE 参数</h4><p>默认情况下 sort 会直接返回排序结果,如果希望保存排序结果,可以使用STORE 参数,</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
 
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/26/一致性哈希算法/">一致性哈希算法</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-26
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-              <a href="/categories/计算机基础/分布式/">分布式</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <blockquote>
-<p><a href="http://www.zsythink.net/archives/1182" target="_blank" rel="noopener">http://www.zsythink.net/archives/1182</a></p>
-</blockquote>
-<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><p>假设有三台缓存服务器用来缓存图片,三台服务器分别编号为0号,1号,2号.有3万张图片需要缓存,希望将这些图片均匀的分布到三台服务器上,以便平摊缓存的压力. 如果毫无规律的将这么多图片分配到三台服务器时,当再次查找的时候,就需要遍历这三台服务器的所有图片才能找到,这显然需要很长的时间,也就失去了缓存的意义.</p>
-<p>最原始的做法就是进行节点取余,对缓存项的键进行哈希,哈希后使用取余的方法映射到三台服务器的其中一台,这样下次再次取的时候,只要服务器的个数没有变,图片的哈希值没有变,就直接知道了图片缓存在哪台服务器上.</p>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>缺点很明显,如果增加服务器或者减少服务器,再取余就有很大概率不在原来的服务器上,这样就需要把所有图片重新计算哈希,重新取余来找到该缓存的服务器,这显然是不能接受的.为了解决这个问题,创造了一致性哈希算法.</p>
-<h3 id="一致性哈希算法"><a href="#一致性哈希算法" class="headerlink" title="一致性哈希算法"></a>一致性哈希算法</h3><p>其实，一致性哈希算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性哈希算法是对2^32取模.</p>
-<p>首先，我们把二的三十二次方想象成一个圆，就像钟表一样，钟表的圆可以理解成由60个点组成的圆，而此处我们把这个圆想象成由2^32个点组成的圆，示意图如下：</p>
-<p><img src="http://www.zsythink.net/wp-content/uploads/2017/02/020717_1707_2.png"></p>
-<p>圆环的正上方的点代表0，0点右侧的第一个点代表1，以此类推，2、3、4、5、6……直到2^32-1,也就是说0点左侧的第一个点代表2^32-1 .</p>
-<p>回到前面的场景,那么，假设我们有3台缓存服务器，服务器A、服务器B、服务器C，那么，在生产环境中，这三台服务器肯定有自己的IP地址，我们使用它们各自的IP地址进行哈希计算，使用哈希后的结果对2^32取模，可以使用如下公式示意。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash（服务器A的IP地址） %  2^32</span><br></pre></td></tr></table></figure>
-<p>通过上述公式算出的结果一定是一个0到2^32-1之间的一个整数，我们就用算出的这个整数，代表服务器A，既然这个整数肯定处于0到2^32-1之间，那么，上图中的hash环上必定有一个点与这个整数对应，而我们刚才已经说明，使用这个整数代表服务器A，那么，服务器A就可以映射到这个环上，同理,B,C 也可以映射到这里.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2019-37-25.png" width="30%"></p>
-<p>到目前为止，我们已经把缓存服务器与hash环联系在了一起，我们通过上述方法，把缓存服务器映射到了hash环上，那么使用同样的方法，我们也可以将需要缓存的对象映射到hash环上。</p>
-<p>假设，我们需要使用缓存服务器缓存图片，而且我们仍然使用图片的名称作为找到图片的key，那么我们使用如下公式可以将图片映射到上图中的hash环上。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hash（图片名称） %  2^32</span><br></pre></td></tr></table></figure>
-<p>映射后的示意图如下，下图中的橘黄色圆形表示图片.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2019-40-19.png" width="30%"></p>
-<p>同时规定顺时针碰到的第一个服务器就是要缓存的服务器,所以上面的橙色代表的图片就应该缓存在A上.</p>
-<p>一致性哈希算法就是通过这种方法，判断一个对象应该被缓存到哪台服务器上的，<strong>将缓存服务器与被缓存对象都映射到hash环上以后，</strong>从被缓存对象的位置出发，沿顺时针方向遇到的第一个服务器，就是当前对象将要缓存于的服务器，由于被缓存对象与服务器hash后的值是固定的，所以，在服务器不变的情况下，一张图片必定会被缓存到固定的服务器上，那么，当下次想要访问这张图片时，只要再次使用相同的算法进行计算，即可算出这个图片被缓存在哪个服务器上，直接去对应的服务器查找对应的图片即可。</p>
-<h4 id="一致性哈希的优点"><a href="#一致性哈希的优点" class="headerlink" title="一致性哈希的优点"></a>一致性哈希的优点</h4><p>一致性哈希可以解决前面增删服务器时所有图片的图片都乱的问题.</p>
-<p>假设，有四张图片,服务器B出现了故障，我们现在需要将服务器B移除，那么，我们将上图中的服务器B从hash环上移除即可，移除服务器B以前和以后 示意图如下。</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2019-50-29.png" width="50%"><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2019-50-55.png" width="50%"></p>
-<p>在服务器B未移除时，图片3应该被缓存到服务器B中，可是当服务器B移除以后，按照之前描述的一致性哈希算法的规则，图片3应该被缓存到服务器C中，因为从图片3的位置出发，沿顺时针方向遇到的第一个缓存服务器节点就是服务器C，也就是说，如果服务器B出现故障被移除时，图片3的缓存位置会发生改变.</p>
-<p>但是，图片4仍然会被缓存到服务器C中，图片1与图片2仍然会被缓存到服务器A中，这与服务器B移除之前并没有任何区别，这就是一致性哈希算法的优点，如果使用之前的hash算法，服务器数量发生改变时，所有服务器的所有缓存在同一时间失效了，而使用一致性哈希算法时，服务器的数量如果发生改变，并不是所有缓存都会失效，而是只有部分缓存会失效，前端的缓存仍然能分担整个系统的压力，而不至于所有压力都在同一时间集中到后端服务器上。</p>
-<h4 id="Hash环的倾斜"><a href="#Hash环的倾斜" class="headerlink" title="Hash环的倾斜"></a>Hash环的倾斜</h4><p>在实际的映射中，服务器的映射可能是不均衡的,那么就有可能很多都缓存在同一台服务器上.这就是哈希环的倾斜.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2019-56-36.png" width="40%"></p>
-<h4 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h4><p>如果想要均衡的将缓存分布到3台服务器上，最好能让这3台服务器尽量多的、均匀的出现在hash环上，我们狗仔一些虚拟节点,一个实际节点可以有好多虚拟节点.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-27%2020-00-17.png" width="40%"></p>
-<p>浅蓝色的表示虚拟节点,这样就均衡了.</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/26/leetcode82/">82. Remove Duplicates from Sorted List II</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-26
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only <em>distinct</em> numbers from the original list.</p>
-<p>For example,<br>Given <code>1-&gt;2-&gt;3-&gt;3-&gt;4-&gt;4-&gt;5</code>, return <code>1-&gt;2-&gt;5</code>.<br>Given <code>1-&gt;1-&gt;1-&gt;2-&gt;3</code>, return <code>2-&gt;3</code>.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>删除一个有序链表中有重复数字的节点.<br>
-          <div class="read-more">
-            <a href="/2018/01/26/leetcode82/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/26/leetcode206&&92/">206. Reverse Linked List&&92. Reverse Linked List II</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-26
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2018-01-28
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Reverse a singly linked list.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>反转链表</p>
-          <div class="read-more">
-            <a href="/2018/01/26/leetcode206&&92/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/25/Redis 应用/">Redis的应用</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-25
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>Redis客户端执行一条命令分为如下四个过程：1发送命令,2命令排队,3命令执行,4返回结果其中1+4称为Round Trip Time（ RTT,往返时间）Redis提供了批量操作命令（ 例如mget、 mset等） ， 有效地节约RTT。 但大部分命令是不支持批量操作的.</p>
-<p>Pipeline（ 流水线） 机制能改善上面这类问题， 它能将一组Redis命令进行组装， 通过一次RTT传输给Redis， 再将这组Redis命令的执行结果按顺序返回给客户端.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/BBFB95CF-0015-47B9-9581-B778D98A923C.png" width="70%"></p>
-<p>上图是使用了pipeline 执行了n次命令，整个过程需要一个RTT</p>
-<p>Pipeline执行速度一般比逐条执行要快。客户端和服务端的网络延时越大， Pipeline的效果越明显。</p>
-<p>pipeline 和原生批量命令相比，原生批量命令是原子的， Pipeline是非原子的。原生批量命令是一个命令对应多个key， Pipeline支持多个命令。原生批量命令是Redis服务端支持实现的， 而Pipeline需要服务端和客户端的共同实现。</p>
-<h3 id="事务与Lua"><a href="#事务与Lua" class="headerlink" title="事务与Lua"></a>事务与Lua</h3><p>为了保证多条命令组合的原子性， Redis提供了简单的事务功能以及集成Lua脚本来解决这个问题。</p>
-<p>Redis提供了简单的事务功能， 将一组需要一起执行的命令放到multi和exec两个命令之间。 multi命令代表事务开始， exec命令代表事务结束， 它们之间的命令是原子顺序执行的.如果要停止事务的执行， 可以使用discard命令代替exec命令即可。</p>
-<p>有些应用场景需要在事务之前， 确保事务中的key没有被其他客户端修改过， 才执行事务， 否则不执行（ 类似乐观锁） 。 Redis提供了watch命令来解决这类问题.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/45C6C5ED-9BBF-4ED7-9A89-F8559F8E60BD.png"></p>
-<p>可以看到在multi前执行了watch key 命令，在事务期间有客户端修改了key的值，所以事务不会执行。Redis提供了简单的事务， 之所以说它简单， <strong>主要是因为它不支持事务中的回滚特性， 同时无法实现命令之间的逻辑关系计算。</strong></p>
-<h3 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h3><p>Redis提供了基于“发布/订阅”模式的消息机制， 此种模式下， 消息发布者和订阅者不进行直接通信， 发布者客户端向指定的频道（ channel） 发布消息， 订阅该频道的每个客户端都可以收到该消息。</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/EF0A7529-5032-477A-BBFD-081630DDC5D1.png" width="70%"></p>
-<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Redis主要提供了发布消息、 订阅频道、 取消订阅以及按照模式订阅和取消订阅等命令</span><br><span class="line"><span class="meta">#</span> 发布消息</span><br><span class="line">publish channel message  返回订阅者人数</span><br><span class="line"><span class="meta">#</span> 订阅消息</span><br><span class="line">subscribe channel [channel...]</span><br><span class="line"><span class="meta">#</span> 取消订阅</span><br><span class="line">unsubscribe channel</span><br><span class="line"><span class="meta">#</span> 查询至少有一个订阅者的频道</span><br><span class="line">pubsub channels pattern</span><br><span class="line"><span class="meta">#</span> 查看频道订阅数</span><br><span class="line">pubsub numsub channel</span><br><span class="line"></span><br><span class="line">客户端在执行订阅命令之后进入了订阅状态， 只能接收subscribe、psubscribe、 unsubscribe、 punsubscribe的四个命令</span><br></pre></td></tr></table></figure>
-<p>和很多专业的消息队列系统（ 例如Kafka、 RocketMQ） 相比， Redis的发布订阅略显粗糙， 例如无法实现消息堆积和回溯。 但胜在足够简单， 如果当前场景可以容忍的这些缺点， 也不失为一个不错的选择。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/25/Redis 单线程架构与五种数据类型应用/">Redis单线程架构与五种数据类型应用</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-25
+        <span class="archive-post-title">
+          <a href="/2018/01/28/Redis 排序/" class="archive-post-link">
+            Redis 排序
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <p>Redis 单线程架构与五种数据类型应用</p>
-<p>Redis 所有数据都是存放在内存中的，所以把数据放在内存中是Redis速度快的最主要原因。Redis 使用C语言实现的，执行速度相对会更快。Redis 使用了单线程架构，预防了多线程可能产生的竞争问题。</p>
-<h4 id="全局命令"><a href="#全局命令" class="headerlink" title="全局命令"></a>全局命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 查看所有键</span><br><span class="line">keys *</span><br><span class="line"><span class="meta">#</span> 键总数</span><br><span class="line">dbsize</span><br><span class="line"><span class="meta">#</span> 判断键是否存在</span><br><span class="line">exists key</span><br><span class="line"><span class="meta">#</span> 删除键</span><br><span class="line">del key</span><br><span class="line"><span class="meta">#</span> 键过期</span><br><span class="line">expire key second</span><br><span class="line"><span class="meta">#</span> 键的数据结构类型</span><br><span class="line">type key</span><br></pre></td></tr></table></figure>
-<h3 id="单线程架构"><a href="#单线程架构" class="headerlink" title="单线程架构"></a>单线程架构</h3><p>Redis使用了单线程架构和I/O多路复用模型来实现高性能的内存数据库服务。</p>
-<p>因为Redis是单线程来处理命令的， 所以一条命令从客户端达到服务端不会立刻被执行， 所有命令都会进入一个队列中， 然后逐个被执行。</p>
-<h5 id="为什么单线程这么快"><a href="#为什么单线程这么快" class="headerlink" title="为什么单线程这么快"></a>为什么单线程这么快</h5><p>第一， 纯内存访问， Redis将所有数据放在内存中， 内存的响应时长大约为100纳秒， 这是Redis达到每秒万级别访问的重要基础。第二， 非阻塞I/O， Redis使用epoll作为I/O多路复用技术的实现， 再加上Redis自身的事件处理模型将epoll中的连接、 读写、 关闭都转换为事件， 不在网络I/O上浪费过多的时间。第三， 单线程避免了线程切换和竞态产生的消耗。</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>批量操作指令MGET key1 key2 和MSET key1 v1 key2 v2 可以有效提高开发效率，没有和有的区别如图</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/2F7AA334-EDCA-4C47-A7AA-3B50BA7FBAD3.png" width="50%"><img src="http://one-1252095801.cosgz.myqcloud.com/304090BC-CC2A-45AB-8521-2D67DE1A5D4A.png" width="50%"></p>
-<p>Redis可以支撑每秒数万的读写操作， 但是这指的是Redis服务端的处理能力， 对于客户端来说， 一次命令除了命令时间还是有网络时间.</p>
-<p>字符串类型的内部编码有3种：·int： 8个字节的长整型。·embstr： 小于等于39个字节的字串。 ·raw： 大于39个字节的字符串。Redis会根据当前值的类型和长度决定使用哪种内部编码实现。</p>
-<h5 id="典型使用场景"><a href="#典型使用场景" class="headerlink" title="典型使用场景"></a>典型使用场景</h5><p>1 缓存功能</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/21DE2EDA-4F09-4C97-9D61-C6989500C409.png" width="50%"></p>
-<p>2 计数</p>
-<p>3 共享Session</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/C5D50654-9151-41CC-B8B9-E38CF87F1474.png" width="40%"></p>
-<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><p>哈希类型的内部编码有两种：<br>·ziplist（ 压缩列表） ： 当哈希类型元素个数小于hash-max-ziplist-entries配置（ 默认512个） 、 同时所有值都小于hash-max-ziplist-value配置（ 默认64字节） 时， Redis会使用ziplist作为哈希的内部实现， ziplist使用更加紧凑的结构实现多个元素的连续存储， 所以在节省内存方面比hashtable更加优秀。<br>·hashtable（ 哈希表） ： 当哈希类型无法满足ziplist的条件时， Redis会使用hashtable作为哈希的内部实现， 因为此时ziplist的读写效率会下降， 而hashtable的读写时间复杂度为O（ 1）</p>
-<h5 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h5><p>用哈希表缓存用户信息，将每个用户的ID定义为键的后缀，多对field-value 对应每个用户的属性。</p>
-<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>列表是一种比较灵活的数据结构， 它可以充当栈和队列的角色， 在实际开发上有很多应用场景。</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/4AFEB8AB-70DC-48F2-9AA4-8759FE92D333.png" width="50%"><img src="http://one-1252095801.cosgz.myqcloud.com/0F66D454-78F2-45EC-AFC2-E75F5B525739.png" width="50%"></p>
-<p>列表类型有两个特点： 第一、 列表中的元素是有序的， 这就意味着可以通过索引下标获取某个元素或者某个范围内的元素列表.第二、 列表中的元素可以是重复的.</p>
-<p>列表类型的内部编码有两种。·ziplist（ 压缩列表） ： 当列表的元素个数小于list-max-ziplist-entries配置（ 默认512个） ， 同时列表中每个元素的值都小于list-max-ziplist-value配置时（ 默认64字节） ， Redis会选用ziplist来作为列表的内部实现来减少内存的使用。·linkedlist（ 链表） ： 当列表类型无法满足ziplist的条件时， Redis会使用linkedlist作为列表的内部实现。</p>
-<h5 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h5><p>1 消息队列 Redis的lpush+brpop命令组合即可实现阻塞队列， 生产者客户端使用lrpush从列表左侧插入元素， 多个消费者客户端使用brpop命令阻塞式的“抢”列表尾部的元素， 多个客户端保证了消费的负载均衡和高可用性</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/62AB18CF-51F0-47D8-8332-CCAF72E3B501.png" width="50%"></p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>集合中不允许有重复元素， 并且集合中的元素是无序的， 不能通过索引下标获取元素。</p>
-<p>集合类型的内部编码有两种：·intset（ 整数集合） ： 当集合中的元素都是整数且元素个数小于set-maxintset-entries配置（ 默认512个） 时， Redis会选用intset来作为集合的内部实现， 从而减少内存的使用。·hashtable（ 哈希表） ： 当集合类型无法满足intset的条件时， Redis会使用hashtable作为集合的内部实现。</p>
-<h5 id="使用场景-2"><a href="#使用场景-2" class="headerlink" title="使用场景"></a>使用场景</h5><p>集合类型比较典型的使用场景是标签（ tag）</p>
-<h3 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a>有序集合</h3><p>有序集合中的元素可以排序。 但是它和列表使用索引下标作为排序依据不同的是， 它给每个元素设置一个分数（ score） 作为排序的依据。</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/A85B1CB0-AB02-49CE-877B-47AF62CB46C8.png" width="50%"></p>
-<p>该有序集合包含kris、 mike、 frank、 tim、 martin、 tom，它们的分数分别是1、 91、 200、 220、 250、 251， 有序集合提供了获取指定分数和元素范围查询、 计算成员排名等功能.元素不能重复，分数可以重复。</p>
-<p>有序集合类型的内部编码有两种：·ziplist（ 压缩列表） ： 当有序集合的元素个数小于zset-max-ziplistentries配置（ 默认128个） ， 同时每个元素的值都小于zset-max-ziplist-value配置（ 默认64字节） 时， Redis会用ziplist来作为有序集合的内部实现， ziplist可以有效减少内存的使用。·skiplist（ 跳跃表） ： 当ziplist条件不满足时， 有序集合会使用skiplist作为内部实现， 因为此时ziplist的读写效率会下降。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/24/Mybatis总结/">Mybatis总结</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-24
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-26
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Mybatis-入门"><a href="#Mybatis-入门" class="headerlink" title="Mybatis 入门"></a>Mybatis 入门</h2><h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><h4 id="从XML中构建SqlSessionFactory"><a href="#从XML中构建SqlSessionFactory" class="headerlink" title="从XML中构建SqlSessionFactory"></a>从XML中构建SqlSessionFactory</h4><p>每个基于 MyBatis 的应用都是以一个 SqlSessionFactory 的实例为中心的。SqlSessionFactory 的实例可以通过 SqlSessionFactoryBuilder 获得。而 SqlSessionFactoryBuilder 则可以从 XML 配置文件或一个预先定制的 Configuration 的实例构建出 SqlSessionFactory 的实例。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String resource = <span class="string">"org/mybatis/example/mybatis-config.xml"</span>;</span><br><span class="line">InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br></pre></td></tr></table></figure>
-<h4 id="从-SqlSessionFactory-中获取-SqlSession"><a href="#从-SqlSessionFactory-中获取-SqlSession" class="headerlink" title="从 SqlSessionFactory 中获取 SqlSession"></a>从 SqlSessionFactory 中获取 SqlSession</h4><p>既然有了 SqlSessionFactory ，顾名思义，我们就可以从中获得 SqlSession 的实例了。SqlSession 完全包含了面向数据库执行 SQL 命令所需的所有方法。你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SqlSession session = sqlSessionFactory.openSession();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  BlogMapper mapper = session.getMapper(BlogMapper.class);</span><br><span class="line">  Blog blog = mapper.selectBlog(<span class="number">101</span>);</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="探究已映射的SQL语句"><a href="#探究已映射的SQL语句" class="headerlink" title="探究已映射的SQL语句"></a>探究已映射的SQL语句</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span><br><span class="line"><span class="meta">&lt;!DOCTYPE mapper</span></span><br><span class="line"><span class="meta">  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"</span></span><br><span class="line"><span class="meta">  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"org.mybatis.example.BlogMapper"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectBlog"</span> <span class="attr">resultType</span>=<span class="string">"Blog"</span>&gt;</span></span><br><span class="line">    select * from Blog where id = #&#123;id&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>在一个 XML 映射文件中，你想定义多少个映射语句都是可以的，这样下来，XML 头部和文档类型声明占去的部分就显得微不足道了。文件的剩余部分具有很好的自解释性。在命名空间“org.mybatis.example.BlogMapper”中定义了一个名为“selectBlog”的映射语句，这样它就允许你使用指定的完全限定名“org.mybatis.example.BlogMapper.selectBlog”来调用映射语句</p>
-<h4 id="作用域与声明周期"><a href="#作用域与声明周期" class="headerlink" title="作用域与声明周期"></a>作用域与声明周期</h4><h5 id="SqlSessionFactoryBuilder"><a href="#SqlSessionFactoryBuilder" class="headerlink" title="SqlSessionFactoryBuilder"></a>SqlSessionFactoryBuilder</h5><p>这个类可以被实例化、使用和丢弃，一旦创建了 SqlSessionFactory，就不再需要它了。因此 SqlSessionFactoryBuilder 实例的最佳作用域是方法作用域（也就是局部方法变量）。你可以重用 SqlSessionFactoryBuilder 来创建多个 SqlSessionFactory 实例，但是最好还是不要让其一直存在以保证所有的 XML 解析资源开放给更重要的事情。</p>
-<h5 id="SqlSessionFactory"><a href="#SqlSessionFactory" class="headerlink" title="SqlSessionFactory"></a>SqlSessionFactory</h5><p>SqlSessionFactory 一旦被创建就应该在应用的运行期间一直存在，没有任何理由对它进行清除或重建。使用 SqlSessionFactory 的最佳实践是在应用运行期间不要重复创建多次，多次重建 SqlSessionFactory 被视为一种代码“坏味道（bad smell）”。因此 SqlSessionFactory 的最佳作用域是应用作用域。有很多方法可以做到，最简单的就是使用单例模式或者静态单例模式。</p>
-<h5 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h5><p>每个线程都应该有它自己的 SqlSession 实例。SqlSession 的实例不是线程安全的，因此是不能被共享的，所以它的最佳的作用域是请求或方法作用域。绝对不能将 SqlSession 实例的引用放在一个类的静态域，甚至一个类的实例变量也不行。也绝不能将 SqlSession 实例的引用放在任何类型的管理作用域中，比如 Servlet 架构中的 HttpSession。如果你现在正在使用一种 Web 框架，要考虑 SqlSession 放在一个和 HTTP 请求对象相似的作用域中。换句话说，每次收到的 HTTP 请求，就可以打开一个 SqlSession，返回一个响应，就关闭它。这个关闭操作是很重要的，你应该把这个关闭操作放到 finally 块中以确保每次都能执行关闭。</p>
-<h3 id="Mapper-XML文件"><a href="#Mapper-XML文件" class="headerlink" title="Mapper XML文件"></a>Mapper XML文件</h3><p>SQL 映射文件有很少的几个顶级元素（按照它们应该被定义的顺序）：</p>
-<ul>
-<li><code>cache</code> – 给定命名空间的缓存配置。</li>
-<li><code>cache-ref</code> – 其他命名空间缓存配置的引用。</li>
-<li><code>resultMap</code> – 是最复杂也是最强大的元素，用来描述如何从数据库结果集中来加载对象。</li>
-<li><code>sql</code> – 可被其他语句引用的可重用语句块。</li>
-<li><code>insert</code> – 映射插入语句</li>
-<li><code>update</code> – 映射更新语句</li>
-<li><code>delete</code> – 映射删除语句</li>
-<li><code>select</code> – 映射查询语句</li>
-</ul>
-<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectPerson"</span> <span class="attr">parameterType</span>=<span class="string">"int"</span> <span class="attr">resultType</span>=<span class="string">"hashmap"</span>&gt;</span></span><br><span class="line">  SELECT * FROM PERSON WHERE ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>#{id}</code>会告诉 MyBatis 创建一个预处理语句参数，通过 JDBC，这样的一个参数在 SQL 中会由一个“?”来标识，并被传递到一个新的预处理语句中.</p>
-<p>参数:</p>
-<ul>
-<li>id :在命名空间中唯一的标识符，可以被用来引用这条语句。</li>
-</ul>
-<ul>
-<li>parameterType :将会传入这条语句的参数类的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以通过 TypeHandler 推断出具体传入语句的参数，默认值为 unset。</li>
-<li>resultType: 从这条语句中返回的期望类型的类的完全限定名或别名。注意如果是集合情形，那应该是集合可以包含的类型，而不能是集合本身。使用 resultType 或 resultMap，但不能同时使用。</li>
-<li>resultMap: 外部 resultMap 的命名引用。结果集的映射是 MyBatis 最强大的特性，使用 resultMap 或 resultType，但不能同时使用。</li>
-<li>flushCache: 将其设置为 true，任何时候只要语句被调用，都会导致本地缓存和二级缓存都会被清空，默认值：false。</li>
-<li>useCache: 将其设置为 true，将会导致本条语句的结果被二级缓存，默认值：对 select 元素为 true。</li>
-<li>timeout: 在抛出异常之前，驱动程序等待数据库返回请求结果的秒数。默认值为 unset（依赖驱动）。</li>
-</ul>
-<h4 id="insert-update-和delete"><a href="#insert-update-和delete" class="headerlink" title="insert update 和delete"></a>insert update 和delete</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertAuthor"</span> <span class="attr">parameterType</span>=<span class="string">"domain.blog.Author"</span>  <span class="attr">flushCache</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag"><span class="attr">statementType</span>=<span class="string">"PREPARED"</span> <span class="attr">keyProperty</span>=<span class="string">""</span>  <span class="attr">keyColumn</span>=<span class="string">""</span>  <span class="attr">useGeneratedKeys</span>=<span class="string">""</span> <span class="attr">timeout</span>=<span class="string">"20"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">"updateAuthor"</span> <span class="attr">parameterType</span>=<span class="string">"domain.blog.Author"</span> <span class="attr">flushCache</span>=<span class="string">"true"</span> <span class="attr">statementType</span>=<span class="string">"PREPARED"</span> <span class="attr">timeout</span>=<span class="string">"20"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">"deleteAuthor"</span> <span class="attr">parameterType</span>=<span class="string">"domain.blog.Author"</span> <span class="attr">flushCache</span>=<span class="string">"true"</span> <span class="attr">statementType</span>=<span class="string">"PREPARED"</span> <span class="attr">timeout</span>=<span class="string">"20"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>parameterType :将会传入这条语句的参数类的完全限定名或别名。这个属性是可选的，因为 MyBatis 可以通过 TypeHandler 推断出具体传入语句的参数，默认值为 unset。</p>
-</li>
-<li><p>useGeneratedKeys: （仅对 insert 和 update 有用）这会令 MyBatis 使用 JDBC 的 getGeneratedKeys 方法来取出由数据库内部生成的主键（比如：像 MySQL 和 SQL Server 这样的关系数据库管理系统的自动递增字段），默认值：false。</p>
-</li>
-<li><p>keyProperty: (仅对 insert 和 update 有用）唯一标记一个属性，MyBatis 会通过 getGeneratedKeys 的返回值或者通过 insert 语句的 selectKey 子元素设置它的键值，默认：<code>unset</code>。如果希望得到多个生成的列，也可以是逗号分隔的属性名称列表。</p>
-</li>
-<li><p>如果你的数据库支持自动生成主键的字段（比如 MySQL 和 SQL Server），那么你可以设置 useGeneratedKeys=”true”，然后再把 keyProperty 设置到目标属性上就OK了。例如，如果上面的 Author 表已经对 id 使用了自动生成的列类型，那么语句可以修改为:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">"insertAuthor"</span> <span class="attr">useGeneratedKeys</span>=<span class="string">"true"</span> <span class="attr">keyProperty</span>=<span class="string">"id"</span>&gt;</span></span><br><span class="line">  insert into Author (username,password,email,bio)</span><br><span class="line">  values (#&#123;username&#125;,#&#123;password&#125;,#&#123;email&#125;,#&#123;bio&#125;)</span><br><span class="line"><span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="sql"><a href="#sql" class="headerlink" title="sql"></a>sql</h4><p>这个元素可以被用来定义可重用的 SQL 代码段，可以包含在其他语句中。它可以被静态地(在加载参数) 参数化. 不同的属性值通过包含的实例变化. 比如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">"userColumns"</span>&gt;</span> $&#123;alias&#125;.id,$&#123;alias&#125;.username,$&#123;alias&#125;.password <span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个 SQL 片段可以被包含在其他语句中，例如</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectUsers"</span> <span class="attr">resultType</span>=<span class="string">"map"</span>&gt;</span></span><br><span class="line">  select</span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">"userColumns"</span>&gt;</span><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"alias"</span> <span class="attr">value</span>=<span class="string">"t1"</span>/&gt;</span><span class="tag">&lt;/<span class="name">include</span>&gt;</span>,</span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">"userColumns"</span>&gt;</span><span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"alias"</span> <span class="attr">value</span>=<span class="string">"t2"</span>/&gt;</span><span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">  from some_table t1</span><br><span class="line">    cross join some_table t2</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="ResultMap"><a href="#ResultMap" class="headerlink" title="ResultMap"></a>ResultMap</h4><p>resultMap 元素是 MyBatis 中最重要最强大的元素。 ResultMap 的设计就是简单语句不需要明确的结果映射,而很多复杂语句确实需要描述它们的关系。</p>
-<p>例如下面的Java Bean</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.someapp.model;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">  <span class="keyword">private</span> String username;</span><br><span class="line">  <span class="keyword">private</span> String hashedPassword;</span><br><span class="line"> <span class="comment">//省略get set</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样的一个 JavaBean 可以被映射到结果集,就像映射到 HashMap 一样简单。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectUsers"</span> <span class="attr">resultType</span>=<span class="string">"com.someapp.model.User"</span>&gt;</span></span><br><span class="line">  select id, username, hashedPassword</span><br><span class="line">  from some_table</span><br><span class="line">  where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>这些情况下,MyBatis 会在幕后自动创建一个 ResultMap,基于属性名来映射列到 JavaBean 的属性上。</strong>如果列名没有精确匹配,你可以在列名上使用 select 字句的别名(一个 基本的 SQL 特性)来匹配标签。比如</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectUsers"</span> <span class="attr">resultType</span>=<span class="string">"User"</span>&gt;</span></span><br><span class="line">  select</span><br><span class="line">    user_id(数据库字段)   as "id"(javabean 字段,通过as来自动创建ResultMap),</span><br><span class="line">    user_name           as "username",</span><br><span class="line">    hashed_password     as "hashedPassword"</span><br><span class="line">  from some_table</span><br><span class="line">  where id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>但是更常用的是下面的自动创建方式</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"userResultMap"</span> <span class="attr">type</span>=<span class="string">"User"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"user_id"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"username"</span> <span class="attr">column</span>=<span class="string">"user_name"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"password"</span> <span class="attr">column</span>=<span class="string">"hashed_password"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="高级结果映射"><a href="#高级结果映射" class="headerlink" title="高级结果映射"></a>高级结果映射</h4><p>how to do  with it ?</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectBlogDetails"</span> <span class="attr">resultMap</span>=<span class="string">"detailedBlogResultMap"</span>&gt;</span></span><br><span class="line">  select</span><br><span class="line">       B.id as blog_id,</span><br><span class="line">       B.title as blog_title,</span><br><span class="line">       B.author_id as blog_author_id,</span><br><span class="line">       A.id as author_id,</span><br><span class="line">       A.username as author_username,</span><br><span class="line">       A.password as author_password,</span><br><span class="line">       A.email as author_email,</span><br><span class="line">       A.bio as author_bio,</span><br><span class="line">       A.favourite_section as author_favourite_section,</span><br><span class="line">       P.id as post_id,</span><br><span class="line">       P.blog_id as post_blog_id,</span><br><span class="line">       P.author_id as post_author_id,</span><br><span class="line">       P.created_on as post_created_on,</span><br><span class="line">       P.section as post_section,</span><br><span class="line">       P.subject as post_subject,</span><br><span class="line">       P.draft as draft,</span><br><span class="line">       P.body as post_body,</span><br><span class="line">       C.id as comment_id,</span><br><span class="line">       C.post_id as comment_post_id,</span><br><span class="line">       C.name as comment_name,</span><br><span class="line">       C.comment as comment_text,</span><br><span class="line">       T.id as tag_id,</span><br><span class="line">       T.name as tag_name</span><br><span class="line">  from Blog B</span><br><span class="line">       left outer join Author A on B.author_id = A.id</span><br><span class="line">       left outer join Post P on B.id = P.blog_id</span><br><span class="line">       left outer join Comment C on P.id = C.post_id</span><br><span class="line">       left outer join Post_Tag PT on PT.post_id = P.id</span><br><span class="line">       left outer join Tag T on PT.tag_id = T.id</span><br><span class="line">  where B.id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>resultMap中的子标签</p>
-<p><code>constructor</code> - 类在实例化时,用来注入结果到构造方法中.</p>
-<ul>
-<li><code>idArg</code> - ID 参数;标记结果作为 ID 可以帮助提高整体效能</li>
-<li><code>arg</code> - 注入到构造方法的一个普通结果</li>
-</ul>
-<p><code>id</code> – 一个 ID 结果;标记结果作为 ID 可以帮助提高整体效能</p>
-<p><code>result</code> – 注入到字段或 JavaBean 属性的普通结果</p>
-<p><code>association</code> – 一个复杂的类型关联;许多结果将包成这种类型</p>
-<p><code>collection</code> – 复杂类型的集</p>
-<p><code>discriminator</code> – 使用结果值来决定使用哪个结果映射</p>
-<h5 id="id-result"><a href="#id-result" class="headerlink" title="id result"></a>id result</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"post_id"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"subject"</span> <span class="attr">column</span>=<span class="string">"post_subject"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>常用属性</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>property</code></td>
-<td>映射到列结果的 JavaBean的字段或属性。如果匹配的是存在的,和给定名称相同 的 JavaBeans 的属性,那么就会使用。否则 MyBatis 将会寻找给定名称 property 的字段。</td>
-</tr>
-<tr>
-<td><code>column</code></td>
-<td>从数据库中得到的列名,或者是列名的重命名标签。</td>
-</tr>
-<tr>
-<td><code>javaType</code></td>
-<td>一个 Java 类的完全限定名,或一个类型别名(参考上面内建类型别名 的列表) 。如果你映射到一个 JavaBean,MyBatis 通常可以断定类型。 然而,如果你映射到的是 HashMap,那么你应该明确地指定 javaType 来保证所需的行为。</td>
-</tr>
-<tr>
-<td><code>jdbcType</code></td>
-<td>支持的 JDBC 类型列表中的类型。<strong>JDBC 类型是仅仅需要对插入,更新和删除操作可能为空的列进行处理</strong>。这是 JDBC jdbcType 的需要,而不是 MyBatis 的。</td>
-</tr>
-<tr>
-<td><code>typeHandler</code></td>
-<td>我们在前面讨论过默认的类型处理器。使用这个属性,你可以覆盖默认的类型处理器。这个属性值是类的完全限定名或者是一个类型处理 器的实现,或者是类型别名。</td>
-</tr>
-</tbody>
-</table>
-<h5 id="关联"><a href="#关联" class="headerlink" title="关联"></a>关联</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"author"</span> <span class="attr">column</span>=<span class="string">"blog_author_id"</span> <span class="attr">javaType</span>=<span class="string">"Author"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"author_id"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"username"</span> <span class="attr">column</span>=<span class="string">"author_username"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>property</code></td>
-<td>映射到列结果的字段或属性。如果匹配的是存在的,和给定名称相同的 property JavaBeans 的属性, 那么就会使用。 否则 MyBatis 将会寻找给定名称的字段。</td>
-</tr>
-<tr>
-<td><code>javaType</code></td>
-<td>一个 Java 类的完全限定名,或一个类型别名</td>
-</tr>
-<tr>
-<td><code>jdbcType</code></td>
-<td>在这个表格之前的所支持的 JDBC 类型列表中的类型。JDBC 类型是仅仅 需要对插入, 更新和删除操作可能为空的列进行处理。这是 JDBC 的需要, jdbcType 而不是 MyBatis 的。</td>
-</tr>
-<tr>
-<td><code>typeHandler</code></td>
-<td>我们在前面讨论过默认的类型处理器。使用这个属性,你可以覆盖默认的 typeHandler 类型处理器。 这个属性值是类的完全限定名或者是一个类型处理器的实现, 或者是类型别名。</td>
-</tr>
-</tbody>
-</table>
-<p>关联中不同的是你需要告诉 MyBatis 如何加载关联。MyBatis 在这方面会有两种不同的 方式:</p>
-<ul>
-<li>嵌套查询:通过执行另外一个 SQL 映射语句来返回预期的复杂类型。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>column</code></td>
-<td>来自数据库的类名,或重命名的列标签。</td>
-</tr>
-<tr>
-<td><code>select</code></td>
-<td>另外一个映射语句的 ID,可以加载这个属性映射需要的复杂类型。获取的 在列属性中指定的列的值将被传递给目标 select 语句作为参数。</td>
-</tr>
-<tr>
-<td><code>fetchType</code></td>
-<td>可选的。有效值为 <code>lazy</code>和<code>eager</code>。 如果使用了，它将取代全局配置参数<code>lazyLoadingEnabled</code>。</td>
-</tr>
-</tbody>
-</table>
-<p>示例</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"blogResult"</span> <span class="attr">type</span>=<span class="string">"Blog"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"author"</span> <span class="attr">column</span>=<span class="string">"author_id"</span> <span class="attr">javaType</span>=<span class="string">"Author"</span> <span class="attr">select</span>=<span class="string">"selectAuthor"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectBlog"</span> <span class="attr">resultMap</span>=<span class="string">"blogResult"</span>&gt;</span></span><br><span class="line">  SELECT * FROM BLOG WHERE ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectAuthor"</span> <span class="attr">resultType</span>=<span class="string">"Author"</span>&gt;</span></span><br><span class="line">  SELECT * FROM AUTHOR WHERE ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>嵌套结果:使用嵌套结果映射来处理重复的联合结果的子集。</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"blogResult"</span> <span class="attr">type</span>=<span class="string">"Blog"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"blog_id"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"title"</span> <span class="attr">column</span>=<span class="string">"blog_title"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"author"</span> <span class="attr">column</span>=<span class="string">"blog_author_id"</span> <span class="attr">javaType</span>=<span class="string">"Author"</span> <span class="attr">resultMap</span>=<span class="string">"authorResult"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"authorResult"</span> <span class="attr">type</span>=<span class="string">"Author"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"author_id"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"username"</span> <span class="attr">column</span>=<span class="string">"author_username"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"password"</span> <span class="attr">column</span>=<span class="string">"author_password"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"email"</span> <span class="attr">column</span>=<span class="string">"author_email"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"bio"</span> <span class="attr">column</span>=<span class="string">"author_bio"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h5 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"posts"</span> <span class="attr">ofType</span>=<span class="string">"domain.blog.Post"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"post_id"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"subject"</span> <span class="attr">column</span>=<span class="string">"post_subject"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"body"</span> <span class="attr">column</span>=<span class="string">"post_body"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>嵌套查询</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"blogResult"</span> <span class="attr">type</span>=<span class="string">"Blog"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"posts"</span> <span class="attr">javaType</span>=<span class="string">"ArrayList"</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">ofType</span>=<span class="string">"Post"</span> <span class="attr">select</span>=<span class="string">"selectPostsForBlog"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectBlog"</span> <span class="attr">resultMap</span>=<span class="string">"blogResult"</span>&gt;</span></span><br><span class="line">  SELECT * FROM BLOG WHERE ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectPostsForBlog"</span> <span class="attr">resultType</span>=<span class="string">"Post"</span>&gt;</span></span><br><span class="line">  SELECT * FROM POST WHERE BLOG_ID = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>注意那个新的“ofType”属性。这个属性用来区分 JavaBean(或字段)属性类型和集合包含的类型来说是很重要的。所以你可以读出下面这个 映射:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"posts"</span> <span class="attr">javaType</span>=<span class="string">"ArrayList"</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">ofType</span>=<span class="string">"Post"</span> <span class="attr">select</span>=<span class="string">"selectPostsForBlog"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>读作: “在 Post 类型的 ArrayList 中的 posts 的集合。”</p>
-<p>javaType 属性是不需要的,因为 MyBatis 在很多情况下会为你算出来。所以你可以缩短 写法:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"posts"</span> <span class="attr">column</span>=<span class="string">"id"</span> <span class="attr">ofType</span>=<span class="string">"Post"</span> <span class="attr">select</span>=<span class="string">"selectPostsForBlog"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>嵌套结果</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">"blogResult"</span> <span class="attr">type</span>=<span class="string">"Blog"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"blog_id"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"title"</span> <span class="attr">column</span>=<span class="string">"blog_title"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"posts"</span> <span class="attr">ofType</span>=<span class="string">"Post"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"id"</span> <span class="attr">column</span>=<span class="string">"post_id"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"subject"</span> <span class="attr">column</span>=<span class="string">"post_subject"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"body"</span> <span class="attr">column</span>=<span class="string">"post_body"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p>MyBatis 包含一个非常强大的查询缓存特性,它可以非常方便地配置和定制。MyBatis 3 中的缓存实现的很多改进都已经实现了,使得它更加强大而且易于配置。</p>
-<p>默认情况下是没有开启缓存的,除了局部的 session 缓存,可以增强变现而且处理循环 依赖也是必须的。要开启二级缓存,你需要在你的 SQL 映射文件中添加一行:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cache</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>字面上看就是这样。这个简单语句的效果如下:</p>
-<ul>
-<li>映射语句文件中的所有 select 语句将会被缓存。</li>
-<li>映射语句文件中的所有 insert,update 和 delete 语句会刷新缓存。</li>
-<li>缓存会使用 Least Recently Used(LRU,最近最少使用的)算法来收回。</li>
-<li>根据时间表(比如 no Flush Interval,没有刷新间隔), 缓存不会以任何时间顺序 来刷新。</li>
-<li>缓存会存储列表集合或对象(无论查询方法返回什么)的 1024 个引用。</li>
-<li>缓存会被视为是 read/write(可读/可写)的缓存,意味着对象检索不是共享的,而 且可以安全地被调用者修改,而不干扰其他调用者或线程所做的潜在修改。</li>
-</ul>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/22/项目总结/">项目总结</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-22
+        <span class="archive-post-title">
+          <a href="/2018/01/26/一致性哈希算法/" class="archive-post-link">
+            一致性哈希算法
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
 
-        
-          <h3 id="项目总结-不断更新"><a href="#项目总结-不断更新" class="headerlink" title="项目总结(不断更新)"></a>项目总结(不断更新)</h3><p>1 jsp文件在最上面加page指令</p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">"java"</span> contentType=<span class="string">"text/html; charset=UTF-8"</span> pageEncoding=<span class="string">"UTF-8"</span>%&gt;</span><br></pre></td></tr></table></figure>
-<p>2 通过request 访问工程根路径</p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%=request.getScheme()+ <span class="string">"://"</span> + request.getServerName()+<span class="string">":"</span>+request.getServerPort()+request.getContextPath()%&gt;</span><br></pre></td></tr></table></figure>
-<p>3 共通jsp</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;% </span><br><span class="line">	String basePath = request.getScheme() + <span class="string">"://"</span> + request.getServerName() + <span class="string">":"</span> + 		request.getServerPort() + request.getContextPath();</span><br><span class="line">	request.setAttribute(<span class="string">"basePath"</span>,basePath);</span><br><span class="line">%&gt;</span><br><span class="line"><span class="comment">// web.xml 有一个为所有页面引入其他页面的配置</span></span><br><span class="line"> &lt;jsp-config&gt;</span><br><span class="line">		&lt;jsp-property-group&gt;</span><br><span class="line">			&lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;</span><br><span class="line">			&lt;include-prelude&gt;/WEB-INF/jsp/system/common.jsp&lt;/include-prelude&gt;</span><br><span class="line">		&lt;/jsp-property-group&gt;</span><br><span class="line">&lt;/jsp-config&gt;</span><br></pre></td></tr></table></figure>
-<p>4 foreach 的使用</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;c:forEach items=<span class="string">"$&#123;list&#125;"</span> var=<span class="string">"item"</span> varStatus=<span class="string">"s"</span>&gt;</span><br><span class="line">									&lt;tr&gt;</span><br><span class="line">										&lt;td&gt;$&#123;s.index + 1&#125;&lt;/td&gt;</span><br><span class="line">										&lt;td&gt;$&#123;item.title&#125;&lt;/td&gt;</span><br><span class="line">										&lt;td&gt;$&#123;item.link&#125;&lt;/td&gt;</span><br><span class="line">									&lt;/tr&gt;</span><br><span class="line">&lt;/c:forEach&gt;</span><br></pre></td></tr></table></figure>
-<p>5 提交文件</p>
-<p>首先,DTO中有一个Spring 封装的类型字段</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> MultipartFile imgFile;</span><br></pre></td></tr></table></figure>
-<p>然后使用transferTo()方法,里面的参数是File f =new File() 的f</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adDto.getImgFile().transferTo();</span><br></pre></td></tr></table></figure>
-<p>6 真实部署环境</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/6B81C13616A6829F8CF3EC5CF07E1320.jpg" width="70%"></p>
-<p>用户通过app,先访问硬负载,然后访问nginx,nginx都过负载均衡把请求散发到接口服务集群,接口服务集群和数据库服务器之间有一个缓存服务器来避免大量的数据库访问,同时,后台管理服务器由于几乎没有并发可以直接访问数据库服务器,同时,静态资源直接通过nginx来访问来加快访问速度,后台服务器也可以直接访问静态资源,数据库服务器中只保存图片的地址.</p>
-<p>7 spring 读取配置文件的配置@Value注解.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;ad.path&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String path;</span><br></pre></td></tr></table></figure>
-<p>8 返回码的处理</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> PageCodeEnum &#123;</span><br><span class="line">    ADD_SUCCESS(<span class="number">1000</span>,<span class="string">"新增成功"</span>),</span><br><span class="line">    ADD_FAIL(<span class="number">1001</span>,<span class="string">"新增失败"</span>);</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY=<span class="string">"pageCode"</span>;</span><br><span class="line">    PageCodeEnum(Integer code,String msg)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>.code=code;</span><br><span class="line">        <span class="keyword">this</span>.msg=msg;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回码的思路,</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//写入数据库后,同时写入model</span><br><span class="line">model.addAttribute(PageCodeEnum.KEY,PageCodeEnum.ADD_FAIL);</span><br><span class="line">还进入原来的页面,这个页面中有一个hidden,所以在jsp中埋得值接收到了,接收到后,前端js在页面加载前先判断hidden是否为空.就输出了.</span><br></pre></td></tr></table></figure>
-<p>9 缓存要处理的一些常见问题</p>
-<ul>
-<li>集群化部署单机内缓存共享</li>
-</ul>
-<p>1) 利用nginx 的转发规则,配置IPhash,根据请求用户的IP分配服务器</p>
-<p>2) 使用redis 共享缓存</p>
-<ul>
-<li>同一用户高并发的重复请求</li>
-<li>处理缓存失效</li>
-</ul>
-<p>10 Ajax 拿不到枚举类型的里面的值,只能拿到外面的字符串,要想前端ajax获取,可以再封装一层DTO,写一个新的构造函数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ApiCodeDto</span><span class="params">(ApiCodeEnum apiCodeEnum)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.errno = apiCodeEnum.getErrno();</span><br><span class="line">		<span class="keyword">this</span>.msg = apiCodeEnum.getMsg();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>11 前后端都必须通过JSON格式传输数据. SpringMVC返回ajax 时一定记得加@ResponseBody</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value = <span class="string">"aaa"</span>,method = RequestMethod.POST)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AppleDto <span class="title">go</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        AppleDto appleDto =<span class="keyword">new</span> AppleDto(<span class="string">"apple"</span>,<span class="string">"red"</span>);</span><br><span class="line">        System.out.println(<span class="string">"1111"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> appleDto;</span><br><span class="line">		<span class="comment">//自动返回JSON</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">       $(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">"123"</span>)</span><br><span class="line">           $.ajax(&#123;</span><br><span class="line">               url: <span class="string">"/aaa"</span>,<span class="comment">//请求接口</span></span><br><span class="line">               type: <span class="string">"POST"</span>,<span class="comment">//请求方式</span></span><br><span class="line">               <span class="comment">//请求参数</span></span><br><span class="line">               dataType: <span class="string">"json"</span>,<span class="comment">//响应类型</span></span><br><span class="line">               success: <span class="function"><span class="keyword">function</span>(<span class="params">data, textStatus</span>)</span>&#123;<span class="comment">//访问成功的回调函数，参数是响应，描述状态的字符串</span></span><br><span class="line">                   <span class="built_in">console</span>.log(textStatus)</span><br><span class="line">                   <span class="built_in">console</span>.log(data.name);</span><br><span class="line">               &#125;,</span><br><span class="line">               error: <span class="function"><span class="keyword">function</span>(<span class="params">XMLHttpRequest, textStatus, errorThrown</span>)</span>&#123;<span class="comment">//访问失败的回调函数，参数是XMLHttpRequest对象、错误信息、捕获的错误对象(可选);</span></span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;);</span><br><span class="line">   &lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-26
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/26/leetcode82/" class="archive-post-link">
+            82. Remove Duplicates from Sorted List II
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-26
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/26/leetcode206&&92/" class="archive-post-link">
+            206. Reverse Linked List&&92. Reverse Linked List II
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-25
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/25/Redis 应用/" class="archive-post-link">
+            Redis的应用
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-25
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/25/Redis 单线程架构与五种数据类型应用/" class="archive-post-link">
+            Redis单线程架构与五种数据类型应用
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-24
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/24/Mybatis总结/" class="archive-post-link">
+            Mybatis总结
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-22
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/22/项目总结/" class="archive-post-link">
+            项目总结
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -925,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -984,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -1041,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

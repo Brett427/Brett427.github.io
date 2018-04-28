@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,469 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
     
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/同步异步阻塞非阻塞/">同步,异步,阻塞,非阻塞</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-              <a href="/categories/计算机基础/Java/">Java</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <p>所谓同步异步关心的是<strong>消息通信机制</strong>，所谓同步，就是在发出一个<em>调用</em>时，在没有得到结果之前，该<em>调用</em>就不返回。但是一旦调用返回，就得到返回值了。换句话说，就是由<em>调用者</em>主动等待这个<em>调用</em>的结果。</p>
-<p>而异步则是相反，调用在发出之后，这个调用就直接返回了，所以没有返回结果。换句话说，当一个异步过程调用发出后，调用者不会立刻得到结果。而是在<em>调用</em>发出后，被调用者通过状态、通知来通知调用者，或通过回调函数处理这个调用。</p>
-<p>而阻塞和非阻塞关注的是程序在等待调用结果（消息返回值）时的状态.</p>
-<p>阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。</p>
-<h3 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h3><p>所谓同步就是一个任务的完成需要依赖另外一个任务时，只有等待被依赖的任务完成后，依赖的任务才能算完成，这是一种可靠的任务序列。要么成功都成功，失败都失败，两个任务的状态可以保持一致。而异步是不需要等待被依赖的任务完成，只是通知被依赖的任务要完成什么工作，依赖的任务也立即执行，只要自己完成了整个任务就算完成了。至于被依赖的任务最终是否真正完成，依赖它的任务无法确定，所以它是不可靠的任务序列。我们可以用打电话和发短信来很好的比喻同步与异步操作。</p>
-<p>在设计到 IO 处理时通常都会遇到一个是同步还是异步的处理方式的选择问题。因为同步与异步的 I/O 处理方式对调用者的影响很大，在数据库产品中都会遇到这个问题。因为 I/O 操作通常是一个非常耗时的操作，在一个任务序列中 I/O 通常都是性能瓶颈。但是同步与异步的处理方式对程序的可靠性影响非常大，<strong>同步能够保证程序的可靠性，而异步可以提升程序的性能</strong>，必须在可靠性和性能之间做个平衡，没有完美的解决办法。</p>
-<h3 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h3><p>阻塞与非阻塞主要是从 CPU 的消耗上来说的，阻塞就是 CPU 停下来等待一个慢的操作完成 CPU 才接着完成其它的事。非阻塞就是在这个慢的操作在执行时 CPU 去干其它别的事，等这个慢的操作完成时，CPU 再接着完成后续的操作。虽然表面上看非阻塞的方式可以明显的提高 CPU 的利用率，但是也带了另外一种后果就是系统的线程切换增加。增加的 CPU 使用时间能不能补偿系统的切换成本需要好好评估。</p>
-<h3 id="两种的方式的组合"><a href="#两种的方式的组合" class="headerlink" title="两种的方式的组合"></a>两种的方式的组合</h3><p>组合的方式可以由四种，分别是：同步阻塞、同步非阻塞、异步阻塞、异步非阻塞，这四种方式都对 I/O 性能有影响。下面给出分析，并有一些常用的设计用例参考。</p>
-<h5 id="四种组合方式"><a href="#四种组合方式" class="headerlink" title="四种组合方式"></a>四种组合方式</h5><table>
-<thead>
-<tr>
-<th><strong>组合方式</strong></th>
-<th><strong>性能分析</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>同步阻塞</td>
-<td>最常用的一种用法，使用也是最简单的，但是 I/O 性能一般很差，CPU 大部分在空闲状态。</td>
-</tr>
-<tr>
-<td>同步非阻塞</td>
-<td>提升 I/O 性能的常用手段，就是将 I/O 的阻塞改成非阻塞方式，尤其在网络 I/O 是长连接，同时传输数据也不是很多的情况下，提升性能非常有效。这种方式通常能提升 I/O 性能，但是会增加 CPU 消耗，要考虑增加的 I/O 性能能不能补偿 CPU 的消耗，也就是系统的瓶颈是在 I/O 还是在 CPU 上。</td>
-</tr>
-<tr>
-<td>异步阻塞</td>
-<td>这种方式在分布式数据库中经常用到，例如在往一个分布式数据库中写一条记录，通常会有一份是同步阻塞的记录，而还有两至三份是备份记录会写到其它机器上，这些备份记录通常都是采用异步阻塞的方式写 I/O。异步阻塞对网络 I/O 能够提升效率，尤其像上面这种同时写多份相同数据的情况。</td>
-</tr>
-<tr>
-<td>异步非阻塞</td>
-<td>这种组合方式用起来比较复杂，只有在一些非常复杂的分布式情况下使用，像集群之间的消息同步机制一般用这种 I/O 组合方式。如 Cassandra 的 Gossip 通信机制就是采用异步非阻塞的方式。它适合同时要传多份相同的数据到集群中不同的机器，同时数据的传输量虽然不大，但是却非常频繁。这种网络 I/O 用这个方式性能能达到最高。</td>
-</tr>
-</tbody>
-</table>
-<p>对unix来讲：阻塞式I/O(默认)，非阻塞式I/O(nonblock)，I/O复用(select/poll/epoll)都属于同步I/O，因为它们在数据由内核空间复制回进程缓冲区时都是阻塞的(不能干别的事)。只有异步I/O模型(AIO)是符合异步I/O操作的含义的，即在1数据准备完成、2由内核空间拷贝回缓冲区后 通知进程，在等待通知的这段时间里可以干别的事。<strong>在IO中，根据第二阶段是否能够返回来判断是同步还是异步，根据第一阶段是否能干其他事来判断是否阻塞非阻塞</strong></p>
-<p>虽然异步和非阻塞能够提升 I/O 的性能，但是也会带来一些额外的性能成本，例如会增加线程数量从而增加 CPU 的消耗，同时也会导致程序设计的复杂度上升。如果设计的不合理的话反而会导致性能下降。在实际设计时要根据应用场景综合评估一下。</p>
-<blockquote>
-<p><a href="https://www.zhihu.com/question/19732473" target="_blank" rel="noopener">https://www.zhihu.com/question/19732473</a></p>
-</blockquote>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
 
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/CAS/">Java多线程之CAS</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h2 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>独占锁是一种悲观锁，Synchronized就是一种悲观锁。会导致其他有需要锁的线程被挂起，等待持有锁的线程释放锁。更加有效的就是乐观锁。每次不加锁而是假设没有冲突去完成某项操作，如果因为冲突失败就进行重试，直到成功为止。乐观锁用到的机制就是CAS compare and swap</p>
-<p>CAS的算法过程是这样, 它包含三个参数V, A, B.  V表示内存值, A表示旧的预期的值, B表示要修改的新值. 仅当V值等于A值时,才会将V值设置为B, 如果V值和A值不同, 说明已经有其他线程做了更新,则当前线程什么都不做.当且仅当预期值A和内存值V相等时，将内存值修改为B并返回true，否则什么都不干并返回false。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/CAS/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包之其他并发工具类/">并发包之其他并发工具类</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2018-01-19
           
-        
-
-        
-          <h3 id="控制并发线程数的Semaphone"><a href="#控制并发线程数的Semaphone" class="headerlink" title="控制并发线程数的Semaphone"></a>控制并发线程数的Semaphone</h3><p>Semaphore(信号量)是用来控制同时访问特定资源的线程数量,它通过协调各个线程,以<br>保证合理的使用公共资源。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包之其他并发工具类/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包之并发容器二/">并发包之并发容器(二)</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h1 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h1><h3 id="ConcurrentLinkedQueue-1"><a href="#ConcurrentLinkedQueue-1" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h3><p>如果要实现一个线程安全的队列有两种方式:一种是使用阻塞算法,另一种是使用非阻塞算法。使用阻塞算法的队列可以用一个锁(入队和出队用同一把锁)或两个锁(入队和出队用不同的锁)等方式来实现。非阻塞的实现方式则可以使用循环CAS的方式来实现。下面主要讨论使用非阻塞的方式来实现线程安全队列。</p>
-<p>ConcurrentLinkedQueue 是一个基于链接节点的无界线程安全队列，采用先进先出的规则对节点进行排序，采用了CAS算法进行实现。</p>
-<p>ConcurrentLinkedQueue由head节点和tail节点组成,每个节点(Node)由节点元素(item)和指向下一个节点(next)的引用组成,节点与节点之间就是通过这个next关联起来,从而组成一张链表结构的队列。默认情况下head节点存储的元素为空,tail节点等于head节点。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包之并发容器二/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发容器一/">并发包之并发容器(一)</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+        <span class="archive-post-title">
+          <a href="/2018/01/19/同步异步阻塞非阻塞/" class="archive-post-link">
+            同步,异步,阻塞,非阻塞
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h2 id="无锁的线程安全整数-AtomicInteger"><a href="#无锁的线程安全整数-AtomicInteger" class="headerlink" title="无锁的线程安全整数 AtomicInteger"></a>无锁的线程安全整数 AtomicInteger</h2><p>为了能够受益于CAS等CPU指令,JDK并发包中有一个Atomic包,里面实现了一些直接使用CAS操作的线程安全的类型</p>
-<p>下面是AtomicInteger的一些常用方法,对应其他原子类,操作是类似的.</p>
-<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-18%2021-36-35.png" alt=""></p>
-<p>内部实现上来说,AtomicInteger中保存一个核心字段</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发容器一/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/并发包之线程池/">并发包之线程池</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+            2018-01-19
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <p>Java中的线程池是运用场景最多的并发框架,几乎所有需要异步或并发执行任务的程序<br>都可以使用线程池。</p>
-<p>使用线程池的好处。<br>第一:降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。<br>第二:提高响应速度。当任务到达时,任务可以不需要等到线程创建就能立即执行。<br>第三:提高线程的可管理性。线程是稀缺资源,如果无限制地创建,不仅会消耗系统资源,<br>还会降低系统的稳定性,使用线程池可以进行统一分配、调优和监控。</p>
-          <div class="read-more">
-            <a href="/2018/01/19/并发包之线程池/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/LockSupport/">并发包之LockSupport</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+        <span class="archive-post-title">
+          <a href="/2018/01/19/CAS/" class="archive-post-link">
+            Java多线程之CAS
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h2 id="LockSupport"><a href="#LockSupport" class="headerlink" title="LockSupport"></a>LockSupport</h2><p>LockSupport 是一个非常方便实用的线程阻塞工具,它可以在线程内任意位置让线程阻塞,</p>
-<p>LockSupport 的静态方法park()可以阻塞当前线程,类似的还有parkNanos(),parkUntil()等方法,它们实现了一个限时的等待.</p>
-          <div class="read-more">
-            <a href="/2018/01/19/LockSupport/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/19/CyclicBarrier/">并发包之CyclicBarrier</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-19
+            2018-01-19
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-              <a href="/categories/Java/多线程/">多线程</a>
-            
-          </div>
-        
-        
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包之其他并发工具类/" class="archive-post-link">
+            并发包之其他并发工具类
+          </a>
+        </span>
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h3 id="同步屏障CyclicBarrier"><a href="#同步屏障CyclicBarrier" class="headerlink" title="同步屏障CyclicBarrier"></a>同步屏障CyclicBarrier</h3><p>CyclicBarrier的字面意思是可循环使用(Cyclic)的屏障(Barrier)。它要做的事情是,让一组线程到达一个屏障(也可以叫同步点)时被阻塞,直到最后一个线程到达屏障时,屏障才会开门,所有被屏障拦截的线程<strong>才会继续运行</strong>。它的功能比CountDownLatch 更加复杂且强大</p>
-<p>CyclicBarrier 可以理解为循环栅栏,栅栏就是一种障碍物,这里就是用来阻止线程继续执行要求线程在栅栏处等待, Cyclic意为循环,也就是说这个计数器可以重复使用,比如,我们将技术器设置为10,那么凑齐第一批10个线程后,计数器就会归0,然后接着凑齐下一批10个线程,这就是循环栅栏的内在含义.</p>
-          <div class="read-more">
-            <a href="/2018/01/19/CyclicBarrier/" class="read-more-link">Read more..</a>
-          </div>
-        
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包之并发容器二/" class="archive-post-link">
+            并发包之并发容器(二)
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发容器一/" class="archive-post-link">
+            并发包之并发容器(一)
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/并发包之线程池/" class="archive-post-link">
+            并发包之线程池
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/LockSupport/" class="archive-post-link">
+            并发包之LockSupport
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/19/CyclicBarrier/" class="archive-post-link">
+            并发包之CyclicBarrier
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -684,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -743,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -800,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

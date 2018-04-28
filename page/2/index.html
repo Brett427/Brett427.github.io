@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,613 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
+    
+
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/Docker 容器管理/">Docker 容器管理</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-11
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/分布式/">分布式</a>
-            
-              <a href="/categories/分布式/微服务/">微服务</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Docker-容器管理"><a href="#Docker-容器管理" class="headerlink" title="Docker 容器管理"></a>Docker 容器管理</h2><p>每个容器被创建后，都会分配一个CONTAINER ID作为容器的唯一标示。后续对容器的所有操作，都是通过这个ID来完成的。ID默认128位，但是对于大多数主机来说，前16位就足够保证唯一性。</p>
-<p>虽然CONTAINER ID能保证唯一性，但是很难记忆，所以创建容器时，可以用 –name参数给容器起一个别名。</p>
-<h4 id="查询容器信息"><a href="#查询容器信息" class="headerlink" title="查询容器信息"></a>查询容器信息</h4><p>通过docker inspect 可以查询容器的所有基本信息，包括运行情况，存储位置，配置参数，网络设置等。</p>
-<p>同时可以用docker logs 查看容器日志</p>
-<p>使用 docker stats 查看容器所占用的系统资源</p>
-<h4 id="容器内部命令"><a href="#容器内部命令" class="headerlink" title="容器内部命令"></a>容器内部命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec +容器名 +容器内执行的命令</span><br></pre></td></tr></table></figure>
-<p>比如查询MyWordPress 容器内启动了哪些进程，执行的命令和结果是</p>
-<p><code>$ docker exec  MyWordPress ps aux</code></p>
-<p>如果希望在容器内连续执行多条命令，可以加上<code>-it</code>参数，相当于以root身份进入容器内，可以连续执行命令。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker exec -it MywordPress /bin/bash</span><br></pre></td></tr></table></figure>
-<h4 id="多容器管理"><a href="#多容器管理" class="headerlink" title="多容器管理"></a>多容器管理</h4><p>假如一个服务需要多个进程组成，就需要创建多个容器组成一个系统，相互分工和配合来对外提供完整的服务。</p>
-<p>在同一台主机下，docker run 命令提供 <code>--link</code>选项建立容器间的互联。</p>
-<p>但有一个前提条件，使用<code>-- link containerA</code> 创建容器B时，容器A必须已经创建并且启动运行。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/11/Docker 安装WordPress/">Docker 安装WordPress</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-11
+        <span class="archive-post-title">
+          <a href="/2018/04/11/Docker 容器管理/" class="archive-post-link">
+            Docker 容器管理
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/分布式/">分布式</a>
-            
-              <a href="/categories/分布式/微服务/">微服务</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Docker-安装WordPress"><a href="#Docker-安装WordPress" class="headerlink" title="Docker 安装WordPress"></a>Docker 安装WordPress</h2><p>使用两行命令安装WordPress</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker run --name db --env MYSQL_ROOT_PASSWORD=example -d mariadb</span><br><span class="line"><span class="meta">$</span> docker run --name MyWordPress --link db:mysql -p 8080:80 -d wordpress</span><br></pre></td></tr></table></figure>
-<p>docker run是一条指令，后面的所有内容 都是Docker指令的参数</p>
-<p>这条指令的含义是启动一个mariadb数据库(MYSQL数据库的一个分支)，数据库管理员的名字设置为example,让这个数据库运行在后台，给它取了一个唯一的名字db进行标示。</p>
-<p>通过参数的最后一部分<code>mariadb</code>来告诉docker run启动的是一个<code>mariadb</code>数据库。</p>
-<p><code>-d</code>参数把启动的<code>mariadb</code>数据库设置到后台运行，如果没有该参数，该进程就会在前台运行。</p>
-<p><code>--name db</code>参数，给这个运行的mariadb数据库起一个名字，如果要启动多个数据库，可以通过名字进行定位。</p>
-<p>第二条指令中<code>--link db:mysql</code>把wordpress和数据库建立了连接。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/08/TCP 三次握手与四次挥手/">TCP 三次握手与四次挥手</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-08
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-11
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="TCP-三次握手与四次挥手"><a href="#TCP-三次握手与四次挥手" class="headerlink" title="TCP 三次握手与四次挥手"></a>TCP 三次握手与四次挥手</h2><h3 id="常用的熟知端口号"><a href="#常用的熟知端口号" class="headerlink" title="常用的熟知端口号"></a>常用的熟知端口号</h3><table>
-<thead>
-<tr>
-<th>应用程序</th>
-<th>FTP</th>
-<th>TFTP</th>
-<th>TELNET</th>
-<th>SMTP</th>
-<th>DNS</th>
-<th>HTTP</th>
-<th>SSH</th>
-<th>MYSQL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>熟知端口</td>
-<td>21,20</td>
-<td>69</td>
-<td>23</td>
-<td>25</td>
-<td>53</td>
-<td>80</td>
-<td>22</td>
-<td>3306</td>
-</tr>
-<tr>
-<td>传输层协议</td>
-<td>TCP</td>
-<td>UDP</td>
-<td>TCP</td>
-<td>TCP</td>
-<td>UDP</td>
-<td>TCP</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h4 id="TCP概述"><a href="#TCP概述" class="headerlink" title="TCP概述"></a>TCP概述</h4><p>TCP把连接作为最基本的对象，每一条TCP连接都有两个端点，这种端点我们叫作套接字（socket），它的定义为端口号拼接到IP地址即构成了套接字，例如，若IP地址为192.3.4.16 而端口号为80，那么得到的套接字为192.3.4.16:80。 </p>
-<h4 id="TCP报文首部"><a href="#TCP报文首部" class="headerlink" title="TCP报文首部"></a>TCP报文首部</h4><ol>
-<li>源端口和目的端口，各占2个字节，分别写入源端口和目的端口；</li>
-<li>序号，占4个字节，TCP连接中传送的字节流中的每个字节都按顺序编号。例如，一段报文的序号字段值是 301 ，而携带的数据共有100字段，显然下一个报文段（如果还有的话）的数据序号应该从401开始；</li>
-<li>确认号，占4个字节，是期望收到对方下一个报文的第一个数据字节的序号。例如，B收到了A发送过来的报文，其序列号字段是501，而数据长度是200字节，这表明B正确的收到了A发送的到序号700为止的数据。因此，B期望收到A的下一个数据序号是701，于是B在发送给A的确认报文段中把确认号置为701；</li>
-<li>数据偏移，占4位，它指出TCP报文的数据距离TCP报文段的起始处有多远；</li>
-<li>保留，占6位，保留今后使用，但目前应都位0；</li>
-<li>紧急URG，当URG=1，表明紧急指针字段有效。告诉系统此报文段中有紧急数据；</li>
-<li>确认ACK，仅当ACK=1时，确认号字段才有效。TCP规定，在连接建立后所有报文的传输都必须把ACK置1；</li>
-<li>推送PSH，当两个应用进程进行交互式通信时，有时在一端的应用进程希望在键入一个命令后立即就能收到对方的响应，这时候就将PSH=1；</li>
-<li>复位RST，当RST=1，表明TCP连接中出现严重差错，必须释放连接，然后再重新建立连接；</li>
-<li>同步SYN，在连接建立时用来同步序号。当SYN=1，ACK=0，表明是连接请求报文，若同意连接，则响应报文中应该使SYN=1，ACK=1；</li>
-<li>终止FIN，用来释放连接。当FIN=1，表明此报文的发送方的数据已经发送完毕，并且要求释放；</li>
-<li>窗口，占2字节，指的是通知接收方，发送本报文你需要有多大的空间来接受；</li>
-<li>检验和，占2字节，校验首部和数据这两部分；</li>
-<li>紧急指针，占2字节，指出本报文段中的紧急数据的字节数；</li>
-<li>选项，长度可变，定义一些其他的可选的参数。</li>
-</ol>
-<h4 id="TCP-标志位"><a href="#TCP-标志位" class="headerlink" title="TCP 标志位"></a>TCP 标志位</h4><p>SYN：代表请求创建连接，所以在三次握手中前两次要SYN=1，表示这两次用于建立连接。</p>
-<p>FIN：表示请求关闭连接，在四次分手时，我们发现FIN发了两遍。这是因为TCP的连接是双向的，所以一次FIN只能关闭一个方向。</p>
-<p>ACK：代表确认接受，从上面可以发现，不管是三次握手还是四次分手，在回应的时候都会加上ACK=1，表示消息接收到了，并且在建立连接以后的发送数据时，都需加上ACK=1,来表示数据接收成功。</p>
-<p>seq:序列号，什么意思呢？当发送一个数据时，数据是被拆成多个数据包来发送，序列号就是对每个数据包进行编号，这样接受方才能对数据包进行再次拼接。</p>
-<p>初始序列号是随机生成的，这样不一样的数据拆包解包就不会连接错了。（例如：两个数据都被拆成1，2，3和一个数据是1，2，3一个是101，102，103，很明显后者不会连接错误）</p>
-<p>ack:这个代表下一个数据包的编号，这也就是为什么第二请求时，ack是seq+1，</p>
-<h3 id="TCP-连接的建立"><a href="#TCP-连接的建立" class="headerlink" title="TCP 连接的建立"></a>TCP 连接的建立</h3><blockquote>
-<p><strong>最开始的时候客户端和服务器都是处于CLOSED状态。主动打开连接的为客户端，被动打开连接的是服务器。</strong></p>
-</blockquote>
-<ol>
-<li>TCP服务器进程先创建传输控制块TCB，时刻准备接受客户进程的连接请求，此时服务器就进入了LISTEN（监听）状态；</li>
-<li>TCP客户进程也是先创建传输控制块TCB，然后向服务器发出连接请求报文，这时报文首部中的同步位SYN=1，同时选择一个初始序列号 seq=x ，此时，TCP客户端进程进入了 SYN-SENT（同步已发送状态）状态。TCP规定，SYN报文段（SYN=1的报文段）不能携带数据，但需要消耗掉一个序号。</li>
-<li>TCP服务器收到请求报文后，如果同意连接，则发出确认报文。确认报文中应该 ACK=1，SYN=1，确认号是ack=x+1，同时也要为自己初始化一个序列号 seq=y，此时，TCP服务器进程进入了SYN-RCVD（同步收到）状态。这个报文也不能携带数据，但是同样要消耗一个序号。</li>
-<li>TCP客户进程收到确认后，还要向服务器给出确认。确认报文的ACK=1，ack=y+1，自己的序列号seq=x+1，此时，TCP连接建立，客户端进入ESTABLISHED（已建立连接）状态。TCP规定，ACK报文段可以携带数据，但是如果不携带数据则不消耗序号。</li>
-<li>当服务器收到客户端的确认后也进入ESTABLISHED状态，此后双方就可以开始通信了。 </li>
-</ol>
-<p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-08%2021-12-08%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<h4 id="为什么TCP客户端最后还要发送一次确认呢？"><a href="#为什么TCP客户端最后还要发送一次确认呢？" class="headerlink" title="为什么TCP客户端最后还要发送一次确认呢？"></a>为什么TCP客户端最后还要发送一次确认呢？</h4><p>一句话，主要防止已经失效的连接请求报文突然又传送到了服务器，从而产生错误。</p>
-<p>如果使用的是两次握手建立连接，假设有这样一种场景，客户端发送了第一个请求连接并且没有丢失，只是因为在网络结点中滞留的时间太长了，由于TCP的客户端迟迟没有收到确认报文，以为服务器没有收到，此时重新向服务器发送这条报文，此后客户端和服务器经过两次握手完成连接，传输数据，然后关闭连接。此时此前滞留的那一次请求连接，网络通畅了到达了服务器，这个报文本该是失效的，但是，两次握手的机制将会让客户端和服务器再次建立连接，这将导致不必要的错误和资源的浪费。</p>
-<p>如果采用的是三次握手，就算是那一次失效的报文传送过来了，服务端接受到了那条失效报文并且回复了确认报文，但是客户端不会再次发出确认。由于服务器收不到确认，就知道客户端并没有请求连接。</p>
-<h3 id="TCP-连接的释放"><a href="#TCP-连接的释放" class="headerlink" title="TCP 连接的释放"></a>TCP 连接的释放</h3><blockquote>
-<p>数据传输完毕后，双方都可释放连接。最开始的时候，客户端和服务器都是处于ESTABLISHED状态，然后客户端主动关闭，服务器被动关闭。</p>
-</blockquote>
-<ol>
-<li>客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。</li>
-<li>服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。</li>
-<li>客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。</li>
-<li>服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。</li>
-<li>客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。</li>
-<li>服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些。</li>
-</ol>
-<p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-08%2021-22-15%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>(客户端多等待2MSL<strong>两个最长报文段寿命</strong>)</p>
-<h4 id="为什么客户端最后还要等待2MSL？"><a href="#为什么客户端最后还要等待2MSL？" class="headerlink" title="为什么客户端最后还要等待2MSL？"></a>为什么客户端最后还要等待2MSL？</h4><blockquote>
-<p>MSL（Maximum Segment Lifetime），TCP允许不同的实现可以设置不同的MSL值。</p>
-<p>第一，保证客户端发送的最后一个ACK报文能够到达服务器，因为这个ACK报文可能丢失，站在服务器的角度看来，我已经发送了FIN+ACK报文请求断开了，客户端还没有给我回应，应该是我发送的请求断开报文它没有收到，于是服务器又会重新发送一次，而客户端就能在这个2MSL时间段内收到这个重传的报文，接着给出回应报文，并且会重启2MSL计时器。</p>
-<p>第二，防止类似与“三次握手”中提到了的“已经失效的连接请求报文段”出现在本连接中。客户端发送完最后一个确认报文后，在这个2MSL时间中，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样新的连接中不会出现旧连接的请求报文。</p>
-</blockquote>
-<h4 id="为什么建立连接是三次握手，关闭连接确是四次挥手呢？"><a href="#为什么建立连接是三次握手，关闭连接确是四次挥手呢？" class="headerlink" title="为什么建立连接是三次握手，关闭连接确是四次挥手呢？"></a>为什么建立连接是三次握手，关闭连接确是四次挥手呢？</h4><blockquote>
-<p>建立连接的时候， 服务器在LISTEN状态下，收到建立连接请求的SYN报文后，把ACK和SYN放在一个报文里发送给客户端。 </p>
-<p>而关闭连接时，服务器收到对方的FIN报文时，仅仅表示对方不再发送数据了但是还能接收数据，而自己也未必全部数据都发送给对方了，所以己方可以立即关闭，也可以发送一些数据给对方后，再发送FIN报文给对方来表示同意现在关闭连接，因此，己方ACK和FIN一般都会分开发送，从而导致多了一次。</p>
-</blockquote>
-<h4 id="如果已经建立了连接，但是客户端突然出现故障了怎么办？"><a href="#如果已经建立了连接，但是客户端突然出现故障了怎么办？" class="headerlink" title="如果已经建立了连接，但是客户端突然出现故障了怎么办？"></a>如果已经建立了连接，但是客户端突然出现故障了怎么办？</h4><blockquote>
-<p>TCP还设有一个保活计时器，显然，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75分钟发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。</p>
-</blockquote>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/08/递归的时间复杂度分析/">递归的时间复杂度分析</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-08
+        <span class="archive-post-title">
+          <a href="/2018/04/11/Docker 安装WordPress/" class="archive-post-link">
+            Docker 安装WordPress
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="递归的时间复杂度分析"><a href="#递归的时间复杂度分析" class="headerlink" title="递归的时间复杂度分析"></a>递归的时间复杂度分析</h2><h4 id="递归中进行一次递归调用的复杂度分析"><a href="#递归中进行一次递归调用的复杂度分析" class="headerlink" title="递归中进行一次递归调用的复杂度分析"></a>递归中进行一次递归调用的复杂度分析</h4><p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-10%2013-00-20%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>这种情况下，当没有找到target时，或者在左半部分递归继续寻找，或者在右半部分继续寻找，也就是在一次递归中，最多再进行一次递归调用，这时，时间复杂度就是递归的最大深度。（同时，处理时是O(1)的）</p>
-<p>总结：如果在递归函数中，只进行一次递归调用，递归深度为depth,在每个递归函数中，时间复杂度为T,则总体时间复杂度为O(T*depth)。</p>
-<h4 id="递归中进行多次递归调用"><a href="#递归中进行多次递归调用" class="headerlink" title="递归中进行多次递归调用"></a>递归中进行多次递归调用</h4><p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-10%2014-22-56%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>此时主要需要关注调用的次数，可以画一颗递归树，像上图一样的，节点的个数就是调用的次数。</p>
-<p>所以这个函数是<code>2^0+2^1+2^2+2^3+2^4+...+2^n</code>=O(2^n)</p>
-<p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-10%2014-28-14%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>在归并排序中，每次处理的元素规模是逐渐变小的，当有8个元素时，树只有三层。每一层处理的规模都是8（8，4+4，2+2+2+2）所以总体是O(nlogn)</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/06/SpringMVC 定时任务详解/">SpringMVC定时任务</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-06
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-08
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="SpringMVC-定时任务"><a href="#SpringMVC-定时任务" class="headerlink" title="SpringMVC 定时任务"></a>SpringMVC 定时任务</h2><p>在SpringMVC里使用spring的定时任务非常的简单。主要步骤如下：</p>
-<p>一：在XML中加入task的命名空间</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">xmlns:task="http:</span>//<span class="attr">www.springframework.org</span>/<span class="attr">schema</span>/<span class="attr">task</span>"   </span></span><br><span class="line"><span class="tag"><span class="attr">http:</span>//<span class="attr">www.springframework.org</span>/<span class="attr">schema</span>/<span class="attr">task</span> <span class="attr">http:</span>//<span class="attr">www.springframework.org</span>/<span class="attr">schema</span>/<span class="attr">task</span>/<span class="attr">spring-task-4.1.xsd</span>&gt;</span><span class="tag">&lt;/<span class="name">xmlns:task</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>二：启用注解驱动的定时任务</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">task:annotation-driven</span> <span class="attr">scheduler</span>=<span class="string">"myScheduler"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>三：配置定时任务的线程池</p>
-<p>推荐配置一个线程池，若不配置的话多任务下就会有问题。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">task:scheduler</span> <span class="attr">id</span>=<span class="string">"myScheduler"</span> <span class="attr">pool-size</span>=<span class="string">"5"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>四：就是写定时任务方法了</p>
-<p>@Scheduled 注解为定时任务，cron表达式里写执行的时机。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ATask</span> <span class="keyword">implements</span> <span class="title">IATask</span></span>&#123;  </span><br><span class="line">       <span class="meta">@Scheduled</span>(cron=<span class="string">"0/10 * *  * * ? "</span>)   <span class="comment">//每10秒执行一次      </span></span><br><span class="line">       <span class="meta">@Override</span>      </span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">aTask</span><span class="params">()</span></span>&#123;      </span><br><span class="line">            <span class="keyword">try</span> &#123;  </span><br><span class="line">                TimeUnit.SECONDS.sleep(<span class="number">20</span>);  </span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </span><br><span class="line">                e.printStackTrace();  </span><br><span class="line">            &#125;  </span><br><span class="line">            DateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);    </span><br><span class="line">            System.out.println(sdf.format(DateTime.now().toDate())+<span class="string">"*A任务每10秒执行一次进入测试"</span>);      </span><br><span class="line">       &#125;      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BTask</span> <span class="keyword">implements</span> <span class="title">IBTask</span></span>&#123;  </span><br><span class="line">       <span class="meta">@Scheduled</span>(cron=<span class="string">"0/5 * *  * * ? "</span>)   <span class="comment">//每5秒执行一次      </span></span><br><span class="line">       <span class="meta">@Override</span>   </span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bTask</span><span class="params">()</span></span>&#123;     </span><br><span class="line">             DateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>);                 System.out.println(sdf.format(DateTime.now().toDate())+<span class="string">"*********B任务每5秒执行一次进入测试"</span>);      </span><br><span class="line">       &#125;      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>spring的定时任务默认是单线程<strong>，</strong>多个任务执行起来时间会有问题（B任务会因为A任务执行起来需要20S而被延后20S执行），如下图所示：</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-08%2010-56-32%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=0i/PNPD04Jmv+2jaQJCHSDQ44U1hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NzQ4Mjk1JnQ9MTUyMzE1NjI5NSZyPTE0OTY3NDQxOTYmZj0vMjAxOC0wNC0wOCUyMDEwLTU2LTMyJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<p>当配置了线程池以后，B任务就不会A任务执行而延后了。</p>
-<h4 id="cron-表达式"><a href="#cron-表达式" class="headerlink" title="cron 表达式"></a>cron 表达式</h4><p>一个cron表达式有至少6个（也可能7个）有空格分隔的时间元素。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">按顺序依次为</span><br><span class="line">      1  秒（0~59）</span><br><span class="line">      2  分钟（0~59）</span><br><span class="line">      3 小时（0~23）</span><br><span class="line">      4  天（0~31）</span><br><span class="line">      5 月（0~11）</span><br><span class="line">      6  星期（1~7 1=SUN 或 SUN，MON，TUE，WED，THU，FRI，SAT）</span><br><span class="line">      7.年份（1970－2099）</span><br><span class="line">      其中每个元素可以是一个值(如6),一个连续区间(9-12),一个间隔时间(8-18/4)(/表示每隔4小时),一个列表(1,3,5),通配符。由于"月份中的日期"和"星期中的日期"这两个元素互斥的,必须要对其中一个设置?.</span><br><span class="line"> 0 0 10,14,16 * * ? 每天上午10点，下午2点，4点</span><br><span class="line">       0 0/30 9-17 * * ?   朝九晚五工作时间内每半小时</span><br><span class="line">       0 0 12 ? * WED 表示每个星期三中午12点</span><br><span class="line">       "0 0 12 * * ?" 每天中午12点触发 </span><br><span class="line">       "0 15 10 ? * *" 每天上午10:15触发 </span><br><span class="line">       "0 15 10 * * ?" 每天上午10:15触发 </span><br><span class="line">       "0 15 10 * * ? *" 每天上午10:15触发 </span><br><span class="line">       "0 15 10 * * ? 2005" 2005年的每天上午10:15触发 </span><br><span class="line">       "0 * 14 * * ?" 在每天下午2点到下午2:59期间的每1分钟触发 </span><br><span class="line">       "0 0/5 14 * * ?" 在每天下午2点到下午2:55期间的每5分钟触发 </span><br><span class="line">       "0 0/5 14,18 * * ?" 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发 </span><br><span class="line">       "0 0-5 14 * * ?" 在每天下午2点到下午2:05期间的每1分钟触发 </span><br><span class="line">       "0 10,44 14 ? 3 WED" 每年三月的星期三的下午2:10和2:44触发 </span><br><span class="line">       "0 15 10 ? * MON-FRI" 周一至周五的上午10:15触发 </span><br><span class="line">       "0 15 10 15 * ?" 每月15日上午10:15触发 </span><br><span class="line">       "0 15 10 L * ?" 每月最后一日的上午10:15触发 </span><br><span class="line">       "0 15 10 ? * 6L" 每月的最后一个星期五上午10:15触发 </span><br><span class="line">       "0 15 10 ? * 6L 2002-2005" 2002年至2005年的每月的最后一个星期五上午10:15触发 </span><br><span class="line">       "0 15 10 ? * 6#3" 每月的第三个星期五上午10:15触发 </span><br><span class="line">       有些子表达式能包含一些范围或列表</span><br></pre></td></tr></table></figure>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/06/责任链模式/">责任链模式</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-06
+        <span class="archive-post-title">
+          <a href="/2018/04/08/TCP 三次握手与四次挥手/" class="archive-post-link">
+            TCP 三次握手与四次挥手
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/软件工程/">软件工程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h2><p>责任链模式（Chain of Responsibility Pattern）为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。</p>
-<p>在这种模式中，通常每个接收者都包含对另一个接收者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者，依此类推。</p>
-<p><strong>意图：</strong>避免请求发送者与接收者（链）耦合在一起，让多个对象都有可能接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止。</p>
-<p><strong>主要解决：</strong>职责链上的处理者负责处理请求，客户只需要将请求发送到职责链上即可，无须关心请求的处理细节和请求的传递，所以职责链将请求的发送者和请求的处理者解耦了。</p>
-<p><strong>何时使用：</strong>在处理消息的时候以过滤很多道。</p>
-<p><strong>如何解决：</strong>拦截的类都实现统一接口。</p>
-<p><strong>关键代码：</strong>Handler 里面聚合它自己，在 HanleRequest 里判断是否合适，如果没达到条件则向下传递，向谁传递之前 set 进去。</p>
-<p><strong>应用实例：</strong> 1、红楼梦中的”击鼓传花”。 2、JS 中的事件冒泡。 3、JAVA WEB 中 Apache Tomcat 对 Encoding 的处理，Struts2 的拦截器，jsp servlet 的 Filter。</p>
-<p><strong>优点：</strong> 1、降低耦合度。它将请求的发送者和接收者解耦。 2、简化了对象。使得对象不需要知道链的结构。 3、增强给对象指派职责的灵活性。通过改变链内的成员或者调动它们的次序，允许动态地新增或者删除责任。 4、增加新的请求处理类很方便。</p>
-<p><strong>缺点：</strong> 1、不能保证请求一定被接收。 2、系统性能将受到一定影响，而且在进行代码调试时不太方便，可能会造成循环调用。 3、可能不容易观察运行时的特征，有碍于除错。</p>
-<p><strong>使用场景：</strong> 1、有多个对象可以处理同一个请求，具体哪个对象处理该请求由运行时刻自动确定。 2、在不明确指定接收者的情况下，向多个对象中的一个提交一个请求。 3、可动态指定一组对象处理请求。</p>
-<p><strong>注意事项：</strong>在 JAVA WEB 中遇到很多应用。</p>
-<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>我们创建抽象类 <em>AbstractLogger</em>，带有详细的日志记录级别。然后我们创建三种类型的记录器，都扩展了 <em>AbstractLogger</em>。每个记录器消息的级别是否属于自己的级别，如果是则相应地打印出来，否则将不打印并把消息传给下一个记录器。(也就是说，这三个记录器就是链上的处理者)</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-04%2011-37-02%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=D4Tm9TAFb/+mrfn7nV7z0/1QTuxhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NDA1MDY2JnQ9MTUyMjgxMzA2NiZyPTE0NzgyOTEyMTEmZj0vMjAxOC0wNC0wNCUyMDExLTM3LTAyJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<h4 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤 1"></a>步骤 1</h4><p>创建抽象的记录器类。</p>
-<p><em>AbstractLogger.java</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> INFO = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> DEBUG = <span class="number">2</span>;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> ERROR = <span class="number">3</span>;</span><br><span class="line">   <span class="keyword">protected</span> <span class="keyword">int</span> level;</span><br><span class="line">   <span class="comment">//责任链中的下一个元素</span></span><br><span class="line">   <span class="keyword">protected</span> AbstractLogger nextLogger;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNextLogger</span><span class="params">(AbstractLogger nextLogger)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.nextLogger = nextLogger;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logMessage</span><span class="params">(<span class="keyword">int</span> level, String message)</span></span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(<span class="keyword">this</span>.level &lt;= level)&#123;</span><br><span class="line">         write(message);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span>(nextLogger !=<span class="keyword">null</span>)&#123;</span><br><span class="line">         nextLogger.logMessage(level, message);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">abstract</span> <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span></span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="步骤-2"><a href="#步骤-2" class="headerlink" title="步骤 2"></a>步骤 2</h3><p>创建扩展了该记录器类的实体类。</p>
-<p><em>ConsoleLogger.java</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsoleLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ConsoleLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.level = level;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;        </span><br><span class="line">      System.out.println(<span class="string">"Standard Console::Logger: "</span> + message);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><em>ErrorLogger.java</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ErrorLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.level = level;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;        </span><br><span class="line">      System.out.println(<span class="string">"Error Console::Logger: "</span> + message);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><em>FileLogger.java</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileLogger</span> <span class="keyword">extends</span> <span class="title">AbstractLogger</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">FileLogger</span><span class="params">(<span class="keyword">int</span> level)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.level = level;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(String message)</span> </span>&#123;        </span><br><span class="line">      System.out.println(<span class="string">"File::Logger: "</span> + message);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="步骤-3"><a href="#步骤-3" class="headerlink" title="步骤 3"></a>步骤 3</h3><p>创建不同类型的记录器。赋予它们不同的错误级别，并在每个记录器中设置下一个记录器。每个记录器中的下一个记录器代表的是链的一部分。</p>
-<p><em>ChainPatternDemo.java</em></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainPatternDemo</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> AbstractLogger <span class="title">getChainOfLoggers</span><span class="params">()</span></span>&#123;</span><br><span class="line">      AbstractLogger errorLogger = <span class="keyword">new</span> ErrorLogger(AbstractLogger.ERROR);</span><br><span class="line">      AbstractLogger fileLogger = <span class="keyword">new</span> FileLogger(AbstractLogger.DEBUG);</span><br><span class="line">      AbstractLogger consoleLogger = <span class="keyword">new</span> ConsoleLogger(AbstractLogger.INFO);</span><br><span class="line">      errorLogger.setNextLogger(fileLogger);</span><br><span class="line">      fileLogger.setNextLogger(consoleLogger);</span><br><span class="line">      <span class="keyword">return</span> errorLogger;    </span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      AbstractLogger loggerChain = getChainOfLoggers();</span><br><span class="line">      loggerChain.logMessage(AbstractLogger.INFO, <span class="string">"This is an information."</span>);</span><br><span class="line">      loggerChain.logMessage(AbstractLogger.DEBUG, <span class="string">"This is an debug level information."</span>);</span><br><span class="line">      loggerChain.logMessage(AbstractLogger.ERROR, <span class="string">"This is an error information."</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="步骤-4"><a href="#步骤-4" class="headerlink" title="步骤 4"></a>步骤 4</h4><p>验证输出。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Standard Console::Logger: This is an information.</span><br><span class="line">File::Logger: This is an debug level information.</span><br><span class="line">Standard Console::Logger: This is an debug level information.</span><br><span class="line">Error Console::Logger: This is an error information.</span><br><span class="line">File::Logger: This is an error information.</span><br><span class="line">Standard Console::Logger: This is an error information.</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="http://www.runoob.com/design-pattern/chain-of-responsibility-pattern.html" target="_blank" rel="noopener">http://www.runoob.com/design-pattern/chain-of-responsibility-pattern.html</a></p>
-</blockquote>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/05/计算机网络问题总结/">计算机网络问题总结</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-05
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-08
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="计算机网络问题总结"><a href="#计算机网络问题总结" class="headerlink" title="计算机网络问题总结"></a>计算机网络问题总结</h2><h4 id="HTTP-TCP-IP的用途区别"><a href="#HTTP-TCP-IP的用途区别" class="headerlink" title="HTTP,TCP,IP的用途区别"></a>HTTP,TCP,IP的用途区别</h4><p>http负责将什么样的数据送给对方，同时，http接收端负责解释这些数据的真正含义</p>
-<p>TCP负责将客户的数据按序送到客户指定的目的地，如果有丢失，则负责重传。</p>
-<p>IP协议负责TCP输入的客户目的地，根据一定的策略将数据送到目的地。IP协议无法保证对端一定活着，IP是不够智能的，只能简单的运送，无法解决丢包重传，重新排序，流量控制等复杂的操作。如果没有上层的Tcp协议，应用层的协议就要无时无刻不盯着自己发送的数据包，超时就重传。乱序则排序，把这些功能抽象出来就是TCP的作用。</p>
-<h4 id="Socket"><a href="#Socket" class="headerlink" title="Socket"></a>Socket</h4><p>socket函数是<strong>操作系统内核将“TCP/IP协议栈 + 底层网卡”抽象出来的一个个用户友好的函数，用于操纵本地的“TCP/IP协议栈 + 底层网卡”与远端的服务器/主机完成通信的任务。</strong></p>
-<h4 id="数据帧"><a href="#数据帧" class="headerlink" title="数据帧"></a>数据帧</h4><p>所谓数据帧（Data frame），就是数据链路层的协议数据单元，它包括三部分：帧头，数据部分，帧尾。其中，帧头和帧尾包含一些必要的控制信息，比如同步信息、地址信息、差错控制信息等；数据部分则包含网络层传下来的数据，比如IP数据包。</p>
-<h4 id="链路层和网络层的关系"><a href="#链路层和网络层的关系" class="headerlink" title="链路层和网络层的关系"></a>链路层和网络层的关系</h4><p>数据链路层提供直连两个设备之间的通信功能。与此相比，作为网络层的IP则负责在没有直连的两个网络之间进行通信传输。</p>
-<p>好比一个人要去很远的地方旅行，其中要坐汽车，要坐火车，要坐船。同时他做了一个规划表，详细制定了几点到几点应该坐什么交通工具从哪到哪。</p>
-<p>在他买了机票，汽车票，船票后，他们都只在特定的区间是有效的。所以就相当于它们都只负责某一个区间的通信运输，而那个详细的规划表就相当于IP,它负责将数据包发送到最终的地址。</p>
-<p>如果只有车票没有行程表，没法到达目的地，因为不知道什么时候该换乘，也不知道下一段路坐什么车，而光有行程表没有车票也不行，因为没法乘坐交通工具。（图解TCPIP /117页）</p>
-<p>也就是网络层知道该往哪条路走(路由选择)(一到路由器就知道下段路该往哪走)，具体在这条链路上怎么走由链路层决定。</p>
-<p>(我的理解：链路层以上的层都是说明了数据该走到哪，走到以后怎么解析，而真正说明怎么走的就是链路层协议规定的内容)</p>
-<h4 id="包传递过程中哪些不变，哪些变"><a href="#包传递过程中哪些不变，哪些变" class="headerlink" title="包传递过程中哪些不变，哪些变"></a>包传递过程中哪些不变，哪些变</h4><p>帧经过交换机时，其源、目标MAC是不会变的，一句话：二层转发不改变帧的MAC地址、IP地址；<br>帧经过路由器时，进行路由转发，IP地址是不会变的，但MAC地址必定会变。</p>
-<h4 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h4><p>主要负责物理层面上的互连的，节点之间的通信传输，例如与一个以太网相连的两个节点之间的通信。将01序列划分为具有意义的数据帧送给对端。</p>
-<p>链路层的协议有许多种，但是有三个基本的问题，那就是封装成帧，透明传输，差错控制。</p>
-<ul>
-<li>封装成帧</li>
-</ul>
-<p>数据链路层的主要工作是添加一个帧头部和帧尾部，不同的数据链路层协议可能格式不同，但是基本的格式都试类似的：</p>
-<p><img src="http://four-1252095801.cosbj.myqcloud.com/2018-04-08%2021-53-14%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
-<p>这里的数据部分，一般有一个最大程度，我们称为MTU，在MAC里一般是1500个字节，当数据是由可打印的ASC2码组成的文件时，可以使用特殊的帧定字符来标明一个帧的开始和结束。比如使用SOH(Start Of Header)–0x01和EOT(End Of Transmission)–0x04来表示，这样数据链路层就可以识别出帧的开始和结束。</p>
-<ul>
-<li>透明传输</li>
-</ul>
-<p>如果我们提供任何数据输入，数据链路层都可以成功传递，那么我们称之为透明传输，即数据链路层的功能对于网络层和上层是透明的。</p>
-<ul>
-<li>错误检测</li>
-</ul>
-<p>现实的通信链路都不会是理想的，这就是说，传输过程中有可能1变成0,0变成1，这种情况就叫做比特差错。数据链路层提供了<strong>循环冗余检验CRC</strong>方法来检测比特差错，其主要使用了帧检验序列FCS来检测比特错误。发送数据前先计算帧的数据部分得出FCS添加在数据部分后，接收端收到数据后添加上FCS后计算验证。</p>
-<p>需要注意的是数据链路层并没有向网络层提供可靠传输服务，传输差错一类是比特差错，还有一类是帧丢失、帧重复或帧失序。完整的传输错误控制是在TCP中实现的。</p>
-<h4 id="物理层怎么传"><a href="#物理层怎么传" class="headerlink" title="物理层怎么传"></a>物理层怎么传</h4><p>物理层只需要把数据从物理相连的链路上传就行了，连到哪，就走到哪，只有到了设备,也就是到了可识别协议的设备的时候,才会有选择路径的说法。</p>
-<h4 id="最后的地址怎么找到"><a href="#最后的地址怎么找到" class="headerlink" title="最后的地址怎么找到"></a>最后的地址怎么找到</h4><p>通过IP地址可以找到目的地在哪一个网络，然后找到这个网络后，就需要通过MAC地址进行广播找到最终的终端。</p>
-<h4 id="MAC地址与IP地址"><a href="#MAC地址与IP地址" class="headerlink" title="MAC地址与IP地址"></a>MAC地址与IP地址</h4><p>MAC寻址中参考的表叫做地址转发表，IP寻址中参考的表叫做路由控制表。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-04%2015-31-13%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=9lWQM3ujpISO409F0zqt6h25vK9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NDE5MTA1JnQ9MTUyMjgyNzEwNSZyPTkwNzk4MDI1NiZmPS8yMDE4LTA0LTA0JTIwMTUtMzEtMTMlRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
-<h4 id="交换机与路由器"><a href="#交换机与路由器" class="headerlink" title="交换机与路由器"></a>交换机与路由器</h4><p>网桥也就是两层交换机，是从数据链路层上延长网络的设备。</p>
-<p>路由器也就是三层交换机，是通过网络层转发分组数据的设备。</p>
-<p>4-7层交换机 处理传输层以上各层网络传输的设备</p>
-<h4 id="包首部"><a href="#包首部" class="headerlink" title="包首部"></a>包首部</h4><p>每一个包首部中至少都会包含两部分信息，一个是发送端接受端地址，另一个上层的协议类型。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-04%2016-10-55%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=BlugcJjoBveu52J1ZnI5rRbPX+FhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1NDIxNDc4JnQ9MTUyMjgyOTQ3OCZyPTgyMDQyNjMyOSZmPS8yMDE4LTA0LTA0JTIwMTYtMTAtNTUlRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
-<h4 id="数据链路的作用"><a href="#数据链路的作用" class="headerlink" title="数据链路的作用"></a>数据链路的作用</h4><p>各个设备在数据传输时，链路层和物理层必不可少，众所周知，计算机以二进制0,1来表示信息，然而实际的通信媒介之间处理的却是电压的高低，光的闪灭以及电波的强弱等信号。把这些信号与二进制的0,1进行转换正是物理层的责任。</p>
-<p>数据链路层的处理也不是单纯的01序列，链路层把他们集合为一个叫做帧的块，然后再进行传输。</p>
-<h4 id="MAC地址"><a href="#MAC地址" class="headerlink" title="MAC地址"></a>MAC地址</h4><p>mac地址用于识别<strong>数据链路中</strong>互联的节点。48位</p>
-<h4 id="数据链路有哪些"><a href="#数据链路有哪些" class="headerlink" title="数据链路有哪些"></a>数据链路有哪些</h4><p>有以太网，无线通信，PPP(点对点，即1对1连接计算机)的方式。</p>
-<p>ATM,POS,FDDI等。</p>
-<p>这些链路协议相当于运输工具，就相当于士兵运货物从海南到北京，其中可能要用船，可能的地方只能骑马，有的地方可以开越野车，（就相当于不同的链路协议）</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/04/IaaS、PaaS、SaaS/">IaaS、PaaS、SaaS</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-04
+        <span class="archive-post-title">
+          <a href="/2018/04/08/递归的时间复杂度分析/" class="archive-post-link">
+            递归的时间复杂度分析
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/微服务/">微服务</a>
-            
-              <a href="/categories/微服务/云计算/">云计算</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
 
-        
-          <h2 id="IaaS、PaaS、SaaS"><a href="#IaaS、PaaS、SaaS" class="headerlink" title="IaaS、PaaS、SaaS"></a>IaaS、PaaS、SaaS</h2><h4 id="本地部署"><a href="#本地部署" class="headerlink" title="本地部署"></a>本地部署</h4><p>本地部署就是服务器，平台，成品软件全都要自己搞好。</p>
-<h4 id="IaaS-基础设施即服务"><a href="#IaaS-基础设施即服务" class="headerlink" title="IaaS 基础设施即服务"></a>IaaS 基础设施即服务</h4><p>基础设施即服务，是云服务里最重要也是最基础的一块，经常提到的云计算，云存储，和CDN加速等，都属于这个领域。</p>
-<p>有了IaaS，可以将硬件外包到别的地方去。IaaS公司会提供场外服务器，存储和网络硬件，你可以租用。节省了维护成本和办公场地，公司可以在任何时候利用这些硬件来运行其应用。</p>
-<p>一些大的IaaS公司包括Amazon, Microsoft, VMWare, Rackspace和Red Hat.不过这些公司又都有自己的专长，比如Amazon和微软给你提供的不只是IaaS，他们还会将其计算能力出租给你来host你的网站。</p>
-<h4 id="PaaS-平台即服务"><a href="#PaaS-平台即服务" class="headerlink" title="PaaS 平台即服务"></a>PaaS 平台即服务</h4><p>PaaS的价值在于，它可以提供软件开发(包括APP)所需的基础功能模块，特别是非核心，但是又有普遍需求的模块，例如通讯，存储，推送。这对一些创业公司来说，尤其有用，按需使用云端的功能模块既可以免去繁琐的开发维护工作，又能提升客户体验。</p>
-<p>第二层就是所谓的PaaS，某些时候也叫做中间件。公司所有的开发都可以在这一层进行，节省了时间和资源。</p>
-<p>PaaS公司在网上提供各种开发和分发应用的解决方案，比如虚拟服务器和操作系统。这节省了你在硬件上的费用，也让分散的工作室之间的合作变得更加容易。网页应用管理，应用设计，应用虚拟主机，存储，安全以及应用开发协作工具等。</p>
-<p>一些大的PaaS提供者有Google App Engine,Microsoft Azure，Force.com,Heroku，Engine Yard。最近兴起的公司有AppFog,Mendix和Standing Cloud.</p>
-<h4 id="SaaS-软件即服务"><a href="#SaaS-软件即服务" class="headerlink" title="SaaS 软件即服务"></a>SaaS 软件即服务</h4><p>第三层也就是所谓SaaS。这一层是和你的生活每天接触的一层，大多是通过网页浏览器来接入。任何一个远程服务器上的应用都可以通过网络来运行，就是SaaS了。</p>
-<p>你消费的服务完全是从网页如Netflix,MOG,Google Apps,Box.net,Dropbox或者苹果的iCloud那里进入这些分类。尽管这些网页服务是用作商务和娱乐或者两者都有，但这也算是云技术的一部分。</p>
-<p>一些用作商务的SaaS应用包括Citrix的Go To Meeting，Cisco的WebEx，Salesforce的CRM，ADP，Workday和SuccessFactors。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-04-03%2021-48-48%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=k59pONdhh4ST3NnT+mZK0tD5QF5hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI1MzU1NDE3JnQ9MTUyMjc2MzQxNyZyPTkyMTE1Mjc1NiZmPS8yMDE4LTA0LTAzJTIwMjEtNDgtNDglRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
-
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-06
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/06/SpringMVC 定时任务详解/" class="archive-post-link">
+            SpringMVC定时任务
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-06
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/06/责任链模式/" class="archive-post-link">
+            责任链模式
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-05
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/05/计算机网络问题总结/" class="archive-post-link">
+            计算机网络问题总结
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
-
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-04
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/04/IaaS、PaaS、SaaS/" class="archive-post-link">
+            IaaS、PaaS、SaaS
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -828,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -887,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -944,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

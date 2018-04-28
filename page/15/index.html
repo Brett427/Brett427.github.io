@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,443 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
+    
+
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/24/leetcode91/">91. Decode Ways</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-24
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><ol>
-<li><p>A message containing letters from <code>A-Z</code> is being encoded to numbers using the following mapping:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&apos;A&apos; -&gt; 1</span><br><span class="line">&apos;B&apos; -&gt; 2</span><br><span class="line">...</span><br><span class="line">&apos;Z&apos; -&gt; 26</span><br></pre></td></tr></table></figure>
-<p>Given an encoded message containing digits, determine the total number of ways to decode it.</p>
-<p>For example,<br>Given encoded message <code>&quot;12&quot;</code>, it could be decoded as <code>&quot;AB&quot;</code> (1 2) or <code>&quot;L&quot;</code> (12).</p>
-<p>The number of ways decoding <code>&quot;12&quot;</code> is 2.</p>
-</li>
-</ol>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>用数字表示字母,给定一个数字字符串,计算有多少种字符的表示方式.<br>
-          <div class="read-more">
-            <a href="/2017/12/24/leetcode91/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/22/MySQL高级特性(二)/">MySQL高级特性(二)</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-22
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2017-12-24
           
-        
-
-        
-          <h3 id="字符集和校对"><a href="#字符集和校对" class="headerlink" title="字符集和校对"></a>字符集和校对</h3><p>字符集是指一种从二进制编码到某类字符符号的映射,校对是指一组用于某个字符集的排序规则.</p>
-<h4 id="MySQL如何使用字符集"><a href="#MySQL如何使用字符集" class="headerlink" title="MySQL如何使用字符集"></a>MySQL如何使用字符集</h4><p>每种字符集都可能有多种校对规则,并且都有一个默认的校对规则,每个校对规则都是针对某个特定的字符集的,和其他的字符集没有关系,校对规则和字符集总是一起使用的,所以也将这样的一个组合统称为一个字符集.</p>
-<h5 id="创建对象时的默认设置"><a href="#创建对象时的默认设置" class="headerlink" title="创建对象时的默认设置"></a>创建对象时的默认设置</h5>
-          <div class="read-more">
-            <a href="/2017/12/22/MySQL高级特性(二)/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/21/MySQL高级特性(一)/">MySQL高级特性(一)</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-21
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><p>在 SQL 中，视图是基于 SQL 语句的结果集的可视化的表。</p>
-<p>视图包含行和列，就像一个真实的表。视图中的字段就是来自一个或多个数据库中的真实的表中的字段。我们可以向视图添加 SQL 函数、WHERE 以及 JOIN 语句，我们也可以提交数据，就像这些来自于某个单一的表。</p>
-<p>视图本身是一个虚拟表,不存放任何数据,在使用sql语句访问视图的时候,它返回的数据是MySQL从其他表中生成的,视图和表是在同一个命名空间,MySQL在很多地方对于视图和表是同样对待的,视图和表也有不同,比如不能对视图创建触发器,也不能用DROP TABLE 命令删除视图</p>
-          <div class="read-more">
-            <a href="/2017/12/21/MySQL高级特性(一)/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/20/leetcode76/">76. Minimum Window Substring</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-20
+        <span class="archive-post-title">
+          <a href="/2017/12/24/leetcode91/" class="archive-post-link">
+            91. Decode Ways
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).</p>
-<p>For example,<br><strong>S</strong> = <code>&quot;ADOBECODEBANC&quot;</code><br><strong>T</strong> = <code>&quot;ABC&quot;</code></p>
-<p>Minimum window is <code>&quot;BANC&quot;</code>.</p>
-<p><strong>Note:</strong><br>If there is no such window in S that covers all characters in T, return the empty string <code>&quot;&quot;</code>.</p>
-<p>If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>找出包含第二个字符的最短子串<br>
-          <div class="read-more">
-            <a href="/2017/12/20/leetcode76/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/20/Linux硬链接与软链接/">Linux硬链接与软链接</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-20
+            2017-12-22
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Linux/">Linux</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <p>现代操作系统为解决信息能独立于进程之外被长期存储引入了文件，文件作为进程创建信息的逻辑单元可被多个进程并发使用。在 UNIX 系统中，操作系统为磁盘上的文本与图像、鼠标与键盘等输入设备及网络交互等 I/O 操作设计了一组通用 API，使他们被处理时均可统一使用字节流方式。换言之，UNIX 系统中除进程之外的一切皆是文件，而 Linux 保持了这一特性。为了便于文件的管理，Linux 还引入了目录（有时亦被称为文件夹）这一概念。目录使文件可被分类管理，且目录的引入使 Linux 的文件系统形成一个层级结构的目录树。</p>
-          <div class="read-more">
-            <a href="/2017/12/20/Linux硬链接与软链接/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/19/Linux管道,grep命令/">Linux管道,grep命令</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-19
+        <span class="archive-post-title">
+          <a href="/2017/12/22/MySQL高级特性(二)/" class="archive-post-link">
+            MySQL高级特性(二)
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Linux/">Linux</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h3 id="查看程序路径"><a href="#查看程序路径" class="headerlink" title="查看程序路径"></a>查看程序路径</h3><p>查看程序的 binary 文件所在路径:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ which command</span><br></pre></td></tr></table></figure>
-<p>eg: 查找 make 程序安装路径:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ which make</span><br><span class="line">/opt/app/openav/soft/bin/make install</span><br></pre></td></tr></table></figure>
-<p>查看程序的搜索路径:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ whereis command</span><br></pre></td></tr></table></figure>
-<p>当系统中安装了同一软件的多个版本时，不确定使用的是哪个版本时，这个命令就能派上用场。</p>
-          <div class="read-more">
-            <a href="/2017/12/19/Linux管道,grep命令/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/19/leetcode72/">79. Word Search</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-19
+            2017-12-21
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given two words <em>word1</em> and <em>word2</em>, find the minimum number of steps required to convert <em>word1</em> to <em>word2</em>. (each operation is counted as 1 step.)</p>
-<p>You have the following 3 operations permitted on a word:</p>
-<p>a) Insert a character<br>b) Delete a character<br>c) Replace a character</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>给定两个单词,求两个变成相同的最少步骤.</p>
-          <div class="read-more">
-            <a href="/2017/12/19/leetcode72/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/18/leetcode67/">67. Add Binary</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-18
+        <span class="archive-post-title">
+          <a href="/2017/12/21/MySQL高级特性(一)/" class="archive-post-link">
+            MySQL高级特性(一)
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><ol>
-<li><p>Given two binary strings, return their sum (also a binary string).</p>
-<p>For example,<br>a = <code>&quot;11&quot;</code><br>b = <code>&quot;1&quot;</code><br>Return <code>&quot;100&quot;</code>.</p>
-</li>
-</ol>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>二进制加法<br>
-          <div class="read-more">
-            <a href="/2017/12/18/leetcode67/" class="read-more-link">Read more..</a>
-          </div>
-        
+            2017-12-20
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/20/leetcode76/" class="archive-post-link">
+            76. Minimum Window Substring
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-20
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/20/Linux硬链接与软链接/" class="archive-post-link">
+            Linux硬链接与软链接
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/19/Linux管道,grep命令/" class="archive-post-link">
+            Linux管道,grep命令
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-19
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/19/leetcode72/" class="archive-post-link">
+            79. Word Search
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-18
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/18/leetcode67/" class="archive-post-link">
+            67. Add Binary
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -658,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -717,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -774,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

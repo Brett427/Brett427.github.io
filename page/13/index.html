@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,463 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
     
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/04/MYSQL的锁/">MYSQL的锁</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-04
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h3 id="Mysql-锁详解"><a href="#Mysql-锁详解" class="headerlink" title="Mysql 锁详解"></a>Mysql 锁详解</h3><p>Mysql存在多种数据存储引擎，每种存储引擎所针对的应用场景特点都不太一样，为了满足各自特定应用场景的需求，每种存储引擎的锁定机制都是为各自所面对的特定场景而优化设计，所以各存储引擎的锁定机制也有较大区别。MySQL各存储引擎使用了三种类型（级别）的锁定机制：表级锁定，行级锁定和页级锁定。</p>
-<ul>
-<li>表级锁定（table-level）</li>
-</ul>
-<p>表级别的锁定是MySQL各存储引擎中最大颗粒度的锁定机制。最大特点是实现逻辑简单，系统负面影响最小。所以获取锁和释放锁的速度很快。由于表级锁一次会将整个表锁定，所以可以很好的避免困扰我们的死锁问题。<br>但是并发度大打折扣。<br>使用表级锁定的主要是MyISAM，MEMORY，CSV等一些非事务性存储引擎。</p>
-<ul>
-<li>行级锁定（row-level）</li>
-</ul>
-<p>行级锁定最大特点是锁定对象的颗粒度很小，也是目前各大数据库管理软件所实现的锁定颗粒度最小的。发生锁定资源争用的概率也最小，能够给予应用程序尽可能大的并发处理能力而提高一些需要高并发应用系统的整体性能。<br>虽然能够在并发处理能力上面有较大的优势，但是行级锁定也因此带来了不少弊端。由于锁定资源的颗粒度很小，所以每次获取锁和释放锁需要做的事情也更多，带来的消耗自然也就更大了。此外，行级锁定也最容易发生死锁。<br>使用行级锁定的主要是InnoDB存储引擎。</p>
-<ul>
-<li>页级锁定（page-level）</li>
-</ul>
-<p>页级锁定是MySQL中比较独特的一种锁定级别，在其他数据库管理软件中也并不是太常见。页级锁定的特点是锁定颗粒度介于行级锁定与表级锁之间，所以获取锁定所需要的资源开销，以及所能提供的并发处理能力也同样是介于上面二者之间。另外，页级锁定和行级锁定一样，会发生死锁。<br>在数据库实现资源锁定的过程中，随着锁定资源颗粒度的减小，锁定相同数据量的数据所需要消耗的内存数量是越来越多的，实现算法也会越来越复杂。不过，随着锁定资源颗粒度的减小，应用程序的访问请求遇到锁等待的可能性也会随之降低，系统整体并发度也随之提升。<br>使用页级锁定的主要是BerkeleyDB存储引擎。</p>
-<h4 id="表级锁定"><a href="#表级锁定" class="headerlink" title="表级锁定"></a>表级锁定</h4><h5 id="MySQL-表级锁的两种锁模式"><a href="#MySQL-表级锁的两种锁模式" class="headerlink" title="MySQL 表级锁的两种锁模式"></a>MySQL 表级锁的两种锁模式</h5><p>表共享读锁（Table Read Lock）和表独占写锁（Table Write Lock）</p>
-<p>对MyISAM表的读操作，不会阻塞其他用户对同一表的读请求，但会阻塞对同一表的写请求；<br>对MyISAM表的写操作，则会阻塞其他用户对同一表的读和写操作；</p>
-<h5 id="如何加表锁"><a href="#如何加表锁" class="headerlink" title="如何加表锁"></a>如何加表锁</h5><p>MyISAM在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁，在执行更新操作（UPDATE、DELETE、INSERT等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预，因此，用户一般不需要直接用LOCK TABLE命令给MyISAM表显式加锁。</p>
-<h4 id="行级锁定"><a href="#行级锁定" class="headerlink" title="行级锁定"></a>行级锁定</h4><p>行级锁定不是MySQL自己实现的锁定方式，而是由其他存储引擎自己所实现的，如广为大家所知的InnoDB存储引擎，以及MySQL的分布式存储引擎NDBCluster等都是实现了行级锁定。主要分析一下InnoDB的锁定特性。</p>
-<h5 id="InnoDB锁定模式及实现机制"><a href="#InnoDB锁定模式及实现机制" class="headerlink" title="InnoDB锁定模式及实现机制"></a>InnoDB锁定模式及实现机制</h5><ul>
-<li>共享锁【S锁】 </li>
-</ul>
-<p>又称读锁，是读取操作创建的锁。其他用户可以并发读取数据，但任何事务都不能对数据进行修改（获取数据上的排他锁），直到已释放所有共享锁。如果事务T对数据A加上共享锁后，则其他事务只能对A再加共享锁，不能加排他锁。获准共享锁的事务只能读数据，不能修改数据。</p>
-<p>用法:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span>;</span><br></pre></td></tr></table></figure>
-<p>在查询语句后面增加<code>LOCK IN SHARE MODE</code>，Mysql会对查询结果中的每行都加共享锁，当没有其他线程对查询结果集中的任何一行使用排他锁时，可以成功申请共享锁，否则会被阻塞。其他线程也可以读取使用了共享锁的表，而且这些线程读取的是同一个版本的数据。</p>
-<ul>
-<li>排他锁【X锁】</li>
-</ul>
-<p>又称写锁。若事务T对数据对象A加上X锁，事务T可以读A也可以修改A，其他事务不能再对A加任何锁，直到T释放A上的锁。这保证了其他事务在T释放A上的锁之前不能再读取和修改A。</p>
-<p>用法:</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ...FOR <span class="keyword">UPDATE</span>;</span><br></pre></td></tr></table></figure>
-<p>在查询语句后面增加<code>FOR UPDATE</code>，Mysql会对查询结果中的每行都加排他锁，当没有其他线程对查询结果集中的任何一行使用排他锁时，可以成功申请排他锁，否则会被阻塞。</p>
-<ul>
-<li>意向锁</li>
-</ul>
-<p>意向锁是表级锁，其设计目的主要是为了在一个事务中揭示下一行将要被请求锁的类型。InnoDB中的两个表锁：</p>
-<p>意向共享锁（IS）：表示事务准备给数据行加入共享锁，也就是说一个数据行加共享锁前必须先取得该表的IS锁</p>
-<p>意向排他锁（IX）：类似上面，表示事务准备给数据行加入排他锁，说明事务在一个数据行加排他锁前必须先取得该表的IX锁。</p>
-<p><strong>意向锁是InnoDB自动加的，不需要用户干预。</strong></p>
-<p>对于insert、update、delete，InnoDB会自动给涉及的数据加排他锁（X）；对于一般的Select语句，InnoDB不会加任何锁，事务可以通过以下语句给显示加共享锁或排他锁。</p>
-<p>共享锁：<code>SELECT ... LOCK IN SHARE MODE;</code></p>
-<p>排他锁：<code>SELECT ... FOR UPDATE;</code></p>
-<h4 id="InnoDB行锁实现方式"><a href="#InnoDB行锁实现方式" class="headerlink" title="InnoDB行锁实现方式"></a>InnoDB行锁实现方式</h4><p>InnoDB行锁是通过给索引上的索引项加锁来实现的，只有通过索引条件检索数据，InnoDB才使用行级锁，否则，InnoDB将使用表锁<br>在实际应用中，要特别注意InnoDB行锁的这一特性，不然的话，可能导致大量的锁冲突，从而影响并发性能。下面通过一些实际例子来加以说明。<br>（1）在不通过索引条件查询的时候，InnoDB确实使用的是表锁，而不是行锁。<br>（2）由于MySQL的行锁是针对索引加的锁，不是针对记录加的锁，所以虽然是访问不同行的记录，但是如果是使用相同的索引键，是会出现锁冲突的。<br>（3）当表有多个索引的时候，不同的事务可以使用不同的索引锁定不同的行，另外，不论是使用主键索引、唯一索引或普通索引，InnoDB都会使用行锁来对数据加锁。<br>（4）即便在条件中使用了索引字段，但是否使用索引来检索数据是由MySQL通过判断不同执行计划的代价来决定的，如果MySQL认为全表扫描效率更高，比如对一些很小的表，它就不会使用索引，这种情况下InnoDB将使用表锁，而不是行锁。因此，在分析锁冲突时，别忘了检查SQL的执行计划，以确认是否真正使用了索引。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
 
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/03/可扩展的MYSQL/">可扩展的MYSQL</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-03
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h2 id="可扩展的MYSQL"><a href="#可扩展的MYSQL" class="headerlink" title="可扩展的MYSQL"></a>可扩展的MYSQL</h2><p>容量是一个和可拓展性相关的概念,系统容量表示在一定时间内能够完成的工作量,容量必须是可以有效利用的,系统的最大吞吐量不等同于容量</p>
-<p>可拓展性的定义: 可拓展性是当增加资源以处理负载和增加容量时系统能够获得的投资产出率.</p>
-          <div class="read-more">
-            <a href="/2018/01/03/可扩展的MYSQL/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/03/复制/">MySQL复制</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-03
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2018-01-04
           
-        
-
-        
-          <p>Mysql内建的复制功能是构建基于MySQL的大规模高性能应用的基础,使用所谓水平拓展的架构,可以通过为服务器配置一个或者多个备库的方式来进行数据同步,</p>
-<h4 id="复制概述"><a href="#复制概述" class="headerlink" title="复制概述"></a>复制概述</h4><p>复制解决的基本问题是让一台服务器的数据与其他服务器保持同步,一台主库的数据可以同步到多台备库中,备库本身也可以被配置为另外一台服务器的主库,主库与备库之间可以有多种不同的组合方式</p>
-          <div class="read-more">
-            <a href="/2018/01/03/复制/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/03/进制与位运算/">进制与位运算</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-03
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h2 id="进制与位运算"><a href="#进制与位运算" class="headerlink" title="进制与位运算"></a>进制与位运算</h2><p>进制也就是进位制，是人们规定的一种进位方法。</p>
-<h5 id="进制的前缀"><a href="#进制的前缀" class="headerlink" title="进制的前缀"></a>进制的前缀</h5><p>0b开头表示二进制</p>
-<p>0开头表示八进制</p>
-<p>0x开头表示十六进制</p>
-          <div class="read-more">
-            <a href="/2018/01/03/进制与位运算/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/02/leetcode136/">136. Single Number</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-02
+        <span class="archive-post-title">
+          <a href="/2018/01/04/MYSQL的锁/" class="archive-post-link">
+            MYSQL的锁
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given an array of integers, every element appears <em>twice</em> except for one. Find that single one.</p>
-<p><strong>Note:</strong><br>Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?</p>
-<h4 id="题目大意"><a href="#题目大意" class="headerlink" title="题目大意"></a>题目大意</h4><p>短小精悍的一道题,给定一个数组,每个元素都出现了两次,但是有一个只出现了一次,求出是哪一个元素？线性复杂度,常数空间.</p>
-          <div class="read-more">
-            <a href="/2018/01/02/leetcode136/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/01/02/leetcode36/">36. Valid Sudoku</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-01-02
+            2018-01-03
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Determine if a Sudoku is valid, according to: <a href="http://sudoku.com.au/TheRules.aspx" target="_blank" rel="noopener">Sudoku Puzzles - The Rules</a>.</p>
-<p>The Sudoku board could be partially filled, where empty cells are filled with the character <code>&#39;.&#39;</code>.</p>
-<p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/250px-Sudoku-by-L2G-20050714.svg.png" alt="img"></p>
-<p>A partially filled sudoku which is valid.</p>
-<p><strong>Note:</strong><br>A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.</p>
-<h4 id="题目大意"><a href="#题目大意" class="headerlink" title="题目大意"></a>题目大意</h4><p>给定一个二维数组代表数独,判断是否满足数独的定义,数独需要满足的规则有每一行1-9不能重复,每一列1-9不能重复,每一个块(一共3*3=9块)1-9不能重复. 点代表未知的任意数,</p>
-          <div class="read-more">
-            <a href="/2018/01/02/leetcode36/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/30/SpringMVC配置/">SpringMVC相关配置</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-30
+        <span class="archive-post-title">
+          <a href="/2018/01/03/可扩展的MYSQL/" class="archive-post-link">
+            可扩展的MYSQL
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><p>Spring MVC框架围绕DispatcherServlet这个核心展开,DispatcherServlet是Spring MVC最重要的Servlet,它负责截获请求并将其分派给相应的处理器处理.</p>
-<p>Spring MVC 框架包括注解驱动控制器,请求及相应的信息处理, 视图解析,本地化解析,上传文件解析,异常处理,及表单标签绑定等内容</p>
-          <div class="read-more">
-            <a href="/2017/12/30/SpringMVC配置/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/30/SpringMVC-(一)/">SpringMVC</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-30
+            2018-01-03
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
+        <span class="archive-post-title">
+          <a href="/2018/01/03/复制/" class="archive-post-link">
+            MySQL复制
+          </a>
+        </span>
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h1 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h1><p>Spring MVC框架围绕DispatcherServlet这个核心展开,DispatcherServlet是Spring MVC最重要的Servlet,它负责截获请求并将其分派给相应的处理器处理.</p>
-<p>Spring MVC 框架包括注解驱动控制器,请求及相应的信息处理, 视图解析,本地化解析,上传文件解析,异常处理,及表单标签绑定等内容</p>
-          <div class="read-more">
-            <a href="/2017/12/30/SpringMVC-(一)/" class="read-more-link">Read more..</a>
-          </div>
-        
+            2018-01-03
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/03/进制与位运算/" class="archive-post-link">
+            进制与位运算
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-02
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/02/leetcode136/" class="archive-post-link">
+            136. Single Number
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-01-02
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/01/02/leetcode36/" class="archive-post-link">
+            36. Valid Sudoku
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-30
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/30/SpringMVC配置/" class="archive-post-link">
+            SpringMVC相关配置
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-30
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/30/SpringMVC-(一)/" class="archive-post-link">
+            SpringMVC
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -678,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -737,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -794,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

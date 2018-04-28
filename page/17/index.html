@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,447 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
+    
+
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/09/Redis(Remote Dictionary Server)/">Redis 命令基础</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-09
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/数据库/">数据库</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h1 id="Redis-Remote-Dictionary-Server"><a href="#Redis-Remote-Dictionary-Server" class="headerlink" title="Redis(Remote Dictionary Server)"></a>Redis(Remote Dictionary Server)</h1><p>redis 的可执行文件有</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis 服务器</span><br><span class="line">redis-cli redis 命令行客户端</span><br><span class="line">redis-benchmark redis 性能测试工具</span><br><span class="line">redis-check-aof  aof文件修复工具</span><br><span class="line">redis-check-dump rdb 文件检查工具</span><br><span class="line">启动redis 即运行redis-server.</span><br></pre></td></tr></table></figure>
-          <div class="read-more">
-            <a href="/2017/12/09/Redis(Remote Dictionary Server)/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/09/leetcode17/">17. Letter Combinations of a Phone Number</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-09
-        </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
+            2017-12-09
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a digit string, return all possible letter combinations that the number could represent.</p>
-<p>A mapping of digit to letters (just like on the telephone buttons) is given below.</p>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt="img"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Input:Digit string &quot;23&quot;</span><br><span class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</span><br></pre></td></tr></table></figure>
-<p><strong>Note:</strong><br>Although the above answer is in lexicographical order, your answer could be in any order you want.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>像图中一样，给定一个数字字符串，输出所有可能的英文字符串。</p>
-          <div class="read-more">
-            <a href="/2017/12/09/leetcode17/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/08/leetcode6/">6. ZigZag Conversion</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-08
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>The string <code>&quot;PAYPALISHIRING&quot;</code> is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">P   A   H   N</span><br><span class="line">A P L S I I G</span><br><span class="line">Y   I   R</span><br></pre></td></tr></table></figure>
-<p>And then read line by line: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;PAHNAPLSIIGYIR&quot;</span><br></pre></td></tr></table></figure>
-<p>Write the code that will take a string and make this conversion given a number of rows:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string convert(string text, int nRows);</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">convert(&quot;PAYPALISHIRING&quot;, 3)</span><br></pre></td></tr></table></figure>
-<p> should return </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;PAHNAPLSIIGYIR&quot;</span><br></pre></td></tr></table></figure>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>以齿轮性输出字符串。</p>
-<p>例如：</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17-12-08-1.png" alt=""></p>
-          <div class="read-more">
-            <a href="/2017/12/08/leetcode6/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/07/leetcode5/">5. Longest Palindromic Substring</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-07
+        <span class="archive-post-title">
+          <a href="/2017/12/09/Redis(Remote Dictionary Server)/" class="archive-post-link">
+            Redis 命令基础
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a string <strong>s</strong>, find the longest palindromic substring in <strong>s</strong>. You may assume that the maximum length of <strong>s</strong> is 1000.</p>
-<p><strong>Example:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;babad&quot;</span><br><span class="line"></span><br><span class="line">Output: &quot;bab&quot;</span><br><span class="line"></span><br><span class="line">Note: &quot;aba&quot; is also a valid answer.</span><br></pre></td></tr></table></figure>
-<p><strong>Example:</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Input: &quot;cbbd&quot;</span><br><span class="line"></span><br><span class="line">Output: &quot;bb&quot;</span><br></pre></td></tr></table></figure>
-          <div class="read-more">
-            <a href="/2017/12/07/leetcode5/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/07/leetcode3/">3. Longest Substring Without Repeating Characters</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-07
+            2017-12-09
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/算法题/">算法题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h4 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h4><p>Given a string, find the length of the <strong>longest substring</strong> without repeating characters.</p>
-<p><strong>Examples:</strong></p>
-<p>Given <code>&quot;abcabcbb&quot;</code>, the answer is <code>&quot;abc&quot;</code>, which the length is 3.</p>
-<p>Given <code>&quot;bbbbb&quot;</code>, the answer is <code>&quot;b&quot;</code>, with the length of 1.</p>
-<p>Given <code>&quot;pwwkew&quot;</code>, the answer is <code>&quot;wke&quot;</code>, with the length of 3. Note that the answer must be a <strong>substring</strong>, <code>&quot;pwke&quot;</code> is a <em>subsequence</em> and not a substring.</p>
-<h4 id="大意"><a href="#大意" class="headerlink" title="大意"></a>大意</h4><p>找出最长的连续的没有重复元素的子字符串。</p>
-          <div class="read-more">
-            <a href="/2017/12/07/leetcode3/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/05/Beautiful Soup/">Beautiful Soup</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-05
+        <span class="archive-post-title">
+          <a href="/2017/12/09/leetcode17/" class="archive-post-link">
+            17. Letter Combinations of a Phone Number
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Python/">Python</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <p><a href="http://www.crummy.com/software/BeautifulSoup/" target="_blank" rel="noopener">Beautiful Soup</a> 是一个可以从HTML或XML文件中提取数据的Python库.它能够通过你喜欢的转换器实现惯用的文档导航,查找,修改文档的方式.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line">soup = BeautifulSoup(html_doc, <span class="string">'html.parser'</span>) <span class="comment"># 构造对象</span></span><br><span class="line">print(soup.prettify())  <span class="comment"># 以标准的缩进格式进行结构输出。</span></span><br></pre></td></tr></table></figure>
-<h5 id="简单浏览结构化数据的方法"><a href="#简单浏览结构化数据的方法" class="headerlink" title="简单浏览结构化数据的方法"></a>简单浏览结构化数据的方法</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">soup.title</span><br><span class="line"><span class="comment"># &lt;title&gt;The Dormouse's story&lt;/title&gt;</span></span><br><span class="line">soup.title.name</span><br><span class="line"><span class="comment"># u'title'</span></span><br><span class="line">soup.title.string</span><br><span class="line"><span class="comment"># u'The Dormouse's story'</span></span><br><span class="line">soup.title.parent.name</span><br><span class="line"><span class="comment"># u'head'</span></span><br><span class="line">soup.p</span><br><span class="line"><span class="comment"># &lt;p class="title"&gt;&lt;b&gt;The Dormouse's story&lt;/b&gt;&lt;/p&gt;</span></span><br><span class="line">soup.p[<span class="string">'class'</span>]</span><br><span class="line"><span class="comment"># u'title'</span></span><br><span class="line">soup.a</span><br><span class="line"><span class="comment"># &lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;</span></span><br><span class="line">soup.find_all(<span class="string">'a'</span>)</span><br><span class="line"><span class="comment"># [&lt;a class="sister" href="http://example.com/elsie" id="link1"&gt;Elsie&lt;/a&gt;,</span></span><br><span class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/lacie" id="link2"&gt;Lacie&lt;/a&gt;,</span></span><br><span class="line"><span class="comment">#  &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;]</span></span><br><span class="line">soup.find(id=<span class="string">"link3"</span>)</span><br><span class="line"><span class="comment"># &lt;a class="sister" href="http://example.com/tillie" id="link3"&gt;Tillie&lt;/a&gt;</span></span><br></pre></td></tr></table></figure>
-          <div class="read-more">
-            <a href="/2017/12/05/Beautiful Soup/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/05/Requests-总结学习/">Requests 总结</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-05
+            2017-12-08
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Python/">Python</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-          
-        
-
-        
-          <h3 id="发送请求"><a href="#发送请求" class="headerlink" title="发送请求"></a>发送请求</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests <span class="comment"># 导入库</span></span><br><span class="line"><span class="comment"># 尝试获取某个网页</span></span><br><span class="line">r =requests.get(<span class="string">'https://www.baidu.com'</span>)</span><br></pre></td></tr></table></figure>
-<p>r 是一个response对象，从这个对象可以获取想要的信息。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">r = requests.post(<span class="string">'http://httpbin.org/post'</span>)</span><br><span class="line">r = requests.put(<span class="string">"http://httpbin.org/put"</span>)</span><br><span class="line">r = requests.delete(<span class="string">"http://httpbin.org/delete"</span>)</span><br><span class="line">r = requests.head(<span class="string">"http://httpbin.org/get"</span>)</span><br><span class="line">r = requests.options(<span class="string">"http://httpbin.org/get"</span>)</span><br></pre></td></tr></table></figure>
-          <div class="read-more">
-            <a href="/2017/12/05/Requests-总结学习/" class="read-more-link">Read more..</a>
-          </div>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/12/05/Python-多线程/">Python 多线程</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017-12-05
+        <span class="archive-post-title">
+          <a href="/2017/12/08/leetcode6/" class="archive-post-link">
+            6. ZigZag Conversion
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Python/">Python</a>
-            
-              <a href="/categories/Python/多线程/">多线程</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
+
+      <div class="archive-post">
+        <span class="archive-post-time">
           
-        
-
-        
-          <p>对于操作系统来说，一个任务就是一个线程。</p>
-<p>有些进程还不止同时干一件事，比如Word，它可以同时进行打字，拼写检查等事情，在一个进程内部，要同时干多件事，就需要同时运行多个“子任务”，我们把进程内的这些“子任务”称为线程。</p>
-<p>Python 内置多线程的支持，Python的线程是真正的Posix Thread，而不是模拟出来的线程。</p>
-<p>Python的标准库提供了两个模块：<code>_thread</code>和<code>threading</code>，<code>_thread</code>是低级模块，<code>threading</code>是高级模块，对<code>_thread</code>进行了封装。绝大多数情况下，我们只需要使用<code>threading</code>这个高级模块。</p>
-          <div class="read-more">
-            <a href="/2017/12/05/Python-多线程/" class="read-more-link">Read more..</a>
-          </div>
-        
+            2017-12-07
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/07/leetcode5/" class="archive-post-link">
+            5. Longest Palindromic Substring
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-07
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/07/leetcode3/" class="archive-post-link">
+            3. Longest Substring Without Repeating Characters
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-05
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/05/Beautiful Soup/" class="archive-post-link">
+            Beautiful Soup
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-05
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/05/Requests-总结学习/" class="archive-post-link">
+            Requests 总结
+          </a>
+        </span>
+      </div>
+    
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-12-05
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2017/12/05/Python-多线程/" class="archive-post-link">
+            Python 多线程
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -662,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -721,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -778,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>

@@ -79,7 +79,11 @@
 
 
 
-    <title> Corn1ng's Blog </title>
+    <title> Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
   </head>
 
   <body><div id="mobile-navbar" class="mobile-navbar">
@@ -203,633 +207,139 @@
 </nav>
 
       </header>
-
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
-  <section id="posts" class="posts">
+  
+  <section id="archive" class="archive">
+    
+
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/04/Linux 使用SSR/">Linux 使用SSR</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-04
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-04
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Linux/">Linux</a>
-            
-              <a href="/categories/Linux/常见问题/">常见问题</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Linux-使用SSR"><a href="#Linux-使用SSR" class="headerlink" title="Linux 使用SSR"></a>Linux 使用SSR</h2><h3 id="Shadowsocks-与-Shadowsocksr-区别"><a href="#Shadowsocks-与-Shadowsocksr-区别" class="headerlink" title="Shadowsocks 与 Shadowsocksr 区别"></a>Shadowsocks 与 Shadowsocksr 区别</h3><p>SS是原版，SSR是原版基础上衍生出来的第三方版本，兼容原版协议，比原版多了一些伪装功能（协议和混淆）。<br>SSR 主要特点是增加了一些人性化功能，比如服务器连接统计、连接管理、协议转换、多重代理等。</p>
-<h3 id="下载SSR客户端"><a href="#下载SSR客户端" class="headerlink" title="下载SSR客户端"></a>下载SSR客户端</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/ssrbackup/shadowsocksr</span><br></pre></td></tr></table></figure>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>进入刚才clone下来的文件夹， 有一个文件 <code>user-config.json</code> ，这个就是配置文件的模板，我们可以复制一份到/etc/shadowsocks.json，然后对这个文件进行配置：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"server"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">    <span class="attr">"server_ipv6"</span>: <span class="string">"::"</span>,</span><br><span class="line">    <span class="attr">"server_port"</span>: <span class="number">8388</span>,</span><br><span class="line">    <span class="attr">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="attr">"local_port"</span>: <span class="number">1080</span>,</span><br><span class="line"></span><br><span class="line">    <span class="attr">"password"</span>: <span class="string">"m"</span>,</span><br><span class="line">    <span class="attr">"method"</span>: <span class="string">"aes-128-ctr"</span>,</span><br><span class="line">    <span class="attr">"protocol"</span>: <span class="string">"auth_aes128_md5"</span>,</span><br><span class="line">    <span class="attr">"protocol_param"</span>: <span class="string">""</span>,</span><br><span class="line">    <span class="attr">"obfs"</span>: <span class="string">"tls1.2_ticket_auth_compatible"</span>,</span><br><span class="line">    <span class="attr">"obfs_param"</span>: <span class="string">""</span>,</span><br><span class="line">    <span class="attr">"speed_limit_per_con"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"speed_limit_per_user"</span>: <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">    "additional_ports" : &#123;&#125;, // only works under multi-user mode</span><br><span class="line">    "additional_ports_only" : false, // only works under multi-user mode</span><br><span class="line">    "timeout": 120,</span><br><span class="line">    "udp_timeout": 60,</span><br><span class="line">    "dns_ipv6": false,</span><br><span class="line">    "connect_verbose_info": 0,</span><br><span class="line">    "redirect": "",</span><br><span class="line">    "fast_open": false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>主要用到的配置是下面的这几个选项：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;server_port&quot;:8388,        //端口</span><br><span class="line">&quot;password&quot;:&quot;password&quot;,     //密码</span><br><span class="line"> &quot;protocol&quot;:&quot;origin&quot;,       //协议插件</span><br><span class="line"> &quot;obfs&quot;:&quot;http_simple&quot;,      //混淆插件</span><br><span class="line"> &quot;method&quot;:&quot;aes-256-cfb&quot;,    //加密方式</span><br></pre></td></tr></table></figure>
-<p>具体的服务器，密码，端口从SS帐号提供商那里获取</p>
-<h3 id="运行程序"><a href="#运行程序" class="headerlink" title="运行程序"></a>运行程序</h3><p>进入到shadowsocksr/shadowsocks/目录里面，执行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python local.py -c /etc/ssr.json</span><br></pre></td></tr></table></figure>
-<p>出现下面的提示,说明运行成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2017-10-17 12:30:49 INFO     local.py:50 local start with protocol[auth_chain_a] password [Ck6295iFwq] method [none] obfs [tls1.2_ticket_auth] obfs_param []</span><br><span class="line">2017-10-17 12:30:49 INFO     local.py:54 starting local at 127.0.0.1:1080</span><br><span class="line">2017-10-17 12:30:49 INFO     asyncdns.py:324 dns server: [(&apos;127.0.1.1&apos;, 53)]</span><br><span class="line">2017-10-17 12:30:57 INFO     util.py:85 loading libcrypto from libcrypto.so.1.0.0</span><br></pre></td></tr></table></figure>
-<h4 id="结合SwitchyOmega-使用"><a href="#结合SwitchyOmega-使用" class="headerlink" title="结合SwitchyOmega 使用"></a>结合SwitchyOmega 使用</h4><p>上面的步骤其中的配置项有两个要注意：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;local_address&quot;: &quot;127.0.0.1&quot;,                            </span><br><span class="line">&quot;local_port&quot;: 1080,</span><br></pre></td></tr></table></figure>
-<p>说明SSR客户端运行本地的127.0.0.1 IP， 监听端口1080<br>所以再SwitchyOmega里面的配置就是</p>
-<p>上网的时候选择这个配置，就可以正常访问网页了</p>
-<h3 id="终端走代理路径"><a href="#终端走代理路径" class="headerlink" title="终端走代理路径"></a>终端走代理路径</h3><p>在终端中直接运行命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export http_proxy=http://proxyAddress:port</span><br></pre></td></tr></table></figure>
-<p>这个办法的好处是简单直接，并且影响面很小（只对当前终端有效，退出就不行了）。</p>
-<p>如果你用的是ss代理，在当前终端运行以下命令，那么<code>wget</code> <code>curl</code> 这类网络命令都会经过ss代理</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export ALL_PROXY=socks5://127.0.0.1:1080</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://www.jianshu.com/p/c336fd0bdfbe" target="_blank" rel="noopener">https://www.jianshu.com/p/c336fd0bdfbe</a></p>
-<p><a href="https://blog.fazero.me/2015/09/15/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/" target="_blank" rel="noopener">https://blog.fazero.me/2015/09/15/%E8%AE%A9%E7%BB%88%E7%AB%AF%E8%B5%B0%E4%BB%A3%E7%90%86%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95/</a></p>
-</blockquote>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/03/ThreadLocal/">ThreadLocal</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-03
+        <span class="archive-post-title">
+          <a href="/2018/04/04/Linux 使用SSR/" class="archive-post-link">
+            Linux 使用SSR
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><h4 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h4><p>首先，它是一个数据结构，有点像HashMap，可以保存<code>&quot;key : value&quot;</code>键值对，但是一个ThreadLocal只能保存一个，并且各个线程的数据互不干扰。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; localName = <span class="keyword">new</span> ThreadLocal();</span><br><span class="line">localName.set(<span class="string">"wkn"</span>);</span><br><span class="line">String name = localName.get();</span><br></pre></td></tr></table></figure>
-<p>在线程1中初始化了一个ThreadLocal对象localName，并通过set方法，保存了一个值 <code>wkn</code>，同时在线程1中通过 <code>localName.get()</code>可以拿到之前设置的值，但是如果在线程2中，拿到的将是一个null。</p>
-<p>下面是<code>set(T value)</code>和<code>get()</code>方法的源码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Thread t =Thread.currentThread();</span><br><span class="line">  	ThreadLocalMap map =getMap(t);</span><br><span class="line">  	<span class="keyword">if</span>(map!=<span class="keyword">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        map.set(<span class="keyword">this</span>,value);</span><br><span class="line">    &#125;</span><br><span class="line">  	<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      createMap(t,value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Thread t= Thread.currentThread();</span><br><span class="line">  	ThreadLocalMap map =getMap(t);</span><br><span class="line">  	<span class="keyword">if</span>(map!=<span class="keyword">null</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        ThreadLocalMap.Entry e =map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">      	<span class="keyword">if</span>(e!=<span class="keyword">null</span>)</span><br><span class="line">          &#123;</span><br><span class="line">            T result =(T)e.value;</span><br><span class="line">          	<span class="keyword">return</span> result;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以发现，每个线程中都有一个 <code>ThreadLocalMap</code>数据结构，当执行set方法时，其值是保存在当前线程的 <code>threadLocals</code>变量中，当执行set方法中，是从当前线程的 <code>threadLocals</code>变量获取。</p>
-<p>所以在线程1中set的值，对线程2来说是摸不到的，而且在线程2中重新set的话，也不会影响到线程1中的值，保证了线程之间不会相互干扰。</p>
-<h4 id="ThreadLocalMap"><a href="#ThreadLocalMap" class="headerlink" title="ThreadLocalMap"></a>ThreadLocalMap</h4><p>从名字上看，可以猜到它也是一个类似HashMap的数据结构，但是在ThreadLocal中，并没实现Map接口。</p>
-<p>在ThreadLoalMap中，也是初始化一个大小16的Entry数组，Entry对象用来保存每一个key-value键值对，只不过这里的key永远都是ThreadLocal对象，通过ThreadLocal对象的set方法，结果把ThreadLocal对象自己当做key，放进了ThreadLoalMap中。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-30%2017-09-06%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=rCkbAp/lBrLQ9Z9n21SKrAs2DzRhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTkyOTg4JnQ9MTUyMjQwMDk4OCZyPTE4MzQ4OTkxNjkmZj0vMjAxOC0wMy0zMCUyMDE3LTA5LTA2JUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<p>这里需要注意的是，ThreadLoalMap的Entry是继承WeakReference，和HashMap很大的区别是，Entry中没有next字段，所以就不存在链表的情况了。</p>
-<h4 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h4><p>没有链表结构，那发生hash冲突了怎么办？先看看ThreadLoalMap中插入一个key-value的实现。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-30%2017-14-09%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=bsVVhFGjyFt/qDTiL6BaXflMlYRhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTkzMjYwJnQ9MTUyMjQwMTI2MCZyPTMwNDQ5NTIyMiZmPS8yMDE4LTAzLTMwJTIwMTctMTQtMDklRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
-<p>每个ThreadLocal对象都有一个hash值 <code>threadLocalHashCode</code>，每初始化一个ThreadLocal对象，hash值就增加一个固定的大小 <code>0x61c88647</code>。（也就是每有一个ThreadLocal对象，第一次为0的话，第二个的Hashcodee就是0x61c88647,第三个就是0x61c88647*2）</p>
-<p>在插入过程中，根据ThreadLocal对象的hash值，定位到table中的位置i，过程如下： 1、如果当前位置是空的，那么正好，就初始化一个Entry对象放在位置i上； 2、不巧，位置i已经有Entry对象了，如果这个Entry对象的key正好是即将设置的key，那么重新设置Entry中的value； 3、很不巧，位置i的Entry对象，和即将设置的key没关系，那么只能找下一个空位置；</p>
-<p>这样的话，在get的时候，也会根据ThreadLocal对象的hash值，定位到table中的位置，然后判断该位置Entry对象中的key是否和get的key一致，如果不一致，就判断下一个位置</p>
-<p>可以发现，set和get如果冲突严重的话，效率很低，因为ThreadLoalMap是Thread的一个属性，所以即使在自己的代码中控制了设置的元素个数，但还是不能控制其它代码的行为.</p>
-<h4 id="内存泄露"><a href="#内存泄露" class="headerlink" title="内存泄露"></a>内存泄露</h4><p>当使用ThreadLocal保存一个value时，会在ThreadLocalMap中的数组插入一个Entry对象，按理说key-value都应该以强引用保存在Entry对象中，但在ThreadLocalMap的实现中，key被保存到了WeakReference对象中。</p>
-<p>这就导致了一个问题，ThreadLocal在没有外部强引用时，发生GC时会被回收，如果创建ThreadLocal的线程一直持续运行，那么这个Entry对象中的value就有可能一直得不到回收，发生内存泄露。</p>
-<h4 id="内存泄露解决方法"><a href="#内存泄露解决方法" class="headerlink" title="内存泄露解决方法"></a>内存泄露解决方法</h4><p>手动调用remove方法。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/02/REST与RESTful/">REST与RESTful与RestTemplate</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-02
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-03
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/微服务/">微服务</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="REST与RESTful与RestTemplate"><a href="#REST与RESTful与RestTemplate" class="headerlink" title="REST与RESTful与RestTemplate"></a>REST与RESTful与RestTemplate</h2><p>REST – REpresentational State Transfer 直接翻译：表现层状态转移。</p>
-<p>用一句话概括：</p>
-<p><strong>URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</strong></p>
-<p>REST 不是rest这个单词，而是几个单词的缩写，</p>
-<ul>
-<li>REST描述的是网络中client和server的一种交互形式，REST本身不实用，实用的是如何设计RESTful API(REST风格的API)</li>
-<li>Server提供的RESTful API中，URL中只使用名词来指定资源，原则上不使用动词。“资源”是REST架构或者说是整个网络处理的核心。</li>
-<li>用HTTP协议里的动词来实现资源的添加，修改，删除等操作。即通过HTTP动词来实现资源的状态扭转：GET    用来获取资源，POST  用来新建资源（也可以用于更新资源），PUT    用来更新资源，DELETE  用来删除资源。</li>
-<li>Server和Client之间传递某资源的一个表现形式，比如用JSON，XML传输文本，或者用JPG，WebP传输图片等。当然还可以压缩HTTP传输时的数据（on-wire data compression）</li>
-<li>用 HTTP Status Code传递Server的状态信息。比如最常用的 200 表示成功，500 表示Server内部错误等。</li>
-</ul>
-<h4 id="为什么要用RESTful结构呢？"><a href="#为什么要用RESTful结构呢？" class="headerlink" title="为什么要用RESTful结构呢？"></a>为什么要用RESTful结构呢？</h4><p>“古代”网页是前端后端融在一起的，比如之前的PHP，JSP等。在之前的桌面时代问题不大，但是近年来移动互联网的发展，各种类型的Client层出不穷，RESTful可以通过一套统一的接口为 Web，iOS和Android提供服务。另外对于广大平台来说，比如Facebook platform，微博开放平台，微信公共平台等，它们不需要有显式的前端，只需要一套提供服务的接口，于是RESTful更是它们最好的选择。在RESTful架构下：<br><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2011-39-33%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=SojQ6cVvNFfAysn6k5O3k+L9od9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0ODg2ODA4JnQ9MTUyMjI5NDgwOCZyPTE4NTk4MDYxOTgmZj0vMjAxOC0wMy0yOSUyMDExLTM5LTMzJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<h3 id="RestTemplate"><a href="#RestTemplate" class="headerlink" title="RestTemplate"></a>RestTemplate</h3><p>借助RestTemplate, Spring应用能够方便地使用REST资源。Spring的RestTemplate访问使用了模板方法的设计模式。模版方法将过程中与特定实现相关的部分委托给接口,而这个接口的不同实现定义了接口的不同行为.</p>
-<p>RestTemplate定义了36个与REST资源交互的方法，其中的大多数都对应于HTTP的方法。 这里面只有11个独立的方法，其中有十个有三种重载形式，而第十一个则重载了六次，这样一共形成了36个方法。</p>
-<ul>
-<li><p><code>delete()</code> 在特定的URL上对资源执行HTTP DELETE操作</p>
-</li>
-<li><p><code>exchange()</code> 在URL上执行特定的HTTP方法，返回包含对象的ResponseEntity，这个对象是从响应体中 映射得到的</p>
-</li>
-<li><p><code>execute()</code> 在URL上执行特定的HTTP方法，返回一个从响应体映射得到的对象</p>
-</li>
-<li><p><strong><code>getForEntity()</code></strong> 发送一个HTTP GET请求，返回的ResponseEntity包含了响应体所映射成的对象</p>
-</li>
-<li><p><strong><code>getForObject()</code></strong> 发送一个HTTP GET请求，返回的请求体将映射为一个对象</p>
-</li>
-<li><p><strong><code>postForEntity()</code></strong> POST 数据到一个URL，返回包含一个对象的ResponseEntity，这个对象是从响应体中映射得 到的</p>
-</li>
-<li><p><strong><code>postForObject()</code></strong> POST 数据到一个URL，返回根据响应体匹配形成的对象</p>
-</li>
-<li><p><code>headForHeaders()</code> 发送HTTP HEAD请求，返回包含特定资源URL的HTTP头</p>
-</li>
-<li><p><code>optionsForAllow()</code> 发送HTTP OPTIONS请求，返回对特定URL的Allow头信息</p>
-</li>
-<li><p><code>postForLocation()</code> POST 数据到一个URL，返回新创建资源的URL</p>
-</li>
-<li><p><code>put()</code> PUT 资源到特定的URL.</p>
-<p>​</p>
-</li>
-</ul>
-<blockquote>
-<p><a href="https://blog.csdn.net/itguangit/article/details/78825505" target="_blank" rel="noopener">https://blog.csdn.net/itguangit/article/details/78825505</a></p>
-<p><a href="https://www.zhihu.com/question/28557115/answer/48094438" target="_blank" rel="noopener">https://www.zhihu.com/question/28557115/answer/48094438</a></p>
-</blockquote>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/01/Docker 配置国内加速器/">Docker 配置国内加速器</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-01
+        <span class="archive-post-title">
+          <a href="/2018/04/03/ThreadLocal/" class="archive-post-link">
+            ThreadLocal
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/分布式/">分布式</a>
-            
-              <a href="/categories/分布式/微服务/">微服务</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Docker-配置国内加速器"><a href="#Docker-配置国内加速器" class="headerlink" title="Docker 配置国内加速器"></a>Docker 配置国内加速器</h2><ul>
-<li><p>登录阿里开发者平台<a href="https://dev.aliyun.com/search.html" target="_blank" rel="noopener">https://dev.aliyun.com/search.html</a></p>
-</li>
-<li><p>点击创建我的容器镜像</p>
-</li>
-<li><p>注册/登录后，进入Docker 镜像仓库 (<a href="https://cr.console.aliyun.com/#/imageList)，选中加速器" target="_blank" rel="noopener">https://cr.console.aliyun.com/#/imageList)，选中加速器</a> Tab</p>
-</li>
-<li><p>这里可以看到，系统已经为我们生成了一个专属加速器地址：<a href="https://xxxxx.mirror.aliyuncs.com" target="_blank" rel="noopener">https://xxxxx.mirror.aliyuncs.com</a></p>
-</li>
-<li><p>可以通过修改daemon配置文件<code>/etc/docker/daemon.json</code>来使用加速器：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors": ["https://uuc927qz.mirror.aliyuncs.com"]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/01/HTTP 详解/">HTTP 详解</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-01
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-02
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/计算机基础/">计算机基础</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="HTTP-详解"><a href="#HTTP-详解" class="headerlink" title="HTTP 详解"></a>HTTP 详解</h2><p>HTTP协议是<code>Hyper Text Transfer Protocol</code>（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。</p>
-<p>HTTP是一个基于<code>TCP/IP</code>通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。</p>
-<p>HTTP是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。它于1990年提出，经过几年的使用与发展，得到不断地完善和扩展。目前在WWW中使用的是HTTP/1.0的第六版，HTTP/1.1的规范化工作正在进行之中，而且HTTP-NG(Next Generation of HTTP)的建议已经提出。</p>
-<p>HTTP协议工作于客户端-服务端架构为上。浏览器作为HTTP客户端通过URL向HTTP服务端即WEB服务器发送所有请求。Web服务器根据接收到的请求后，向客户端发送响应信息。</p>
-<h3 id="主要特点"><a href="#主要特点" class="headerlink" title="主要特点"></a>主要特点</h3><ul>
-<li>简单快速：客户向服务器请求服务时，只需传送请求方法和路径。请求方法常用的有GET、HEAD、POST。每种方法规定了客户与服务器联系的类型不同。由于HTTP协议简单，使得HTTP服务器的程序规模小，因而通信速度很快。</li>
-<li>灵活：HTTP允许传输任意类型的数据对象。正在传输的类型由<code>Content-Type</code>加以标记。</li>
-<li>无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。</li>
-<li>无状态：HTTP协议是无状态协议。无状态是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</li>
-<li>支持B/S及C/S模式。</li>
-</ul>
-<h4 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h4><p>HTTP使用统一资源标识符（Uniform Resource Identifiers, URI）来传输数据和建立连接。URL是一种特殊类型的URI，包含了用于查找某个资源的足够的信息</p>
-<p>URL,全称是UniformResourceLocator, 中文叫统一资源定位符,是互联网上用来标识某一处资源的地址。以下面这个URL为例，介绍下普通URL的各部分组成：</p>
-<p><code>http://www.aspxfans.com:8080/news/index.asp?boardID=5&amp;ID=24618&amp;page=1#name</code></p>
-<p>从上面的URL可以看出，一个完整的URL包括以下几部分：</p>
-<ul>
-<li>协议部分：该URL的协议部分为“http：”，这代表网页使用的是HTTP协议。在Internet中可以使用多种协议，如HTTP，FTP等等本例中使用的是HTTP协议。在”HTTP”后面的“//”为分隔符</li>
-<li>域名部分：该URL的域名部分为“<a href="http://www.aspxfans.com”。一个URL中，也可以使用IP地址作为域名使用" target="_blank" rel="noopener">www.aspxfans.com”。一个URL中，也可以使用IP地址作为域名使用</a></li>
-<li>端口部分：跟在域名后面的是端口，域名和端口之间使用“:”作为分隔符。端口不是一个URL必须的部分，如果省略端口部分，将采用默认端口</li>
-<li>虚拟目录部分：从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”</li>
-<li>文件名部分：从域名后的最后一个“/”开始到“？”为止，是文件名部分，如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名</li>
-<li>锚部分：从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分</li>
-<li>参数部分：从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。本例中的参数部分为“boardID=5&amp;ID=24618&amp;page=1”。参数可以允许有多个参数，参数与参数之间用“&amp;”作为分隔符。</li>
-</ul>
-<h4 id="URL-与URI"><a href="#URL-与URI" class="headerlink" title="URL 与URI"></a>URL 与URI</h4><p>URI，是uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。</p>
-<p>URL是uniform resource locator，统一资源定位器，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何locate这个资源。</p>
-<h4 id="Request"><a href="#Request" class="headerlink" title="Request"></a>Request</h4><p>客户端发送一个HTTP请求到服务器的请求消息包括以下格式：</p>
-<p>请求行（request line）、请求头部（header）、空行和请求数据四个部分组成。</p>
-<h4 id="Response"><a href="#Response" class="headerlink" title="Response"></a>Response</h4><p>一般情况下，服务器接收并处理客户端发过来的请求后会返回一个HTTP的响应消息。</p>
-<p>HTTP响应也由四个部分组成，分别是：状态行、消息报头、空行和响应正文。</p>
-<h4 id="HTTP之状态码"><a href="#HTTP之状态码" class="headerlink" title="HTTP之状态码"></a>HTTP之状态码</h4><p>状态代码有三位数字组成，第一个数字定义了响应的类别，共分五种类别:</p>
-<p>1xx：指示信息–表示请求已接收，继续处理</p>
-<p>2xx：成功–表示请求已被成功接收、理解、接受</p>
-<p>3xx：重定向–要完成请求必须进行更进一步的操作</p>
-<p>4xx：客户端错误–请求有语法错误或请求无法实现</p>
-<p>5xx：服务器端错误–服务器未能实现合法的请求</p>
-<h4 id="HTTP请求方法"><a href="#HTTP请求方法" class="headerlink" title="HTTP请求方法"></a>HTTP请求方法</h4><p>根据HTTP标准，HTTP请求可以使用多种请求方法。<br>HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法。<br>HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT 方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET     请求指定的页面信息，并返回实体主体。</span><br><span class="line">HEAD     类似于get请求，只不过返回的响应中没有具体的内容，用于获取报头</span><br><span class="line">POST     向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。</span><br><span class="line">PUT     从客户端向服务器传送的数据取代指定的文档的内容。</span><br><span class="line">DELETE      请求服务器删除指定的页面。</span><br><span class="line">CONNECT     HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。</span><br><span class="line">OPTIONS     允许客户端查看服务器的性能。</span><br><span class="line">TRACE     回显服务器收到的请求，主要用于测试或诊断。</span><br></pre></td></tr></table></figure>
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/04/01/Docker/">Docker 入门</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-04-01
+        <span class="archive-post-title">
+          <a href="/2018/04/02/REST与RESTful/" class="archive-post-link">
+            REST与RESTful与RestTemplate
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/分布式/">分布式</a>
-            
-              <a href="/categories/分布式/微服务/">微服务</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>Docker使用Google公司推出的Go语言进行开发实现,基于Linux内核<code>cgroup,namespace,</code>以及<code>AUFS</code>类的<code>Union    FS</code>等技术,对进程进行封装隔离,属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程,因此也称其为容器。最初实现是基于<code>LXC</code>,从0.7版本以后开始去除<code>LXC</code>,转而使用自行开发的<code>libcontainer</code>,从    1.11    开始,则进一步演进为使用<code>runC</code>和<code>containerd</code>。</p>
-<p>Docker    在容器的基础上,进行了进一步的封装,从文件系统、网络互联到进程隔离等等,极大的简化了容器的创建和维护。使得Docker技术比虚拟机技术更为轻便、快捷。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2015-47-41%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=nnf9xuxoNJdGq6uhUXkJ3my3chBhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTAxNzAzJnQ9MTUyMjMwOTcwMyZyPTI3MjIxMDIzNyZmPS8yMDE4LTAzLTI5JTIwMTUtNDctNDElRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
-<p>下面的图片比较了Docker和传统虚拟化方式的不同之处。传统虚拟机技术是虚拟出一套硬件后,在其上运行一个完整操作系统,在该系统上再运行所需应用进程;而容器内的应用进程直接运行于宿主的内核,容器内没有自己的内核,而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。</p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2015-49-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=hKO5rZFL59/Lo4EuYXOhYJGxe89hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTAxNzU0JnQ9MTUyMjMwOTc1NCZyPTM0NzYxMzMwJmY9LzIwMTgtMDMtMjklMjAxNS00OS0wMSVFNSVCMSU4RiVFNSVCOSU5NSVFNiU4OCVBQSVFNSU5QiVCRS5wbmcmYj10d28=" alt=""></p>
-<h3 id="Docker-的好处"><a href="#Docker-的好处" class="headerlink" title="Docker 的好处"></a>Docker 的好处</h3><p>Docker可以更高效的利用系统资源，拥有更快的启动时间，有一致的运行环境，可以进行持续交付和部署。可以进行更轻松的迁移，更轻松的维护和扩展。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Docker包括三个基本概念，分别是镜像（image），容器(Container)，仓库(Repository).</p>
-<ul>
-<li><p>镜像</p>
-<p>操作系统分内核和用户空间，对Linux而言，内核启动后，会挂载root文件系统为其提供用户空间支持。而Docker镜像(Image),就相当于是一个     root     文件系统。比如官方镜像ubuntu:16.04就包含了完整的一套    Ubuntu    16.04最小系统的root文件系统。<br>Docker镜像是一个特殊的文件系统,除了提供容器运行时所需的程序、库、资源、配置等文件外,还包含了一些为运行时准备的一些配置参数(如匿名卷、环境变量、用户等)。镜像不包含任何动态数据,其内容在构建之后也不会被改变。</p>
-</li>
-<li><p>Docker容器</p>
-<p>镜像(Image)和容器(Container)的关系,就像是面向对象程序设计中的      类和    实例    一样,镜像是静态的定义,容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。<br>容器的实质是进程,但与直接在宿主执行的进程不同,容器进程运行于属于自己的独立的命名空间。因此容器可以拥有自己的root文件系统、自己的网络配置、自己的进程空间,甚至自己的用户ID空间。容器内的进程是运行在一个隔离的环境里,使用起来,就好像是在一个独立于宿主的系统下操作一样。这种特性使得容器封装的应用比直接在宿主运行更加安全。</p>
-</li>
-</ul>
-<p>前面讲过镜像使用的是分层存储,容器也是如此。每一个容器运行时,是以镜像为基础层,在其上创建一个当前容器的存储层,我们可以称这个为容器运行时读写而准备的存储层为容器存储层。</p>
-<p>容器存储层的生存周期和容器一样,容器消亡时,容器存储层也随之消亡。因此,任何保存于容器存储层的信息都会随容器删除而丢失。</p>
-<p>按照    Docker最佳实践的要求,容器不应该向其存储层内写入任何数据,容器存储层要保持无状态化。所有的文件写入操作,都应该使用数据(Volume)、或者绑定宿主目录,在这些位置的读写会跳过容器存储层,直接对宿主(或网络存储)发生读写,其性能和稳定性更高。<br>数据卷的生存周期独立于容器,容器消亡,数据卷不会消亡。因此,使用数据卷后,容器删除或者重新运行之后,数据却不会丢失。</p>
-<ul>
-<li><p>Docker Registry</p>
-<p>镜像构建完成后,可以很容易的在当前宿主机上运行,但是,如果需要在其它服务器上使用这个镜像,我们就需要一个集中的存储、分发镜像的服务,DockerRegistry    就是这样的服务。<br>一个DockerRegistry中可以包含多个仓库(    Repository);每个仓库可以包含多个标签(Tag);每个标签对应一个镜像。</p>
-</li>
-</ul>
-<p>通常,一个仓库会包含同一个软件不同版本的镜像,而标签就常用于对应该软件的各个版本。我们可以通过<code>&lt;仓库名&gt;:&lt;标签&gt;</code> 的格式来指定具体是这个软件哪个版本的镜像。如果不给出标签,将以latest作为默认标签。</p>
-<p>最常使用的Registry公开服务是官方的DockerHub,这也是默认的Registry,并拥有大量的高质量的官方镜像。</p>
-<h3 id="使用Docker镜像"><a href="#使用Docker镜像" class="headerlink" title="使用Docker镜像"></a>使用Docker镜像</h3><p>Docker运行容器前需要本地存在对应的镜像,如果本地不存在该镜像,Docker    会从镜像仓库下载该镜像。</p>
-<h4 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search Java</span><br></pre></td></tr></table></figure>
-<h4 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h4><p>从Docker镜像仓库获取镜像的命令是<code>docker pull</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker	pull [选项] DockerRegistry地址:端口号/仓库名:标签</span><br></pre></td></tr></table></figure>
-<p>比如下载一个Ubuntu镜像就是<code>docker pull ubuntu:16.04</code>上面的命令中没有给出    Docker镜像仓库地址,因此将会从    DockerHub获取镜像。而镜像名<br>称是    ubuntu:16.04 ,因此将会获取官方镜像library/ubuntu仓库中标签为16.04的镜像。</p>
-<h4 id="列出镜像"><a href="#列出镜像" class="headerlink" title="列出镜像"></a>列出镜像</h4><p>要想列出已经下载下来的镜像,可以使用<code>docker image ls</code>命令。</p>
-<p><code>docker image ls</code>列表中的镜像体积总和并非是所有镜像实际硬盘消耗。由于    Docker镜像是多层存储结构,并且可以继承，复用,因此不同镜像可能会因为使用相同的基础镜像,从而拥有共同的层。由于Docker使用UnionFS,相同的层只需要保存一份即可,因此实际镜像硬盘占用空间很可能要比这个列表镜像大小的总和要小的多。</p>
-<h4 id="虚悬镜像"><a href="#虚悬镜像" class="headerlink" title="虚悬镜像"></a>虚悬镜像</h4><p>上面的镜像列表中,还可以看到一个特殊的镜像,这个镜像既没有仓库名,也没有标签,均为<code>&lt;none&gt;</code> 。:<br>这个镜像原本是有镜像名和标签的,原来为<code>mongo:3.2</code> ,随着官方镜像维护,发布了新版本后,重新<code>docker pull mongo:3.2</code>时, <code>mongo:3.2</code>这个镜像名被转移到了新下载的镜像身上,而旧的镜像上的这个名称则被取消,从而成为了<code>&lt;none&gt;</code> 。除了<code>docker    pull</code>可能导致这种情况, <code>docker build</code>也同样可以导致这种现象。由于新旧镜像同名,旧镜像名称被取消,从而出现仓库名、标签均为    <code>&lt;none&gt;</code>    的镜像。这类无标签镜像也被称为虚悬镜像<br><code>(danglingimage)</code>    ,可以用下面的命令专门显示这类镜像:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image ls -f dangling=true</span><br></pre></td></tr></table></figure>
-<h4 id="删除本地镜像"><a href="#删除本地镜像" class="headerlink" title="删除本地镜像"></a>删除本地镜像</h4><p>使用<code>docker image rm</code>命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>docker image rm [选项] &lt;镜像1&gt; [&lt;镜像2&gt;...]</span><br></pre></td></tr></table></figure>
-<h4 id="利用commit-理解镜像构成"><a href="#利用commit-理解镜像构成" class="headerlink" title="利用commit 理解镜像构成"></a>利用commit 理解镜像构成</h4><p>镜像是多层存储,每一层是在前一层的基础上进行的修改;而容器同样也是多层存储,是在以镜像为基础层,在其基础上加一层作为容器运行时的存储层。</p>
-<p>下面以定制一个web服务器为例子，讲解镜像如何构建。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name webserver -d -p 80:80 nginx</span><br></pre></td></tr></table></figure>
-<p>这条命令会用    nginx镜像启动一个容器,命名为webserver     ,并且映射了80    端口,这样我们可以用浏览器去访问这个nginx服务器。<br>如果是在    Linux本机运行的Docker,那么可以直接访问:<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a>;<br>直接用浏览器访问的话,我们会看到默认的    Nginx    欢迎页面。</p>
-<p>我们在运行一个容器的时候(不适用卷的话)，我们做的任何修改都会被记录于容器存储层里。而Docker提供了<code>docker commit</code>可以将容器的存储层保存下载成为镜像。也就是，在原来镜像的基础上，再叠加上容器的存储层，并构成新的镜像。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker	commit	[选项]	&lt;容器ID或容器名&gt;	[&lt;仓库名&gt;[:&lt;标签&gt;]]</span><br></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker commit\</span><br><span class="line">		--author "Tao Wang&lt;twang2218@gmail.com&gt;" \</span><br><span class="line">		--message "修改了默认网页"	\</span><br><span class="line">		webserver \</span><br><span class="line">		nginx:v2</span><br><span class="line">sha256:07e33465974800ce65751acc279adc6ed2dc5ed4e0838f8b86f0c87aa1795214</span><br></pre></td></tr></table></figure>
-<h4 id="使用Dockerfile-定制镜像"><a href="#使用Dockerfile-定制镜像" class="headerlink" title="使用Dockerfile 定制镜像"></a>使用Dockerfile 定制镜像</h4><p>镜像的定制实际上就是定制每一层所添加的配置、文件。如果我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本,用这个脚本来构建定制镜像,那么之前提及的无法重复的问题、镜像构建透明性的问题、体积的问题就都会解决。这个脚本就是    Dockerfile</p>
-<p>Dockerfile是一个文本文件,其内包含了一条条的指令(Instruction),每一条指令构建一层,因此每一条指令的内容,就是描述该层应当如何构建。</p>
-<h3 id="操作Docker容器"><a href="#操作Docker容器" class="headerlink" title="操作Docker容器"></a>操作Docker容器</h3><p>容器是独立运行的一个或一组应用,以及它们的运行态环境。对应的,虚拟机可以理解为模拟运行的一整套操作系统(提供了运行态环境和其他系统环境)和跑在上面的应用。</p>
-<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>启动容器有两种方式,一种是基于镜像新建一个容器并启动,另外一个是将在终止状态(stopped)的容器重新启动。</p>
-<h4 id="新建并启动"><a href="#新建并启动" class="headerlink" title="新建并启动"></a>新建并启动</h4><p>所需要主要命令是<code>docker run</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>docker	run	ubuntu:14.04 /bin/echo 'Hello world'</span><br></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span>docker	run	-t -i ubuntu:14.04	/bin/bash</span><br><span class="line">-t 选项让docker分配一个伪终端，并绑定到容器的标准输入上，-i则让容器的标准输入保持打开。</span><br></pre></td></tr></table></figure>
-<p>有许多选型，常见的选项有 <code>-d</code>表示后台运行，<code>-P</code>随机端口映射，<code>-p</code>指定端口映射</p>
-<p>当使用<code>docker run</code>来创建容器时，Docker在后台运行的标准操作包括</p>
-<p>检查本地是否存在指定的镜像,不存在就从公有仓库下载、利用镜像创建并启动一个容器、分配一个文件系统,并在只读的镜像层外面挂载一层可读写层、从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去、从地址池配置一个ip地址给容器、执行用户指定的应用程序、执行完毕后容器被终止。</p>
-<h4 id="进入容器内部"><a href="#进入容器内部" class="headerlink" title="进入容器内部"></a>进入容器内部</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker exec # 在一个运行的容器中运行命令</span><br><span class="line">docker exec -it 容器名 /bin/sh</span><br></pre></td></tr></table></figure>
-<h4 id="docker-网络类型"><a href="#docker-网络类型" class="headerlink" title="docker 网络类型"></a>docker 网络类型</h4><p>主要有bridge ,Host None</p>
-<p>bridge是桥接模式，使用虚拟的网卡，和主机隔离，容器有独立的IP和端口。</p>
-<p>Host 使用宿主机的网卡等。 </p>
-<p>当使用bridge模式时，就需要进行端口的映射技术，这样当访问主机的某个端口时，实际上就是访问容器上的某个端口。</p>
-<blockquote>
-<p>Docker 端口映射</p>
-<p>在启动容器时，如果不配置宿主机器与虚拟机的端口映射，外部程序是无法访问虚拟机的，因为没有端口。</p>
-<p>端口映射的Docker指令是</p>
-<p>Docker run -p ip:hostport:containerPort redis</p>
-<p>使用-p参数会分配宿主机的端口映射到虚拟机。<br>IP表示主机的IP地址。<br>hostPort表示宿主机的端口。(redis的启动端口）<br>containerPort表示虚拟机(容器)的端口。 </p>
-</blockquote>
-<h4 id="列出容器"><a href="#列出容器" class="headerlink" title="列出容器"></a>列出容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps # 列出运行中的容器</span><br></pre></td></tr></table></figure>
-<h4 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop  id#停止容器</span><br></pre></td></tr></table></figure>
-<h4 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker kill id</span><br></pre></td></tr></table></figure>
-<h4 id="启动已终止容器"><a href="#启动已终止容器" class="headerlink" title="启动已终止容器"></a>启动已终止容器</h4><p><code>docker  start</code> 命令，将一个已经终止的容器启动运行。</p>
-<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm id</span><br></pre></td></tr></table></figure>
-<h4 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h4><p>更多时候，需要让Docker在后台运行而不是直接把执行命令的结果输出在当前宿主机下。此时,可以通过添加<code>-d</code>参数来实现。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d ubuntu:17.10 /bin/sh -c "while true; do echo hello world; sleep 1; done"</span><br><span class="line">77b2dc01fe0f3f1265df143181e7b9af5e05279a884f4776ee75350ea9d8017a</span><br></pre></td></tr></table></figure>
-<p>要获取容器的输出信息,可以通过     <code>docker container logs</code>    命令。</p>
-<h3 id="Docker-Hub"><a href="#Docker-Hub" class="headerlink" title="Docker Hub"></a>Docker Hub</h3><p>Docker 官方维护了一个公共仓库Docker Hub.</p>
-<h4 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h4><p>可以通过<code>docker search</code> 命令来查找官方仓库中的镜像，并利用<code>docker pull</code>命令把它下载到本地。</p>
-<h4 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a>推送镜像</h4><p>用户也可以在登录后通过<code>docker push</code>命令来将自己的镜像推送到<code>Docker Hub</code>。<br>以下命令中的<code>username</code>替换为<code>Docker</code>账号用户名。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
     
       
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/03/29/客户端负载均衡Spring Cloud Ribbon/">客户端负载均衡Spring Cloud Ribbon</a>
-        
-      </h1>
 
-      <div class="post-meta">
-        <span class="post-time">
-          2018-03-29
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-01
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/微服务/">微服务</a>
-            
-              <a href="/categories/微服务/分布式/">分布式</a>
-            
-          </div>
-        
-        
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <h2 id="客户端负载均衡Spring-Cloud-Ribbon"><a href="#客户端负载均衡Spring-Cloud-Ribbon" class="headerlink" title="客户端负载均衡Spring Cloud Ribbon"></a>客户端负载均衡Spring Cloud Ribbon</h2><p><code>Spring cloud Ribbon</code>是一个基于HTTP 和TCP的客户端负载均衡工具。它基于<code>Netflix Ribbon</code>实现。通过Spring Cloud 的封装，可以轻松的将面向服务的REST模板请求自动转换成客户端负载均衡的服务调用。<code>Spring Cloud Ribbon</code>虽然是一个工具类框架，它不像服务注册中心，配置中心，API网关那样需要独立部署，但是它几乎存在于每一个<code>Spring Cloud</code>构建的微服务和基础设施中。因为微服务间的调用，API网关的请求转发等内容，实际上都是通过Ribbon来实现的。</p>
-<p>Ribbon 通常在服务消费者上使用。</p>
-<h4 id="客户端负载均衡"><a href="#客户端负载均衡" class="headerlink" title="客户端负载均衡"></a>客户端负载均衡</h4><p>负载均衡在系统架构中是一个非常重要，并且不得不实施的内容。因为负载均衡是对系统的高可用，网络压力的缓解和处理能力扩容的重要手段之一。通过所说的负载均衡都是在服务端负载均衡。硬件负载均衡主要通过在服务器节点之间安装专门用于负载均衡的设备。软件负载均衡则通过在服务器上安装一些具有负载均衡功能或模块的软件来完成请求分发工作。</p>
-<p>硬件负载均衡的设备或者软件负载均衡的软件模块都会维护一个可用的服务器清单，通过心跳检测来剔除故障的服务器节点以保证清单中都是可以正常访问的服务端节点。当客户端发送请求到负载均衡的设备的时候，该设备按照某种算法从维护的可用服务器清单中取出一台服务器的地址，然后进行转发。</p>
-<p>客户端负载均衡和服务端负载均衡的最大不同点在于服务清单所存储的位置。客户端负载均衡中，所有客户端节点都维护着自己要访问的服务端清单，而这些服务端的清单来自服务注册中心，例如eureka.同服务端负载均衡的架构类似，在客户端负载均衡也需要心跳去维护服务端清单的健康性。这个步骤需要与服务注册中心配合完成。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2018/03/28/服务治理 Spring Cloud Eureka/">服务治理 Spring Cloud Eureka</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2018-03-28
+        <span class="archive-post-title">
+          <a href="/2018/04/01/Docker 配置国内加速器/" class="archive-post-link">
+            Docker 配置国内加速器
+          </a>
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/微服务/">微服务</a>
-            
-              <a href="/categories/微服务/分布式/">分布式</a>
-            
-          </div>
-        
-        
       </div>
-    </header>
-
     
-    
-
-    <div class="post-content">
       
-        
-        
 
-        
-          <h2 id="服务治理-Spring-Cloud-Eureka"><a href="#服务治理-Spring-Cloud-Eureka" class="headerlink" title="服务治理 Spring Cloud Eureka"></a>服务治理 Spring Cloud Eureka</h2><p><code>Spring Cloud Eureka</code>是Spring Cloud Netflix 微服务套件中的一部分，基于<code>Netflix Eureka</code> 做了二次封装，主要负责完成微服务架构中的服务治理功能。</p>
-<h4 id="服务治理"><a href="#服务治理" class="headerlink" title="服务治理"></a>服务治理</h4><p>服务治理是微服务架构中最为核心和基础的模块，主要用来实现各个微服务实例的自动化注册与发现。</p>
-<p>最开始构建微服务系统的时候可能服务并不多，可以通过做一些静态配置来完成服务的调用，但是当业务发展，静态配置变得越来越难以维护，面对不断发展的业务，我们的集群规模，服务的位置，服务的命名都有可能发生变化。为了解决微服务架构中服务实例维护问题，产生了大量服务治理框架与产品，这些框架与产品的实现都围绕着服务注册与服务发现机制来完成微服务应用实例的自动化管理。</p>
-<ul>
-<li>服务注册</li>
-</ul>
-<p>服务治理框架中，通常有一个注册中心，每个服务单元向注册中心登记自己的服务，将主机与端口号，版本号，通信协议等一些附加信息告知注册中心。注册中心按服务名分类组织服务清单。</p>
-<ul>
-<li>服务发现</li>
-</ul>
-<p>在服务治理框架下运作，服务间的调用不再通过指定具体的实例地址来实现。而是通过向服务名发起请求调用来实现(这样，当这个服务有多个实例时，就可以负载均衡的找到空闲的实例)。所以服务调用方在调用服务提供方接口的时候，并不知道具体的服务实例位置，因此，调用方需要向服务注册中心咨询服务，并获取所有服务的实例清单。以实现对具体服务实例的访问。</p>
-<h3 id="Eureka"><a href="#Eureka" class="headerlink" title="Eureka"></a>Eureka</h3><p>用来实现服务注册与发现，既包含了服务端组件，也包含了客户端组件，都用Java语言编写。</p>
-<p>Eureka服务端，也称为服务注册中心，同其他服务注册中心一样，都支持高可用配置。依托强一致性提供良好的服务实例可用性。应对多种不同的故障场景。</p>
-<p>Eureka客户端(服务提供者，服务消费者)，主要处理服务的<strong>注册</strong>与<strong>发现</strong>，客户端服务通过注解和参数配置的方式，嵌入在客户端应用程序的代码中，应用程序运行时，Eureka客户端向注册中心自身提供的服务并周期性的发送心跳来更新它的服务租约。同时，也能从服务端查询当前注册的服务信息并把他们缓存到本地并周期性的刷新服务状态。</p>
-<p>Eureka中有三个核心角色，分别是服务注册中心，服务提供者，以及服务消费者。</p>
-<p>服务注册中心也就是Eureka提供的服务端，提供服务注册与发现的功能，也就是前面的eureka-server.</p>
-<p>服务提供者是提供服务的应用，可以是Spring Boot应用，也可以是其他技术平台遵循Eureka通信机制的应用，他将自己的服务注册到Eureka,以供其他应用发现。</p>
-<p>服务消费者从服务注册中心获取服务列表，从而使消费者可以知道去何处调用其所需要的服务。</p>
-<p><strong>很多时候，Eureka客户端既是服务提供者又是服务消费者</strong></p>
-<h3 id="Eureka配置"><a href="#Eureka配置" class="headerlink" title="Eureka配置"></a>Eureka配置</h3><ul>
-<li>制定注册中心</li>
-</ul>
-<p>主要通过<code>eureka.client.serviceUrl</code>参数实现。它的配置值存储在HashMap中。并且设置有一组默认值，默认值的key为<code>defaultZone</code>,value=<code>http://localhost:8761/eureka/</code>。</p>
-<ul>
-<li>元数据</li>
-</ul>
-<p>元数据是eureka客户端在向服务注册中心发送注册请求时，用于描述自身服务信息的对象，其中包括了一些标准化的元数据，比如服务名称，实例名称，实例IP,实例端口等用于服务治理的重要信息。</p>
-<ul>
-<li>实例名配置</li>
-</ul>
-<p>实例名，即InstanceInfo中的instanceId参数，，它是区分同一服务中不同实例的唯一标识。原生实现中，采用主机名作为默认值。我们可以采用下面的方法使用不同的端口开启同一个服务的多个实例。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.instace.instanceId=$&#123;spring.application.name&#125;:$&#123;random.int&#125;</span><br></pre></td></tr></table></figure>
-<p>通过加随机数的方式来区别不同的实例，从而实现在同一个主机上，不指定端口就能够启动多个实例。</p>
-
-        
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-01
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/01/HTTP 详解/" class="archive-post-link">
+            HTTP 详解
+          </a>
+        </span>
+      </div>
+    
       
-    </div>
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-04-01
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/04/01/Docker/" class="archive-post-link">
+            Docker 入门
+          </a>
+        </span>
+      </div>
     
+      
 
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-03-29
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/03/29/客户端负载均衡Spring Cloud Ribbon/" class="archive-post-link">
+            客户端负载均衡Spring Cloud Ribbon
+          </a>
+        </span>
+      </div>
     
+      
 
-  </article>
-
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2018-03-28
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2018/03/28/服务治理 Spring Cloud Eureka/" class="archive-post-link">
+            服务治理 Spring Cloud Eureka
+          </a>
+        </span>
+      </div>
     
   </section>
 
@@ -848,6 +358,7 @@
       </a>
     
   </nav>
+
 
 
           </div>
@@ -907,14 +418,7 @@
 
 
 <div class="copyright">
-  <span class="power-by">
-    Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a>
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    Theme - 
-    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even">Even</a>
-  </span>
+  
 
   <span class="copyright-year">
     
@@ -964,5 +468,9 @@
     <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
 <script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
 
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
   </body>
 </html>
