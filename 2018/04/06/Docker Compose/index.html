@@ -17,10 +17,12 @@
 
 
 
-  <meta name="description" content="Gotta Make A Change"/>
+  <meta name="description" content="Docker Compose"/>
 
 
 
+
+  <meta name="keywords" content="Docker, 微服务, 分布式, Corn1ng's Blog" />
 
 
 
@@ -40,7 +42,7 @@
 
 
 
-<link rel="canonical" href="https://corn1ng.github.io/page/23/"/>
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/06/Docker Compose/"/>
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
@@ -79,7 +81,7 @@
 
 
 
-    <title> Corn1ng's Blog </title>\
+    <title> Docker Compose - Corn1ng's Blog </title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -207,162 +209,138 @@
 </nav>
 
       </header>
-      </br>
-      </br>
-      </br>
-      </br>
-      </br>
       <main id="main" class="main">
         <div class="content-wrapper">
           <div id="content" class="content">
             
   
-  <section id="archive" class="archive">
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Docker Compose
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-06
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+              <a href="/categories/分布式/微服务/">微服务</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
     
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Compose"><span class="toc-text">Docker Compose</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h2><p>Docker compose 是Docker官方编排的项目之一，负责快速的部署分布式应用。</p>
+<h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>负责实现对Docker容器集群的快速编排。从功能上看，跟openstack中的Heat十分类似。</p>
+<p>Compose定位是定义和运行多个Docker 容器的应用。</p>
+<p>通过一个Dockerfile模板文件，可以让用户很方便的定义一个单独的应用容器，但是很多情况下，需要多个容器相互配合来完成某项任务，Compose刚好满足了这样的需求。</p>
+<p>它允许用户通过一个单独的<code>docker-compose.yml</code>模板文件来定义一组相关联的应用容器为一个项目。</p>
+<p>Compose中有两个重要的概念，分别是</p>
+<ul>
+<li>服务：一个应用的容器，实际上也可以包括若干运行相同镜像的容器实例。</li>
+<li>项目：由一组关联的应用容器组成的一个完整业务单元，在docker-compose.yml中定义。</li>
+</ul>
+<p>可见，一个项目可以由多个服务(容器)关联而成，Compose面向项目进行管理。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>编写一个app.py文件用来记录页面访问次数，然后编写Dockerfile文件。</p>
+<p>然后编写docker-compose.yml文件，这是Compose使用的主模板文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span> </span><br><span class="line">	<span class="attr">web:</span></span><br><span class="line">		<span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">		<span class="string">port</span> <span class="string">:</span></span><br><span class="line">			<span class="bullet">-</span> <span class="string">"5000:5000"</span></span><br><span class="line">	<span class="attr">redis:</span> </span><br><span class="line">		<span class="attr">image:</span> <span class="string">"redis:alpine"</span></span><br></pre></td></tr></table></figure>
+<p>运行compose项目</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-compose up</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
 
     
       
-
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-10
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/10/leetcode42/" class="archive-post-link">
-            42. Trapping Rain Water
-          </a>
-        </span>
-      </div>
-    
       
 
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-08
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/08/Vector的分析/" class="archive-post-link">
-            Vector的分析
-          </a>
-        </span>
-      </div>
-    
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/04/06/Docker Compose/">https://corn1ng.github.io/2018/04/06/Docker Compose/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
       
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
 
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-08
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/08/锁和forkjoin/" class="archive-post-link">
-            锁 ,ForkJoin
-          </a>
-        </span>
-      </div>
-    
+
+
       
-
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-08
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/08/leetcode39/" class="archive-post-link">
-            39.Combination Sum
-          </a>
-        </span>
-      </div>
-    
       
-
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-07
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/07/Synchronized-关键字/" class="archive-post-link">
-            Synchronized 关键字
-          </a>
-        </span>
-      </div>
     
-      
 
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-11-03
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/11/03/leetcode15/" class="archive-post-link">
-            15. 3 Sum
-          </a>
-        </span>
-      </div>
     
-      
-
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-10-27
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/10/27/Java 中的转发和重定向/" class="archive-post-link">
-            Java 中的转发和重定向
-          </a>
-        </span>
-      </div>
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Docker/">Docker</a>
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
     
-      
-
-      <div class="archive-post">
-        <span class="archive-post-time">
-          
-            2017-10-26
-          
-        </span>
-        <span class="archive-post-title">
-          <a href="/2017/10/26/SpringBoot 常见注解/" class="archive-post-link">
-            SpringBoot 常见注解
-          </a>
-        </span>
-      </div>
-    
-  </section>
-
-  
-  <nav class="pagination">
-    
-      <a class="prev" href="/page/22/">
+      <a class="prev" href="/2018/04/06/SpringMVC 定时任务详解/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text">Prev</span>
+        <span class="prev-text nav-default">SpringMVC定时任务</span>
+        <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/page/24/">
-        <span class="next-text">Next</span>
+      <a class="next" href="/2018/04/06/责任链模式/">
+        <span class="next-text nav-default">责任链模式</span>
+        <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
     
   </nav>
 
+      </footer>
+    
+
+  </article>
 
 
           </div>
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
       </main>
@@ -443,6 +421,11 @@
     </div>
 
     
+  
+  
+
+  
+
 
 
     
