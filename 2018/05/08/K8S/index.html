@@ -300,7 +300,11 @@
 <h5 id="Horizontal-Pod-Autoscaler-HPA"><a href="#Horizontal-Pod-Autoscaler-HPA" class="headerlink" title="Horizontal Pod Autoscaler (HPA)"></a>Horizontal Pod Autoscaler (HPA)</h5><p>意思是Pod 横向自动扩容，与之前的RC, Deployment 一样，也是属于一种k8s 资源对象，通过追踪分析RC 控制的所有目标Pod 的负载均衡变化情况，来确定是否需要针对性的调整目标Pod 的副本数。</p>
 <h5 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h5><p>k8s中的每个service其实就是我们经常提起的微服务架构中的一个”微服务“，之前的Pod,RC等资源对象其实都是为”服务“做”嫁衣“的。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8A%E5%8D%8810.50.02.png" alt=""></p>
+<p>在K8S的世界里，虽然每个Pod都会被分配一个单独的IP地址，但是这个IP会随着pod的销毁而消失，这就引出了一个问题，如果有一组pod组成一个集群来提供服务，该如何访问，service就是用来解决这个问题的核心概念，一个Service可以看做是一组提供相同服务的pod的对外访问接口，Service作用于哪些Pod是通过label selector 来定义的。</p>
+<p>前面虽然创建了Pod，但是在k8s中，Pod的IP会随着pod的重启而变化，并不建议直接拿pod的IP来交互，那如何访问这些pod提供的服务呢，使用service，service为一组pod提供一个统一的入口，并为他们提供负载均衡和自动服务发现。</p>
+<p>pod的IP地址是docker daemon根据docker0网桥的IP地址段进行分配的，但service的Cluster IP地址是kubernetes系统中的虚拟IP地址，由系统动态分配。 Service的ClusterIP地址相对于pod的IP地址来说相对稳定，service被创建时即被分配IP地址，在销毁该service之前，这个IP地址都不会再变化。<br>由于service对象在Cluster IP Range池中分配到的IP只能在内部访问，所以其他pod都可以无障碍地访问到它。但如果这个service作为前端服务，准备为集群外的客户端提供服务，我们就需要给这个服务提供公共IP了。</p>
 <p>Service定义了一个服务的访问入口地址，前端的应用通过这个入口地址访问其背后的一组由Pod 副本组成的集群实例，Service 与其后端Pod 副本集群之间则通过 label selector 来实现无缝对接。而RC的作用实际上是保证Service 的服务能力和服务质量始终处于预期的标准。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8B%E5%8D%885.10.54.png" alt=""></p>
 <h4 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h4><p>命名空间在很多情况下用于实现多租户的资源隔离，Namespace 通过将集群内部的资源对象”分配“到不同的NameSpace 中，形成逻辑上分组的不同项目，小组或用户组。便于不同的分组在共享使用整个集群的资源的同时还能被分别管理。</p>
 
       
