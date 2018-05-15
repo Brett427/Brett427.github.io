@@ -17,12 +17,12 @@
 
 
 
-  <meta name="description" content="REST与RESTful与RestTemplate"/>
+  <meta name="description" content="Docker Machine"/>
 
 
 
 
-  <meta name="keywords" content="微服务, 计算机网络, Corn1ng's Blog" />
+  <meta name="keywords" content="Docker, 微服务, 分布式, Corn1ng's Blog" />
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-<link rel="canonical" href="https://corn1ng.github.io/2018/04/02/REST与RESTful/"/>
+<link rel="canonical" href="https://corn1ng.github.io/2018/05/15/Dockermachine/"/>
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
@@ -81,7 +81,7 @@
 
 
 
-    <title> REST与RESTful与RestTemplate - Corn1ng's Blog </title>\
+    <title> Docker Machine - Corn1ng's Blog </title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -218,18 +218,20 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          REST与RESTful与RestTemplate
+          Docker Machine
         
       </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2018-04-02
+          2018-05-15
         </span>
         
           <div class="post-category">
             
-              <a href="/categories/微服务/">微服务</a>
+              <a href="/categories/分布式/">分布式</a>
+            
+              <a href="/categories/分布式/微服务/">微服务</a>
             
           </div>
         
@@ -242,56 +244,44 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#REST与RESTful与RestTemplate"><span class="toc-text">REST与RESTful与RestTemplate</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要用RESTful结构呢？"><span class="toc-text">为什么要用RESTful结构呢？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RestTemplate"><span class="toc-text">RestTemplate</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Machine"><span class="toc-text">Docker Machine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建本地主机实例"><span class="toc-text">创建本地主机实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#远程主机上安装Docker"><span class="toc-text">远程主机上安装Docker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#切换管理不同的主机"><span class="toc-text">切换管理不同的主机</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="REST与RESTful与RestTemplate"><a href="#REST与RESTful与RestTemplate" class="headerlink" title="REST与RESTful与RestTemplate"></a>REST与RESTful与RestTemplate</h2><p>REST – REpresentational State Transfer 直接翻译：表现层状态转移。</p>
-<p>用一句话概括：</p>
-<p><strong>URL定位资源，用HTTP动词（GET,POST,DELETE,DETC）描述操作。</strong></p>
-<p>REST 不是rest这个单词，而是几个单词的缩写，</p>
-<ul>
-<li>REST描述的是网络中client和server的一种交互形式，REST本身不实用，实用的是如何设计RESTful API(REST风格的API)</li>
-<li>Server提供的RESTful API中，URL中只使用名词来指定资源，原则上不使用动词。“资源”是REST架构或者说是整个网络处理的核心。</li>
-<li>用HTTP协议里的动词来实现资源的添加，修改，删除等操作。即通过HTTP动词来实现资源的状态扭转：GET    用来获取资源，POST  用来新建资源（也可以用于更新资源），PUT    用来更新资源，DELETE  用来删除资源。</li>
-<li>Server和Client之间传递某资源的一个表现形式，比如用JSON，XML传输文本，或者用JPG，WebP传输图片等。当然还可以压缩HTTP传输时的数据（on-wire data compression）</li>
-<li>用 HTTP Status Code传递Server的状态信息。比如最常用的 200 表示成功，500 表示Server内部错误等。</li>
+        <h2 id="Docker-Machine"><a href="#Docker-Machine" class="headerlink" title="Docker Machine"></a>Docker Machine</h2><p>Docker machine 是docker 官方编排项目之一，它可以帮助我们在远程的机器上安装Docker,或者在虚拟机host上直接安装虚拟机并在虚拟机中安装Docker.我们还可以通过docker-machine命令来管理这些虚拟机和Docker。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>Docker Machine 支持多种后端驱动，包括虚拟机，本地主机和云平台。</p>
+<h4 id="创建本地主机实例"><a href="#创建本地主机实例" class="headerlink" title="创建本地主机实例"></a>创建本地主机实例</h4><ul>
+<li>VirtualBox驱动</li>
 </ul>
-<h4 id="为什么要用RESTful结构呢？"><a href="#为什么要用RESTful结构呢？" class="headerlink" title="为什么要用RESTful结构呢？"></a>为什么要用RESTful结构呢？</h4><p>“古代”网页是前端后端融在一起的，比如之前的PHP，JSP等。在之前的桌面时代问题不大，但是近年来移动互联网的发展，各种类型的Client层出不穷，RESTful可以通过一套统一的接口为 Web，iOS和Android提供服务。另外对于广大平台来说，比如Facebook platform，微博开放平台，微信公共平台等，它们不需要有显式的前端，只需要一套提供服务的接口，于是RESTful更是它们最好的选择。在RESTful架构下：<br><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2011-39-33%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=SojQ6cVvNFfAysn6k5O3k+L9od9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0ODg2ODA4JnQ9MTUyMjI5NDgwOCZyPTE4NTk4MDYxOTgmZj0vMjAxOC0wMy0yOSUyMDExLTM5LTMzJUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<h3 id="RestTemplate"><a href="#RestTemplate" class="headerlink" title="RestTemplate"></a>RestTemplate</h3><p>借助RestTemplate, Spring应用能够方便地使用REST资源。Spring的RestTemplate访问使用了模板方法的设计模式。模版方法将过程中与特定实现相关的部分委托给接口,而这个接口的不同实现定义了接口的不同行为.</p>
-<p>RestTemplate定义了36个与REST资源交互的方法，其中的大多数都对应于HTTP的方法。 这里面只有11个独立的方法，其中有十个有三种重载形式，而第十一个则重载了六次，这样一共形成了36个方法。</p>
+<p>使用virtualBox类型的驱动，创建一台Docker 主机，命名为test。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-machine create -d virtualbox test //默认使用boot2docker的镜像创建虚拟机。</span><br></pre></td></tr></table></figure>
+<p>有下面一些可以加入的参数，来配置主机或者主机上的Docker。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--engine-opt dns=114.114.114.114 配置Docker 的默认DNS.</span><br><span class="line">--engine-registry-mirror https://registry.docker-cn.com 配置Docker仓库镜像</span><br><span class="line">--virtualbox-memory 2048 配置主机内存</span><br><span class="line">--virtualbox-cpu-count 2 配置主机CPU</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p><code>delete()</code> 在特定的URL上对资源执行HTTP DELETE操作</p>
-</li>
-<li><p><code>exchange()</code> 在URL上执行特定的HTTP方法，返回包含对象的ResponseEntity，这个对象是从响应体中 映射得到的</p>
-</li>
-<li><p><code>execute()</code> 在URL上执行特定的HTTP方法，返回一个从响应体映射得到的对象</p>
-</li>
-<li><p><strong><code>getForEntity()</code></strong> 发送一个HTTP GET请求，返回的ResponseEntity包含了响应体所映射成的对象</p>
-</li>
-<li><p><strong><code>getForObject()</code></strong> 发送一个HTTP GET请求，返回的请求体将映射为一个对象</p>
-</li>
-<li><p><strong><code>postForEntity()</code></strong> POST 数据到一个URL，返回包含一个对象的ResponseEntity，这个对象是从响应体中映射得 到的</p>
-</li>
-<li><p><strong><code>postForObject()</code></strong> POST 数据到一个URL，返回根据响应体匹配形成的对象</p>
-</li>
-<li><p><code>headForHeaders()</code> 发送HTTP HEAD请求，返回包含特定资源URL的HTTP头</p>
-</li>
-<li><p><code>optionsForAllow()</code> 发送HTTP OPTIONS请求，返回对特定URL的Allow头信息</p>
-</li>
-<li><p><code>postForLocation()</code> POST 数据到一个URL，返回新创建资源的URL</p>
-</li>
-<li><p><code>put()</code> PUT 资源到特定的URL.</p>
-<p>​</p>
-</li>
+<li>macOS xhyve驱动</li>
 </ul>
-<blockquote>
-<p><a href="https://blog.csdn.net/itguangit/article/details/78825505" target="_blank" rel="noopener">https://blog.csdn.net/itguangit/article/details/78825505</a></p>
-<p><a href="https://www.zhihu.com/question/28557115/answer/48094438" target="_blank" rel="noopener">https://www.zhihu.com/question/28557115/answer/48094438</a></p>
-</blockquote>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-15%20%E4%B8%8A%E5%8D%8811.01.49.png" alt=""></p>
+<h4 id="远程主机上安装Docker"><a href="#远程主机上安装Docker" class="headerlink" title="远程主机上安装Docker"></a>远程主机上安装Docker</h4><p>通过Docker-machine命令可以轻松的在远程主机上安装Docker。但是有三个前提条件，1在目标主机上创建一个用户并加入sudo组，为该用户设置sudo 操作不需要输入密码。把本地用户的ssh public key 添加到目标主机上。</p>
+<p>比如我们要在远程主机上添加一个名为 nick 的用户并加入 sudo 组：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo adduser nick</span><br><span class="line"><span class="meta">$</span> sudo usermod -a -G sudo nick</span><br></pre></td></tr></table></figure>
+<p>然后设置 sudo 操作不需要输入密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo visudo</span><br></pre></td></tr></table></figure>
+<p>把下面一行内容添加到文档的最后并保存文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nick   ALL=(ALL:ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+<p>最后把本地用户的 ssh public key 添加到目标主机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> ssh-copy-id -i ~/.ssh/id_rsa.pub nick@xxx.xxx.xxx.xxx</span><br></pre></td></tr></table></figure>
+<p>这几步操作的主要目的是获得足够的权限可以远程的操作目标主机。</p>
+<p>安装命令</p>
+<p>在本地运行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-machine create -d generic \</span><br><span class="line">    --generic-ip-address=xxx.xxx.xxx.xxx \</span><br><span class="line">    --generic-ssh-user=nick \</span><br><span class="line">    --generic-ssh-key ~/.ssh/id_rsa \</span><br><span class="line">    krdevdb</span><br></pre></td></tr></table></figure>
+<p>使用<code>docker-machine ls</code>命令查看当前可管理的主机列表。</p>
+<p>然后执行 <code>eval $(docker-machine env 远程主机Docker名字)</code> 命令，就可以通过本地的客户端操作远程主机上的 Docker daemon 了。</p>
+<h4 id="切换管理不同的主机"><a href="#切换管理不同的主机" class="headerlink" title="切换管理不同的主机"></a>切换管理不同的主机</h4><p>只需要输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(docker-machine env 新主机Docker名字)# 即可切换。</span><br></pre></td></tr></table></figure>
+<p>要管理本地主机，需要重新开启一个终端就好。</p>
 
       
     </div>
@@ -307,7 +297,7 @@
     </p>
     <p class="copyright-item">
       <span>Link: </span>
-      <a href="https://corn1ng.github.io/2018/04/02/REST与RESTful/">https://corn1ng.github.io/2018/04/02/REST与RESTful/</a>
+      <a href="https://corn1ng.github.io/2018/05/15/Dockermachine/">https://corn1ng.github.io/2018/05/15/Dockermachine/</a>
     </p>
     <p class="copyright-item">
       <span>License: </span>
@@ -327,9 +317,11 @@
         
           <div class="post-tags">
             
+              <a href="/tags/Docker/">Docker</a>
+            
               <a href="/tags/微服务/">微服务</a>
             
-              <a href="/tags/计算机网络/">计算机网络</a>
+              <a href="/tags/分布式/">分布式</a>
             
           </div>
         
@@ -337,15 +329,9 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/04/03/ThreadLocal/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">ThreadLocal</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
     
-    
-      <a class="next" href="/2018/04/01/HTTP 详解/">
-        <span class="next-text nav-default">HTTP 详解</span>
+      <a class="next" href="/2018/05/12/ZooKeeper入门/">
+        <span class="next-text nav-default">ZooKeeper入门</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
