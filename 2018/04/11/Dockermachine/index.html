@@ -17,7 +17,7 @@
 
 
 
-  <meta name="description" content="Docker 容器管理"/>
+  <meta name="description" content="Docker 镜像管理&仓库管理"/>
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-<link rel="canonical" href="https://corn1ng.github.io/2018/04/11/Docker 容器管理/"/>
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/11/Dockermachine/"/>
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
@@ -81,7 +81,7 @@
 
 
 
-    <title> Docker 容器管理 - Corn1ng's Blog </title>\
+    <title> Docker 镜像管理&仓库管理 - Corn1ng's Blog </title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -218,7 +218,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Docker 容器管理
+          Docker 镜像管理&仓库管理
         
       </h1>
 
@@ -244,26 +244,44 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-容器管理"><span class="toc-text">Docker 容器管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#查询容器信息"><span class="toc-text">查询容器信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器内部命令"><span class="toc-text">容器内部命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多容器管理"><span class="toc-text">多容器管理</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Machine"><span class="toc-text">Docker Machine</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建本地主机实例"><span class="toc-text">创建本地主机实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#远程主机上安装Docker"><span class="toc-text">远程主机上安装Docker</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#切换管理不同的主机"><span class="toc-text">切换管理不同的主机</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="Docker-容器管理"><a href="#Docker-容器管理" class="headerlink" title="Docker 容器管理"></a>Docker 容器管理</h2><p>每个容器被创建后，都会分配一个CONTAINER ID作为容器的唯一标示。后续对容器的所有操作，都是通过这个ID来完成的。ID默认128位，但是对于大多数主机来说，前16位就足够保证唯一性。</p>
-<p>虽然CONTAINER ID能保证唯一性，但是很难记忆，所以创建容器时，可以用 –name参数给容器起一个别名。</p>
-<h4 id="查询容器信息"><a href="#查询容器信息" class="headerlink" title="查询容器信息"></a>查询容器信息</h4><p>通过docker inspect 可以查询容器的所有基本信息，包括运行情况，存储位置，配置参数，网络设置等。</p>
-<p>同时可以用docker logs 查看容器日志</p>
-<p>使用 docker stats 查看容器所占用的系统资源</p>
-<h4 id="容器内部命令"><a href="#容器内部命令" class="headerlink" title="容器内部命令"></a>容器内部命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec +容器名 +容器内执行的命令</span><br></pre></td></tr></table></figure>
-<p>比如查询MyWordPress 容器内启动了哪些进程，执行的命令和结果是</p>
-<p><code>$ docker exec  MyWordPress ps aux</code></p>
-<p>如果希望在容器内连续执行多条命令，可以加上<code>-it</code>参数，相当于以root身份进入容器内，可以连续执行命令。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker exec -it MywordPress /bin/bash</span><br></pre></td></tr></table></figure>
-<h4 id="多容器管理"><a href="#多容器管理" class="headerlink" title="多容器管理"></a>多容器管理</h4><p>假如一个服务需要多个进程组成，就需要创建多个容器组成一个系统，相互分工和配合来对外提供完整的服务。</p>
-<p>在同一台主机下，docker run 命令提供 <code>--link</code>选项建立容器间的互联。</p>
-<p>但有一个前提条件，使用<code>-- link containerA</code> 创建容器B时，容器A必须已经创建并且启动运行。</p>
+        <h2 id="Docker-Machine"><a href="#Docker-Machine" class="headerlink" title="Docker Machine"></a>Docker Machine</h2><p>Docker machine 是docker 官方编排项目之一，它可以帮助我们在远程的机器上安装Docker,或者在虚拟机host上直接安装虚拟机并在虚拟机中安装Docker.我们还可以通过docker-machine命令来管理这些虚拟机和Docker。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>Docker Machine 支持多种后端驱动，包括虚拟机，本地主机和云平台。</p>
+<h4 id="创建本地主机实例"><a href="#创建本地主机实例" class="headerlink" title="创建本地主机实例"></a>创建本地主机实例</h4><ul>
+<li>VirtualBox驱动</li>
+</ul>
+<p>使用virtualBox类型的驱动，创建一台Docker 主机，命名为test。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-machine create -d virtualbox test //默认使用boot2docker的镜像创建虚拟机。</span><br></pre></td></tr></table></figure>
+<p>有下面一些可以加入的参数，来配置主机或者主机上的Docker。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--engine-opt dns=114.114.114.114 配置Docker 的默认DNS.</span><br><span class="line">--engine-registry-mirror https://registry.docker-cn.com 配置Docker仓库镜像</span><br><span class="line">--virtualbox-memory 2048 配置主机内存</span><br><span class="line">--virtualbox-cpu-count 2 配置主机CPU</span><br></pre></td></tr></table></figure>
+<ul>
+<li>macOS xhyve驱动</li>
+</ul>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-15%20%E4%B8%8A%E5%8D%8811.01.49.png" alt=""></p>
+<h4 id="远程主机上安装Docker"><a href="#远程主机上安装Docker" class="headerlink" title="远程主机上安装Docker"></a>远程主机上安装Docker</h4><p>通过Docker-machine命令可以轻松的在远程主机上安装Docker。但是有三个前提条件，1在目标主机上创建一个用户并加入sudo组，为该用户设置sudo 操作不需要输入密码。把本地用户的ssh public key 添加到目标主机上。</p>
+<p>比如我们要在远程主机上添加一个名为 nick 的用户并加入 sudo 组：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo adduser nick</span><br><span class="line"><span class="meta">$</span> sudo usermod -a -G sudo nick</span><br></pre></td></tr></table></figure>
+<p>然后设置 sudo 操作不需要输入密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo visudo</span><br></pre></td></tr></table></figure>
+<p>把下面一行内容添加到文档的最后并保存文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nick   ALL=(ALL:ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+<p>最后把本地用户的 ssh public key 添加到目标主机上：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> ssh-copy-id -i ~/.ssh/id_rsa.pub nick@xxx.xxx.xxx.xxx</span><br></pre></td></tr></table></figure>
+<p>这几步操作的主要目的是获得足够的权限可以远程的操作目标主机。</p>
+<p>安装命令</p>
+<p>在本地运行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-machine create -d generic \</span><br><span class="line">    --generic-ip-address=xxx.xxx.xxx.xxx \</span><br><span class="line">    --generic-ssh-user=nick \</span><br><span class="line">    --generic-ssh-key ~/.ssh/id_rsa \</span><br><span class="line">    krdevdb</span><br></pre></td></tr></table></figure>
+<p>使用<code>docker-machine ls</code>命令查看当前可管理的主机列表。</p>
+<p>然后执行 <code>eval $(docker-machine env 远程主机Docker名字)</code> 命令，就可以通过本地的客户端操作远程主机上的 Docker daemon 了。</p>
+<h4 id="切换管理不同的主机"><a href="#切换管理不同的主机" class="headerlink" title="切换管理不同的主机"></a>切换管理不同的主机</h4><p>只需要输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(docker-machine env 新主机Docker名字)# 即可切换。</span><br></pre></td></tr></table></figure>
+<p>要管理本地主机，需要重新开启一个终端就好。</p>
 
       
     </div>
@@ -279,7 +297,7 @@
     </p>
     <p class="copyright-item">
       <span>Link: </span>
-      <a href="https://corn1ng.github.io/2018/04/11/Docker 容器管理/">https://corn1ng.github.io/2018/04/11/Docker 容器管理/</a>
+      <a href="https://corn1ng.github.io/2018/04/11/Dockermachine/">https://corn1ng.github.io/2018/04/11/Dockermachine/</a>
     </p>
     <p class="copyright-item">
       <span>License: </span>
@@ -311,15 +329,15 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/04/11/Dockermachine/">
+      <a class="prev" href="/2018/04/11/Docker 镜像管理/">
         <i class="iconfont icon-left"></i>
         <span class="prev-text nav-default">Docker 镜像管理&仓库管理</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/2018/04/11/Docker 安装WordPress/">
-        <span class="next-text nav-default">Docker 安装WordPress</span>
+      <a class="next" href="/2018/04/11/Docker 容器管理/">
+        <span class="next-text nav-default">Docker 容器管理</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
