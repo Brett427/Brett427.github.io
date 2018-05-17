@@ -263,7 +263,8 @@
 <p>Service的服务进程目前都基于Socket通信方式来对外提供服务。同时，容器提供了强大的隔离功能，所以有必要把为Service提供服务的这组进程放入容器中进行隔离，因此，k8s设计了Pod对象，将每个服务进程包装到对应的Pod中，使其成为Pod中运行的一个容器，为了建立Service和Pod间的关联关系，k8s首先给每个Pod贴一个标签，给运行MYSQL的pod贴上name=mysql标签，给运行PHP的贴上name=php,然后给对应的Service定义标签选择器，比如MYSQL Service 的标签选择器的选择条件为name =mysql ,意为该service要作用于所有包含name=mysql Label 的Pod上。这样一来，就巧妙了的解决了Service 与Pod的关联问题。</p>
 <p>Pod运行在一个我们称之为节点(Node)的环境中，这个节点既可以是物理机，也可以是私有云或者公有云中的一个虚拟机。通常一个节点中运行几百个Pod。其次，每个Pod里运行着一个特殊的被称之为Pause的容器，其他容器则称为业务容器，这些业务容器共享Pause容器的网络栈和Volume挂载卷。因此他们的通信和数据交换更为高效。只有提供服务的一组Pod才能被映射成一个服务。</p>
 <p>在集群管理方面，k8s将集群中的机器划为一个Master节点和一群工作节点（Node）。在Master节点运行着集群管理相关的一组进程，这些进程实现了整个集群的资源管理，Pod调度，弹性伸缩，安全控制，系统监控等管理功能。</p>
-<h4 id="基本概念与术语"><a href="#基本概念与术语" class="headerlink" title="基本概念与术语"></a>基本概念与术语</h4><p>k8s中大部分概念如Node,Pod,Replication Controller,Service 等都可以看做一种资源对象，几乎所有的资源对象都可以通过k8s提供的kubectl工具执行增删改查操作并将其保存在etcd中持久化存储。从这个角度看，k8s其实是一个高度自动化的资源控制系统。它通过跟踪对比etcd库里保存的“资源期望状态与当前环境中的“实际资源状态”的差异来实现自动控制和自动纠错的高级功能。</p>
+<h4 id="基本概念与术语"><a href="#基本概念与术语" class="headerlink" title="基本概念与术语"></a>基本概念与术语</h4><p><strong>pod中是一个容器多个容器，因为一个pod可能会出现故障，所以一组pod组成一个Service,来提供服务</strong>。</p>
+<p>k8s中大部分概念如Node,Pod,Replication Controller,Service 等都可以看做一种资源对象，几乎所有的资源对象都可以通过k8s提供的kubectl工具执行增删改查操作并将其保存在etcd中持久化存储。从这个角度看，k8s其实是一个高度自动化的资源控制系统。它通过跟踪对比etcd库里保存的“资源期望状态与当前环境中的“实际资源状态”的差异来实现自动控制和自动纠错的高级功能。</p>
 <h5 id="Master"><a href="#Master" class="headerlink" title="Master"></a>Master</h5><p>Master指的是集群控制节点，每个k8s集群中需要一个Master来负责整个集群的管理和控制。基本上k8s所有的控制指令都是发给他。它来负责具体的执行过程。</p>
 <p>Master节点上运行着一组关键进程ouu</p>
 <ul>
@@ -280,12 +281,14 @@
 <li>docker engine  docker 引擎，负责本地的容器创建和管理工作。</li>
 </ul>
 <p>Node节点可以在运行期间动态的添加到k8s集群中。</p>
-<h5 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h5><p>Pod 是k8s 最重要的概念，每个Pod都有一个特殊的被称为”根容器“的Pause 容器。Pause 容器对应的镜像属于k8s 平台的一部分，除了Pause 容器，每个Pod 还包含了一个或多个紧密相关的用户业务容器。</p>
+<h5 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h5><p>Pod就像是豌⾖荚⼀样， 它由⼀个或者多个容器组成（ 例如Docker容器） ， 它们共享容器存储、 ⽹络和容器运⾏配置项。 Pod中的容器总是被同时调度， 有共同的运⾏环境。 你可以把单个Pod想象成是运⾏独⽴应⽤的“逻辑主机”——其中运⾏着⼀个或者多个紧密耦合的应⽤容器——在有容器之前， 这些应⽤都是运⾏在⼏个相同的物理机或者虚拟机上。</p>
+<p>Pod 是k8s 最重要的概念，Pod是kubernetes中你可以创建和部署的最⼩也是最简单位。 ⼀个Pod代表着集群中运⾏的⼀个进程。Pod中封装着应⽤的容器（ 有的情况下是好⼏个容器) ，存储、独⽴的⽹络IP， 管理容器如何运⾏的策略选项。 Pod代表着部署的⼀个单位：kubernetes中应⽤的⼀个实例， 可能由⼀个或者多个容器组合在⼀起共享<br>资源。每个Pod都有一个特殊的被称为”根容器“的Pause 容器。Pause 容器对应的镜像属于k8s 平台的一部分，除了Pause 容器，每个Pod 还包含了一个或多个紧密相关的用户业务容器。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8A%E5%8D%8810.01.41.png" width="50%"></p>
 <p>Pod 的出现原因</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8A%E5%8D%8810.05.21.png" alt=""></p>
 <p>Pod 有两种类型，普通Pod 及静态Pod。静态的Pod 并不存放在k8s 的 etcd 存储里，而是存放在某个具体的Node 上的一个具体文件中。并且只有在此Nod 上启动运行。而普通Pod 一旦被创建，就会被放入到etcd 中存储。随后被master 调度到某个具体的Node  上并进行绑定。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8A%E5%8D%8810.19.49.png" alt=""></p>
+<p>Pod中的应⽤可以共享⽹络空间（ IP地址和端⼝） ， 因此可以通过 localhost 互相发现。 因此， pod中的应⽤必须协调端⼝占⽤。 每个pod都有⼀个唯⼀的IP地址， 跟物理机和其他pod都处于⼀个扁平的⽹络空间中， 它们之间可以直接连通。</p>
 <p>k8s中所有的资源对象都可以用yaml  或者JSON格式的文件来定义或者定义。</p>
 <h5 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h5><p>一个label 是一个key =value 的键值对。key 和value 都由自己来定义，label 可以附加到各种资源对象上，如Node,Pod, Service,RC 等。一个资源对象可以定义任意数量的Label。同一个Label 也可以被天剑到任意数量的资源对象上去。Label 通常在资源对象定义时确定，也可以在对象创建后动态添加或者删除。</p>
 <p>可以通过给指定的资源对象捆绑一个或多个不同的Label 来实现多维度的资源分组管理功能。以便于灵活，方便的进行资源管理。</p>
@@ -300,12 +303,12 @@
 <h5 id="Horizontal-Pod-Autoscaler-HPA"><a href="#Horizontal-Pod-Autoscaler-HPA" class="headerlink" title="Horizontal Pod Autoscaler (HPA)"></a>Horizontal Pod Autoscaler (HPA)</h5><p>意思是Pod 横向自动扩容，与之前的RC, Deployment 一样，也是属于一种k8s 资源对象，通过追踪分析RC 控制的所有目标Pod 的负载均衡变化情况，来确定是否需要针对性的调整目标Pod 的副本数。</p>
 <h5 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h5><p>k8s中的每个service其实就是我们经常提起的微服务架构中的一个”微服务“，之前的Pod,RC等资源对象其实都是为”服务“做”嫁衣“的。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8A%E5%8D%8810.50.02.png" alt=""></p>
-<p>在K8S的世界里，虽然每个Pod都会被分配一个单独的IP地址，但是这个IP会随着pod的销毁而消失，这就引出了一个问题，如果有一组pod组成一个集群来提供服务，该如何访问，service就是用来解决这个问题的核心概念，一个Service可以看做是一组提供相同服务的pod的对外访问接口，Service作用于哪些Pod是通过label selector 来定义的。</p>
+<p>在K8S的世界里，虽然每个Pod都会被分配一个单独的IP地址，但是这个IP会随着pod的销毁而消失，这就引出了一个问题，如果有一组pod组成一个集群来提供服务，该如何访问，service就是用来解决这个问题的核心概念，<strong>一个Service可以看做是一组提供相同服务的pod的对外访问接口，Service作用于哪些Pod是通过label selector 来定义的。</strong></p>
 <p>前面虽然创建了Pod，但是在k8s中，Pod的IP会随着pod的重启而变化，并不建议直接拿pod的IP来交互，那如何访问这些pod提供的服务呢，使用service，service为一组pod提供一个统一的入口，并为他们提供负载均衡和自动服务发现。</p>
 <p>pod的IP地址是docker daemon根据docker0网桥的IP地址段进行分配的，但service的Cluster IP地址是kubernetes系统中的虚拟IP地址，由系统动态分配。 Service的ClusterIP地址相对于pod的IP地址来说相对稳定，service被创建时即被分配IP地址，在销毁该service之前，这个IP地址都不会再变化。<br>由于service对象在Cluster IP Range池中分配到的IP只能在内部访问，所以其他pod都可以无障碍地访问到它。但如果这个service作为前端服务，准备为集群外的客户端提供服务，我们就需要给这个服务提供公共IP了。</p>
 <p>Service定义了一个服务的访问入口地址，前端的应用通过这个入口地址访问其背后的一组由Pod 副本组成的集群实例，Service 与其后端Pod 副本集群之间则通过 label selector 来实现无缝对接。而RC的作用实际上是保证Service 的服务能力和服务质量始终处于预期的标准。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-05-08%20%E4%B8%8B%E5%8D%885.10.54.png" alt=""></p>
-<h4 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h4><p>命名空间在很多情况下用于实现多租户的资源隔离，Namespace 通过将集群内部的资源对象”分配“到不同的NameSpace 中，形成逻辑上分组的不同项目，小组或用户组。便于不同的分组在共享使用整个集群的资源的同时还能被分别管理。</p>
+<h4 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h4><p>命名空间在很多情况下用于<strong>实现多租户的资源隔离</strong>，Namespace 通过将集群内部的资源对象”分配“到不同的NameSpace 中，形成逻辑上分组的不同项目，小组或用户组。便于不同的分组在共享使用整个集群的资源的同时还能被分别管理。</p>
 
       
     </div>

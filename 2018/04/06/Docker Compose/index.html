@@ -244,7 +244,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Compose"><span class="toc-text">Docker Compose</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-Compose"><span class="toc-text">Docker Compose</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Compose-命令说明"><span class="toc-text">Compose 命令说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Compose-模板文件"><span class="toc-text">Compose 模板文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#build"><span class="toc-text">build</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#command"><span class="toc-text">command</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#dns"><span class="toc-text">dns</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#tmpfs"><span class="toc-text">tmpfs</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#env-file"><span class="toc-text">env_file</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#environment"><span class="toc-text">environment</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#expose"><span class="toc-text">expose</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#secret"><span class="toc-text">secret</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ports"><span class="toc-text">ports</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
   </div>
 
@@ -261,12 +261,51 @@
 <li>服务：一个应用的容器，实际上也可以包括若干运行相同镜像的容器实例。</li>
 <li>项目：由一组关联的应用容器组成的一个完整业务单元，在docker-compose.yml中定义。</li>
 </ul>
+<p>Compose 的默认管理对象是项目，通过子命令对项目中的一组容器进行便捷地生命周期管理。</p>
 <p>可见，一个项目可以由多个服务(容器)关联而成，Compose面向项目进行管理。</p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>编写一个app.py文件用来记录页面访问次数，然后编写Dockerfile文件。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>编写一个app.py文件用来记录页面访问次数，然后编写Dockerfile文件。,</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> python:<span class="number">3.6</span>-alpine</span><br><span class="line"><span class="keyword">ADD</span> . /code</span><br><span class="line">WORDDIR /code</span><br><span class="line">RUN pip install redis flask</span><br><span class="line">CMD ["python","app.py"]</span><br></pre></td></tr></table></figure>
 <p>然后编写docker-compose.yml文件，这是Compose使用的主模板文件。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span> </span><br><span class="line">	<span class="attr">web:</span></span><br><span class="line">		<span class="attr">build:</span> <span class="string">.</span></span><br><span class="line">		<span class="string">port</span> <span class="string">:</span></span><br><span class="line">			<span class="bullet">-</span> <span class="string">"5000:5000"</span></span><br><span class="line">	<span class="attr">redis:</span> </span><br><span class="line">		<span class="attr">image:</span> <span class="string">"redis:alpine"</span></span><br></pre></td></tr></table></figure>
 <p>运行compose项目</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker-compose up</span><br></pre></td></tr></table></figure>
+<h3 id="Compose-命令说明"><a href="#Compose-命令说明" class="headerlink" title="Compose 命令说明"></a>Compose 命令说明</h3><p>对于Compose来说，大部分的命令的对象既可以是项目本身，也可以指定为项目中的服务或者容器。如果没有特别的说明，命令对象将是项目，这意味着项目中所有的服务都会受到命令影响。</p>
+<p>执行<code>docker-compose [COMMAND] --help</code> 或者<code>docker-compose help [COMMAND]</code></p>
+<p>可以查看具体某个命令的使用格式。</p>
+<ul>
+<li>build 是构建项目中的服务容器</li>
+<li>config验证compose文件格式是否正确</li>
+<li>down命令停止up命令所启动的容器，并移除网络</li>
+<li>exec进入指定的容器</li>
+<li>help获得一个命令的帮助</li>
+<li>images列出compose文件中包含的镜像</li>
+<li>Kill 强行停止服务容器</li>
+<li>logs 查看服务容器的输出</li>
+<li>pause 暂停一个服务容器</li>
+<li>port 打印某个容器端口所映射的公共端口</li>
+<li>ps 列出项目中目前的所有容器</li>
+<li>pull 拉取服务依赖的镜像</li>
+<li>push 推送服务依赖的镜像到Docker 镜像仓库</li>
+<li>restart 重启项目中的服务</li>
+<li>rm 删除所有停止的服务容器</li>
+<li>run 在指定服务上执行一个命令</li>
+<li>scale设置指定服务运行的容器个数</li>
+<li>start 启动已经存在的服务容器</li>
+<li>stop 停止已经处于运行状态的容器，但是不删除它。</li>
+<li>top 查看各个容器内运行的进程</li>
+<li>up 自动完成构建容器，重新创建服务，启动服务，并关联服务相关容器的一系列操作。</li>
+</ul>
+<h3 id="Compose-模板文件"><a href="#Compose-模板文件" class="headerlink" title="Compose 模板文件"></a>Compose 模板文件</h3><p>模板文件是使用compose的核心，默认文件名是docker-compose.yml。格式是YAML</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"3"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">	<span class="attr">webapp:</span></span><br><span class="line">	<span class="attr">image:</span> <span class="string">example/web</span></span><br><span class="line">	<span class="attr">port:</span></span><br><span class="line">		<span class="bullet">-</span> <span class="string">"80:80"</span></span><br><span class="line">	<span class="attr">volumes:</span></span><br><span class="line">		<span class="bullet">-</span> <span class="string">"/data"</span></span><br></pre></td></tr></table></figure>
+<h5 id="build"><a href="#build" class="headerlink" title="build"></a>build</h5><p>指定Dockerfile 所在文件夹的路径。Compose 将会利用它来自动构建这个镜像，然后使用这个镜像。</p>
+<h5 id="command"><a href="#command" class="headerlink" title="command"></a>command</h5><p>覆盖容器启动后默认执行的命令。</p>
+<h5 id="dns"><a href="#dns" class="headerlink" title="dns"></a>dns</h5><p>自定义DNS服务器，可以是一个值，也可以是一个列表。</p>
+<h5 id="tmpfs"><a href="#tmpfs" class="headerlink" title="tmpfs"></a>tmpfs</h5><p>挂载一个tmpfs文件系统到容器</p>
+<h5 id="env-file"><a href="#env-file" class="headerlink" title="env_file"></a>env_file</h5><p>从文件中获取环境变量</p>
+<h5 id="environment"><a href="#environment" class="headerlink" title="environment"></a>environment</h5><p>设置环境变量</p>
+<h5 id="expose"><a href="#expose" class="headerlink" title="expose"></a>expose</h5><p>暴露端口，但是不映射到宿主机，只被连接的服务访问。</p>
+<h5 id="secret"><a href="#secret" class="headerlink" title="secret"></a>secret</h5><p>存储敏感数据</p>
+<h5 id="ports"><a href="#ports" class="headerlink" title="ports"></a>ports</h5><p>暴露端口信息</p>
 
       
     </div>
