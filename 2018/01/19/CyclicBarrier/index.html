@@ -266,7 +266,9 @@
 <p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-16%2021-56-33.png" alt=""></p>
 <h4 id="CyclicBarrier的应用场景"><a href="#CyclicBarrier的应用场景" class="headerlink" title="CyclicBarrier的应用场景"></a>CyclicBarrier的应用场景</h4><p>CyclicBarrier可以用于多线程计算数据,最后合并计算结果的场景。例如,用一个Excel保存了用户所有银行流水,每个Sheet保存一个账户近一年的每笔银行流水,现在需要统计用户的日均银行流水,先用多线程处理每个sheet里的银行流水,都执行完之后,得到每个sheet的日均银行流水,最后,再用barrierAction用这些线程的计算结果,计算出整个Excel 的日均银行流水.</p>
 <h4 id="CyclicBarrier-实现"><a href="#CyclicBarrier-实现" class="headerlink" title="CyclicBarrier 实现"></a>CyclicBarrier 实现</h4><p>CyclicBarrier实现主要基于ReentrantLock</p>
-<h4 id="CyclicBarrier和CountDownLatch-的区别"><a href="#CyclicBarrier和CountDownLatch-的区别" class="headerlink" title="CyclicBarrier和CountDownLatch 的区别"></a>CyclicBarrier和CountDownLatch 的区别</h4><p>CountDownLatch简单的说就是一个线程等待，直到他所等待的其他线程都执行完成并且调用countDown()方法发出通知后，当前线程才可以继续执行。cyclicBarrier是所有线程都进行等待，直到所有线程都准备好进入await()方法之后，所有线程同时开始执行.</p>
+<h4 id="CyclicBarrier和CountDownLatch-的区别"><a href="#CyclicBarrier和CountDownLatch-的区别" class="headerlink" title="CyclicBarrier和CountDownLatch 的区别"></a>CyclicBarrier和CountDownLatch 的区别</h4><p>Countdownlatch 是在多个线程都进行了latch.countDown后才会触发事件，唤醒await在latch上的线程，而执行countDown的线程，执行完countDown后会继续自己的工作。</p>
+<p>CyclicBarrier是一个栅栏，用于同步所有调用await方法的线程，并且等所有线程都到了await方法时，这些线程才一起返回继续各自的工作。</p>
+<p>CountDownLatch简单的说就是一个线程等待，直到他所等待的其他线程都执行完成并且调用countDown()方法发出通知后，当前线程才可以继续执行。cyclicBarrier是所有线程都进行等待，直到所有线程都准备好进入await()方法之后，所有线程同时开始执行.</p>
 <p>CountDownLatch的计数器只能使用一次,而CyclicBarrier的计数器可以用<strong>reset()</strong>方法重置。所以CyclicBarrier能处理更为复杂的业务场景。例如,如果计算发生错误,可以重置计数器,并让线程重新执行一次。<br>CyclicBarrier还提供其他有用的方法,比如<code>getNumberWaiting</code>方法可以获得<code>CyclicBarrier</code>阻塞的线程数量。isBroken()方法用来了解阻塞的线程是否被中断。</p>
 <p>还有很重要的一个区别是 闭锁用于等待事件,而栅栏常用语等待其他线程.</p>
 

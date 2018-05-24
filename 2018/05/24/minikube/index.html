@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="MiniKube和Kubectl"/>
+
+
+
+
+  <meta name="keywords" content="微服务, 分布式, Kubernetes, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/05/24/minikube/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> MiniKube和Kubectl - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          MiniKube和Kubectl
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-05-24
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+              <a href="/categories/分布式/微服务/">微服务</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MiniKube和Kubectl"><span class="toc-text">MiniKube和Kubectl</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#start-a-minikube"><span class="toc-text">start a minikube</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cluster-info"><span class="toc-text">cluster info</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常用命令"><span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#create-a-deployment"><span class="toc-text">create a deployment</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#查看所有deployment"><span class="toc-text">查看所有deployment</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#查看pod"><span class="toc-text">查看pod</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置代理"><span class="toc-text">设置代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-a-service"><span class="toc-text">Create a service</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#访问服务"><span class="toc-text">访问服务</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#enable-插件"><span class="toc-text">enable 插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#clean-up"><span class="toc-text">clean up</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#运行多个应用"><span class="toc-text">运行多个应用</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="MiniKube和Kubectl"><a href="#MiniKube和Kubectl" class="headerlink" title="MiniKube和Kubectl"></a>MiniKube和Kubectl</h2><p>Minikube is a lightweight Kubernetes implementation that creates a VM on your local machine and deploys a simple cluster containing only one node. </p>
+<p>The Minikube CLI provides basic bootstrapping operations for working with your cluster, including start, stop, status, and delete.</p>
+<h4 id="start-a-minikube"><a href="#start-a-minikube" class="headerlink" title="start a minikube"></a>start a minikube</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> minikube version</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> minikube start</span></span><br></pre></td></tr></table></figure>
+<h4 id="cluster-info"><a href="#cluster-info" class="headerlink" title="cluster info"></a>cluster info</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl cluster-info <span class="comment">#Details of the cluster and it's health status</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl get nodes <span class="comment"># view the nodes in the cluster.</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><ul>
+<li><strong>kubectl get</strong> - list resources</li>
+<li><strong>kubectl describe</strong> - show detailed information about a resource</li>
+<li><strong>kubectl logs</strong> - print the logs from a container in a pod</li>
+<li><strong>kubectl exec</strong> - execute a command on a container in a pod</li>
+</ul>
+<h4 id="create-a-deployment"><a href="#create-a-deployment" class="headerlink" title="create a deployment"></a>create a deployment</h4><p>一个Pod中有一个或者多个容器，一个k8s deployment 可以检查Pod的健康情况而且在Pod重启后可以重新启动Pod。deployment 是一种推荐的用来创建和伸缩Pod的方式。</p>
+<p>deployment可以指导k8s如何创建和更新你的应用实例。</p>
+<p>使用kubectl run命令来创建一个管理Pod的的deployment。我们需要提供deployment的名字和image的所在地。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx-deployment --image=nginx --port=80</span><br></pre></td></tr></table></figure>
+<h5 id="查看所有deployment"><a href="#查看所有deployment" class="headerlink" title="查看所有deployment"></a>查看所有deployment</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get deployments</span><br></pre></td></tr></table></figure>
+<h5 id="查看pod"><a href="#查看pod" class="headerlink" title="查看pod"></a>查看pod</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -o wide #(-o wide 会显示IP等信息)</span><br></pre></td></tr></table></figure>
+<p>当创建一个deployment的时候，k8s会自动的创建一个Pod。</p>
+<p>一个Pod 是K8s的抽象，代表了一个或者多个容器，还有一些共享的资源。</p>
+<p>一个Pod中的容器共享一个IP地址和端口空间</p>
+<p>Pod是K8S平台上自动的单元，当我们在K8S平台上创建了Deployment，Deployment会自动创建Pod.Each Pod is tied to the Node where it is scheduled, and remains there until termination (according to restart policy) or deletion. In case of a Node failure, identical Pods are scheduled on other available Nodes in the cluster.</p>
+<h4 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy</span><br></pre></td></tr></table></figure>
+<p>在主机和k8s集群之间设置代理，然后可以直接通过代理的方法访问API。</p>
+<h4 id="Create-a-service"><a href="#Create-a-service" class="headerlink" title="Create a service"></a>Create a service</h4><p>一个Pod终将死亡，Pod是有生命周期的，当一个工作节点死亡后，上面运行的Pod也会消失。</p>
+<p>Service是一种抽象，定义了一系列Pod和策略。</p>
+<p>默认情况下，一个Pod只能通过K8S集群中的内部IP地址访问到。如果想让容器可以在外部访问到的话，可以把Pod暴露成一个k8s的Service。</p>
+<p>可以使用<code>kubectl expose 命令</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl expose deployment hello --type=LoadBalancer</span><br></pre></td></tr></table></figure>
+<h5 id="访问服务"><a href="#访问服务" class="headerlink" title="访问服务"></a>访问服务</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube service hello</span><br></pre></td></tr></table></figure>
+<p>Service 使用labels 和selector 来匹配Pod.labels 是附着在Object上的键值对。lables 可以在创建的时候也可以在创建后附着在Object上。而且他们可以在任意时刻被修改。</p>
+<p><strong>deployment会自动的创建标签给Pod</strong>,然后可以用Label来查询Pod的列表。(使用-l 参数)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods -l run=nginx</span><br></pre></td></tr></table></figure>
+<p>可以采用相同的方式获取service。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get service -l run=nginx</span><br></pre></td></tr></table></figure>
+<p>应用一个<strong>new</strong> label 可以使用 （注意是new label ，并不是修改已有的Label）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label pod $POD_NAME app=v1</span><br></pre></td></tr></table></figure>
+<h4 id="enable-插件"><a href="#enable-插件" class="headerlink" title="enable 插件"></a>enable 插件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube addons list</span><br></pre></td></tr></table></figure>
+<h4 id="clean-up"><a href="#clean-up" class="headerlink" title="clean up"></a>clean up</h4><p>Now you can clean up the resources you created in your cluster:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete service hello-node</span><br><span class="line">kubectl delete deployment hello-node</span><br></pre></td></tr></table></figure>
+<p>删除的时候，label 也可以派上用场。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete service -l run=kubernetes-bootcamp</span><br></pre></td></tr></table></figure>
+<p>Optionally, force removal of the Docker images created:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi hello-node:v1 hello-node:v2 -f</span><br></pre></td></tr></table></figure>
+<p>Optionally, stop the Minikube VM:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">minikube stop</span><br><span class="line">eval $(minikube docker-env -u)</span><br></pre></td></tr></table></figure>
+<p>Optionally, delete the Minikube VM:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minikube delete# optional</span><br></pre></td></tr></table></figure>
+<h4 id="运行多个应用"><a href="#运行多个应用" class="headerlink" title="运行多个应用"></a>运行多个应用</h4><p>前面，我们创建了一个deployment，然后把它暴露成一个服务，deploymnet只为我们的App创建了一个Pod.当流量增加的时候，我们应该扩容我们的应用。</p>
+<p>使用kubectl scale 命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployments/kubernetes-bootcamp --replicas=4</span><br></pre></td></tr></table></figure>
+<p>缩容的话只需要把 replicas 的数值设为1即可。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/05/24/minikube/">https://corn1ng.github.io/2018/05/24/minikube/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/微服务/">微服务</a>
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+              <a href="/tags/Kubernetes/">Kubernetes</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/05/17/DockerFile/">
+        <span class="next-text nav-default">DockerFile</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
