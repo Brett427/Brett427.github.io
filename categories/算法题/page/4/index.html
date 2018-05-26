@@ -17,12 +17,10 @@
 
 
 
-  <meta name="description" content="JSR 303 校验"/>
+  <meta name="description" content="Gotta Make A Change"/>
 
 
 
-
-  <meta name="keywords" content="SpringMVC, Corn1ng's Blog" />
 
 
 
@@ -42,7 +40,7 @@
 
 
 
-<link rel="canonical" href="https://corn1ng.github.io/2017/11/24/JSR-303-校验/"/>
+<link rel="canonical" href="https://corn1ng.github.io/categories/算法题/page/4/"/>
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
@@ -81,7 +79,11 @@
 
 
 
-    <title> JSR 303 校验 - Corn1ng's Blog </title>\
+    <title>
+  
+    算法题 · Corn1ng's Blog
+  
+</title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -214,121 +216,42 @@
           <div id="content" class="content">
             
   
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          JSR 303 校验
-        
-      </h1>
+  <section id="archive" class="archive">
+    
 
-      <div class="post-meta">
-        <span class="post-time">
-          2017-11-24
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2017-11-03
+          
         </span>
-        
-          <div class="post-category">
-            
-              <a href="/categories/Java/">Java</a>
-            
-          </div>
-        
-        
+        <span class="archive-post-title">
+          <a href="/2017/11/03/leetcode15/" class="archive-post-link">
+            15. 3 Sum
+          </a>
+        </span>
       </div>
-    </header>
-
     
+  </section>
+
+  
+  <nav class="pagination">
     
-  <div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">Contents</h2>
-    <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JSR-303-校验"><span class="toc-text">JSR 303 校验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#首先添加maven库。"><span class="toc-text">首先添加maven库。</span></a></li></ol></li></ol></li></ol>
-    </div>
-  </div>
-
-
-    <div class="post-content">
-      
-        <h1 id="JSR-303-校验"><a href="#JSR-303-校验" class="headerlink" title="JSR 303 校验"></a>JSR 303 校验</h1><h3 id="首先添加maven库。"><a href="#首先添加maven库。" class="headerlink" title="首先添加maven库。"></a>首先添加maven库。</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0.2.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>&lt;mvc:annotation-driven/&gt;</code>会默认装配一个LocalValidatorFactoryBean ,通过在处理方法的入参上标注@Valid注解，即可让SpringMVC在完成数据绑定后执行数据校验工作。</p>
-<a id="more"></a>
-<p>在表单对象类的属性中标准校验注解，在处理方法对应的入参前添加@Valid，SpringMVC就会实施校验并将校验结果保存在被校验入参对象之后的BindingResult或者Errors中。</p>
-<p>pojo</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/171124.png" alt=""></p>
-<p>controller</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17112401.png" alt=""></p>
-<p>view</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/17112402.png" alt=""></p>
-
-      
-    </div>
-
-    
-      
-      
-
-  <div class="post-copyright">
-    <p class="copyright-item">
-      <span>Author: </span>
-      <a href="https://corn1ng.github.io">corn1ng</a>
-    </p>
-    <p class="copyright-item">
-      <span>Link: </span>
-      <a href="https://corn1ng.github.io/2017/11/24/JSR-303-校验/">https://corn1ng.github.io/2017/11/24/JSR-303-校验/</a>
-    </p>
-    <p class="copyright-item">
-      <span>License: </span>
-      
-      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
-    </p>
-  </div>
-
-
-
-      
-      
-    
-
-    
-      <footer class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/SpringMVC/">SpringMVC</a>
-            
-          </div>
-        
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2017/11/24/表单校验/">
+      <a class="prev" href="/categories/算法题/page/3/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">前后端表单校验</span>
-        <span class="prev-text nav-mobile">Prev</span>
+        <span class="prev-text">Prev</span>
       </a>
     
-    
-      <a class="next" href="/2017/11/24/TF-IDF-算法/">
-        <span class="next-text nav-default">TF-IDF 算法</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
     
   </nav>
 
-      </footer>
-    
-
-  </article>
 
 
           </div>
           
-  <div class="comments" id="comments">
-    
-  </div>
-
 
         </div>
       </main>
