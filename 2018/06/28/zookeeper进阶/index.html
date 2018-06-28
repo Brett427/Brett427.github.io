@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="ZooKeeper进阶"/>
+
+
+
+
+  <meta name="keywords" content="分布式, ZooKeeper, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/06/28/zookeeper进阶/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> ZooKeeper进阶 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          ZooKeeper进阶
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-06-28
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper-进阶"><span class="toc-text">Zookeeper 进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZK-的ZAB-协议"><span class="toc-text">ZK 的ZAB 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#消息广播"><span class="toc-text">消息广播</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#崩溃恢复"><span class="toc-text">崩溃恢复</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Zookeeper-进阶"><a href="#Zookeeper-进阶" class="headerlink" title="Zookeeper 进阶"></a>Zookeeper 进阶</h2><p>zookeeper 是一个开放源代码的分布式协调服务，设计目标是将那些复杂且容易出错的分布式一致性服务封装起来，构成一个高效可靠的原语集，并以一系列简单易用的接口提供给用户使用。</p>
+<p>分布式程序可以基于zookeeper 实现诸如 数据发布订阅，负载均衡，命名服务，分布式协调、通知，集群管理 Master选举，分布式锁，分布式队列等功能。</p>
+<h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><p><strong>集群角色</strong>：zookeeper 中，没有传统的主从概念，引入了leader，follower，observer 三种角色。zookeeper集群中所有机器通过一个leader 选举过程来选定一台被称为leader的机器，leader服务器为客户端提供读和写服务。除了leader外，还包括follower和observer，他们都能够提供服务，唯一的区别是observer 不参与leader选举过程，也不参与写操作的”过半写成功”策略，因此observer可以在不影响写性能的情况下提升集群的读性能。</p>
+<p><strong>会话（sesseion）</strong>： session 指客户端会话。在zk中，一个客户端连接是指客户端和服务端之间的一个TCP长连接，客户端启动时，首先与服务器建立一个TCP连接，从第一次建立连接开始，客户端的生命周期就开始了。通过这个连接，客户端能够通过心跳检测与服务器保持有效的会话，也能够向zk服务器发送请求并接受相应，同时还能够通过该连接接收来自服务器的watcher事件通知。</p>
+<p><strong>数据节点znode</strong>: zookeeper将所有数据存储在内存中，数据模型是一颗树，由斜杠分割的路径，就是一个Znode 每个Znode 都会保存自己的数据内容，同时还会保存一系列的属性信息。zk中，数据节点分为持久节点和临时节点两种，持久节点就是一旦创建，除非主动进行移除工作，否则znode会一直保存在zk上，而临时节点不一样，它的生命周期和客户端会话绑定，一旦客户端会话失败，那么这个客户端创建的临时节点也会被移除。</p>
+<p><strong>版本：</strong>对于每个znode，zk 都会为其维护一个叫stat的数据结构，stat 记录了这个Znode 的三个数据版本，分别是当前znode版本，当前znode 子节点版本，当前znode acl版本。</p>
+<p><strong>watcher</strong> 即事件监听器，是zookeeper 中一个很重要的特性，允许用户在指定节点上注册一些watcher ，并且在一些特定事件触发的时候，zk 服务端会将事件通知到感兴趣的客户端上，该机制是zK 实现分布式协调服务的重要特性。</p>
+<p><strong>ACL</strong></p>
+<p>采用ACL 策略进行权限控制，定义了五种权限，</p>
+<p>CREATE 创建子节点的权限</p>
+<p>READ 获取节点数据和子节点列表的权限</p>
+<p>WRITE 更新节点数据的权限</p>
+<p>DELETE 删除子节点的权限</p>
+<p>ADMIN 设置节点ACL的权限</p>
+<h4 id="ZK-的ZAB-协议"><a href="#ZK-的ZAB-协议" class="headerlink" title="ZK 的ZAB 协议"></a>ZK 的ZAB 协议</h4><p>Zookeeper Atomic Broadcast zk 原子消息广播协议。 作为其数据一致性的核心算法。</p>
+<p>是为zk专门设计的一种支持奔溃恢复的原子关闭协议。</p>
+<p>zk中，主要依赖ZAB协议来实现分布式数据一致性。基于该协议，zk实现了一种主备模式的系统架构来保持集群中各副本之间的数据一致性。</p>
+<p>具体来说，zk使用一个单一的主进程来接受并处理客户端的所有事务请求，并采用ZAB的原子广播协议，将服务器数据的状态变更以事务proposal的形式广播到所有的副本进程上去，ZAB的这个主备模型架构保证了同一时刻集群中只有一个主进程来广播服务器的状态变更，因此能够很好的处理客户端大量的并发请求。</p>
+<p>ZAB协议包括两种基本的模式，分别是崩溃恢复和消息广播，当服务框架启动过程中，或者是当leader服务器出现网络中断，奔溃退出或者重启等异常状况时，ZAB就会进入恢复模式并选举出新的leader服务器。当选举出leader服务器并且集群中已经有过半的机器与该leader服务器完成了状态同步之后，ZAB就会退出恢复模式，其中，状态同步就是指数据同步。</p>
+<p>当集群中有过半follower完成了与leader的状态同步后，整个服务框架就可以进入消息广播模式了，当一台同样遵守ZAB的服务器启动加入集群中时，如果集群中已经存在一个leader进行广播，新加入的服务器就会自觉地进入数据恢复模式，即找到leader服务器，并与其进行数据同步，然后一起参与到消息广播流程中。</p>
+<p>当leader服务器出现崩溃或者重启，或者集群中已经不存在过半的服务器与该leader服务器保持正常通信时，那么在重新开始新一轮的原子广播事务操作之前，所有进程会首先使用崩溃协议来使彼此达到一个一致的状态，ZAB流程会从消息广播模式进入崩溃恢复阶段。</p>
+<h5 id="消息广播"><a href="#消息广播" class="headerlink" title="消息广播"></a>消息广播</h5><p>消息广播使用的是原子广播协议，类似一个二阶段提交过程，针对客户端的事务请求，leader服务器会为其生成对应的事务proposal,并将其发送给集群中其余所有机器，然后再分别收集各自的选票，最后进行事务提交。<strong>即先发送propose，受到半数Ack，然后再发送commit 进行提交。</strong></p>
+<p>在整个消息广播过程中，leader 服务器会为每个事务请求生成对应的proposal来进行广播，并且在广播事务proposal之前，leader服务器会首先为这个事务proposal分配一个全局递增的唯一ID，称之为事务ID. 由于ZAB还要保证消息严格的因果关系，因此必须将每个事务proposal按照其事务ID的先后顺序排序与处理。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-06-27%20%E4%B8%8A%E5%8D%889.22.44.png" alt=""></p>
+<h4 id="崩溃恢复"><a href="#崩溃恢复" class="headerlink" title="崩溃恢复"></a>崩溃恢复</h4><p>一旦leader服务器出现崩溃，或者网络原因导致leader 服务器失去了与过半follower 的联系，就会进入崩溃恢复模式，在ZAB协议中，为了保证程序正确运行，整个恢复过程结束后需要选举一个新的leader 服务器。因此，ZAB需要一个高效可靠的leader选举算法。</p>
+<p>leader选举算法应该能够确保提交已经被leader提交的事务proposal，同时丢弃已经被跳过的事务proposal。</p>
+<p>针对这个要求，如果让leader选举算法能够保证新选举出来的leader 服务器拥有集群中所有机器最高编号的事务proposal ，那么就可以保证这个新选举的leader一定具有所有已经提交的提案，更为重要的是，如果让具有最高编号事务proposal 的机器来成为leader，就可以省去leader 服务器检查proposal 的提交和丢弃工作的这一步操作了。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/06/28/zookeeper进阶/">https://corn1ng.github.io/2018/06/28/zookeeper进阶/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+              <a href="/tags/ZooKeeper/">ZooKeeper</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/06/28/Zookeeperd典型应用场景/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">ZooKeeper应用场景</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/05/26/leetcode343/">
+        <span class="next-text nav-default">343***. Integer Break</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
