@@ -22,7 +22,7 @@
 
 
 
-  <meta name="keywords" content="Java基础, Linux, Corn1ng's Blog" />
+  <meta name="keywords" content="Linux, Java基础, Corn1ng's Blog" />
 
 
 
@@ -290,7 +290,7 @@
 <p><strong>虽然I/O多路复用的函数也是阻塞的，但是其与以上两种还是有不同的，I/O多路复用是阻塞在select，epoll这样的系统调用之上，而没有阻塞在真正的I/O系统调用如recvfrom之上。</strong></p>
 <font color="8000ff">也就是说 阻塞IO中，一个线程A执行到需要从socket中读数据时，需要阻塞在这里，等待内核先把数据加载到内核（第一步），再复制到用户空间（第二步），而在等待的过程中，线程A什么都干不了。而在非阻塞IO中，第一步，需要不断的问内核数据准备好了没，但是不问的时间，就可以执行其他操作了。</font>
 
-<font color="8000ff">阻塞IO和非阻塞IO的问题都在于，如果有许多socket都要处理，阻塞在一个socket上，后面的socket都无法操作，所以就产生了IO多路复用。</font>
+<font color="8000ff">阻塞IO和非阻塞IO的问题都在于，如果有许多socket都要处理，阻塞在一个socket上，后面的socket都无法操作，要想处理多个socket，要有多个线程 ,所以就产生了IO多路复用。</font>
 
 <font color="8000ff">而IO多路复用中，线程A阻塞在select这样的系统调用上，select函数用线程B不断的轮询所有负责的socket，当有socket有数据需要处理时，select函数会通知用户进程A, 而用户进程A只有在调用select函数的时候才会阻塞，收发消息是不会阻塞的。IO多路复用主要作用就是一个线程就可以负责很多socket。</font>
 
@@ -349,9 +349,9 @@
         
           <div class="post-tags">
             
-              <a href="/tags/Java基础/">Java基础</a>
-            
               <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/Java基础/">Java基础</a>
             
           </div>
         
@@ -359,15 +359,15 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/01/29/IO多路复用之select、poll、epoll详解/">
+      <a class="prev" href="/2018/01/29/leetcode160/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">IO多路复用之select、poll、epoll</span>
+        <span class="prev-text nav-default">160. Intersection of Two Linked Lists</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/2018/01/28/Redis 排序/">
-        <span class="next-text nav-default">Redis 排序</span>
+      <a class="next" href="/2018/01/29/IO多路复用之select、poll、epoll详解/">
+        <span class="next-text nav-default">IO多路复用之select、poll、epoll</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
