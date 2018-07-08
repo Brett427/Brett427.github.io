@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="ZooKeeper系统模型"/>
+
+
+
+
+  <meta name="keywords" content="分布式, ZooKeeper, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/07/07/zookeeper系统模型/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> ZooKeeper系统模型 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          ZooKeeper系统模型
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-07-07
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/分布式/">分布式</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper-系统模型"><span class="toc-text">Zookeeper 系统模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据模型"><span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#节点特性"><span class="toc-text">节点特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本—保证分布式数据原子性操作"><span class="toc-text">版本—保证分布式数据原子性操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#watcher-数据变更的通知"><span class="toc-text">watcher 数据变更的通知</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ACL-保障数据的安全"><span class="toc-text">ACL 保障数据的安全</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Zookeeper-系统模型"><a href="#Zookeeper-系统模型" class="headerlink" title="Zookeeper 系统模型"></a>Zookeeper 系统模型</h2><h4 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h4><p>zookeeper 的视图结构和标准的Unix文件系统非常类似，但是没有引入传统文件系统中目录和文件等相关概念，而是使用了其特有的数据节点概念，我们称为Znode,Znode 是zookeeper中数据的最小单元，每个Znode上都可以保存数据，同时还可以挂载子节点，因此构成了一个层次化的命名空间，我们称为树。</p>
+<p>Znode的节点路径标识方式和Unix文件系统路径非常相似，都是由一系列使用斜杠（/）进行分割的路径表示，开发人员可以向这个节点中写入数据，也可以在节点下面创建子节点。</p>
+<p>在ZK中，事务是指能够改变ZK服务器状态的操作，我们称之为事务操作或更新操作，一般包括数据节点创建与删除，数据节点内容更新和客户端会话创建与失效等操作。对于每一个事务请求，ZK都会为其分配一个全局唯一的事务ID,用ZXID表示，通常是一个64位的数字，每一个ZXID对应一次更新操作，从这些ZXID可以间接地识别出ZK处理这些更新操作请求的全局顺序。</p>
+<h4 id="节点特性"><a href="#节点特性" class="headerlink" title="节点特性"></a>节点特性</h4><p>ZK中，每个数据节点都是有生命周期的，其生命周期的长短取决于数据节点的节点类型，在ZK中，节点类型可以分为<strong>持久节点</strong>，<strong>临时节点</strong>，<strong>顺序节点</strong>三大类，具体在节点创建过程中，通过组合使用，可以生成以下四种组合类型节点类型。</p>
+<ul>
+<li><p>持久节点</p>
+<p>最常见类型，创建后，就会一直存在于ZK服务器上，直到有删除操作来主动清除这个节点。</p>
+</li>
+<li><p>持久顺序节点</p>
+<p>基本特性与持久节点一样，额外的特性表现在顺序性上，在ZK上，每个父节点都会为它的第一级子节点维护一份顺序，用于记录下每个子节点创建的先后顺序，基于这个顺序特性，在创建子节点的时候，可以设置这个标记，那么在创建节点过程中，ZK会自动为给定节点加上一个数字后缀，作为一个新的，完整的节点名。</p>
+</li>
+<li><p>临时节点</p>
+<p>临时节点生命周期与客户端会话绑定在一起，如果客户端会话失效，节点就会被自动清理掉。另外，不能基于临时节点来创建子节点，临时节点只能作为叶子节点。</p>
+</li>
+<li><p>临时顺序节点</p>
+<p>同样在临时节点的基础上，加上了顺序的特性。</p>
+</li>
+</ul>
+<p>事实上，每个数据节点除了存储了数据内容外，还存储了数据节点本身的一些状态信息，也就是Stat对象的输出。包括了事务ID，版本信息和子节点个数等信息。</p>
+<h4 id="版本—保证分布式数据原子性操作"><a href="#版本—保证分布式数据原子性操作" class="headerlink" title="版本—保证分布式数据原子性操作"></a>版本—保证分布式数据原子性操作</h4><p>每个数据节点都具有三种类型的版本信息，对数据节点的任何更新操作都会引起版本号的变化，三种版本信息分别是version(当前数据节点数据内容的版本号)，cversion(当前数据节点子节点的版本号)，aversion(当前数据节点ACL变更版本号)</p>
+<p>ZK中的吧版本概念表示的是对数据节点的数据内容，子节点列表，或是节点ACL信息的修改次数，即使前后两次变更并没有使得数据内容的值发生变化，version的值依然会变更。</p>
+<hr>
+<p>先看分布式领域中最常见的一个概念，锁</p>
+<p>悲观锁，又被称作悲观并发控制，是数据库中一种非常典型且非常严格的并发控制策略，适合解决那些对于数据更新竞争十分激烈的场景</p>
+<p>乐观锁，在更新事务提交之前，每个事务都会检查当前事务读取数据后，是否有其他事务对该数据进行了修改，若有其他事务更新的话，那么提交的事务就需要回滚，所以适合并发竞争不大，事务冲突较少的场景。</p>
+<hr>
+<p>ZK中，version属性正是用来实现乐观锁机制中的“写入校验”的，在ZK服务器的PreRequestProcessor 处理器类中，在处理每一个数据更新请求时，都会先对版本进行检查，获取当前请求的版本version,同时从数据记录nodeRecore中获取当前服务器上该数据的最新版本currentVersion。</p>
+<h4 id="watcher-数据变更的通知"><a href="#watcher-数据变更的通知" class="headerlink" title="watcher 数据变更的通知"></a>watcher 数据变更的通知</h4><p>ZK提供了分布式数据的发布、订阅功能，一个典型的发布订阅模型系统定义了一种一对多的订阅关系，能够让多个订阅者同时监听某一个主题对象，当这个主题对象自身状态变化时，会通知所有订阅者，使他们能够做出相应的处理。ZK中，引入了watcher 这种分布式的通知机制，ZK允许客户端向服务端注册一个watcher监听，当服务端的一些指定事件触发了这个watcher，那么就会向指定客户端发送一个事件通知来实现分布式的通知功能，</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-07%20%E4%B8%8B%E5%8D%8810.34.58.png" alt=""></p>
+<p>ZK的watcher机制主要包括客户端线程，客户端watcherManager，ZK服务器三部分，具体流程上，客户端在向ZK服务器注册watcher的同时，会将watcher对象存储在客户端的watcherManager中。当ZK服务器触发watcher事件后，会向客户端发送通知，客户端线程从watcherManager 中取出对应的Watcher 对象来执行回调逻辑。</p>
+<p><strong>工作机制</strong></p>
+<p>watcher机制，总的来说可以概括为以下三个过程，客户端注册Watcher，服务端处理Watcher和客户端回调watcher。</p>
+<p><strong>特性</strong></p>
+<p>一次性：一旦一个watcher被触发，ZK都会将其从对应的存储中移除。</p>
+<p>客户端串行执行： 客户端watcher回调的过程是一个串行同步的过程，这保证了顺序。</p>
+<p>轻量：网络开销和服务端内存开销都是非常廉价的。</p>
+<h4 id="ACL-保障数据的安全"><a href="#ACL-保障数据的安全" class="headerlink" title="ACL 保障数据的安全"></a>ACL 保障数据的安全</h4><p>ZK提供了一套完整的ACL权限控制机制来保障数据的安全。</p>
+<p>三个方面理解ACL机制，分别是“权限模式”，授权对象和权限，通常使用“<code>schema:id:permission</code> 来标识一个有效的ACL信息。</p>
+<p><strong>权限模式</strong> 权限模式用来确定权限验证过程中使用的检验策略，有四种主要的权限模式，分别是IP，Digest(类似于username：password的形式）World,Super </p>
+<p>IP模式指的是通过IP地址粒度来进行权限控制，例如配置了“ip:192.168.0.110”,即表示权限控制都是针对这个IP地址的，</p>
+<p>Digest 是最常用的权限控制，其以类似于“username:password” 形式的权限标识来进行权限控制，便于区分不同应用来进行权限控制。</p>
+<p>world 是最开放的一种权限控制模式，几乎没有任何作用，数据节点的访问权限对所有用户开放，即所有用户可以在不尽兴任何权限校验的情况下操作ZK上的数据。</p>
+<p>Super 也就是超级用户，对ZK上的数据节点进行任何操作。</p>
+<p><strong>授权对象：ID</strong>  授权对象指的是权限授予的用户或一个指定实体，</p>
+<p><strong>权限 Permission</strong> 指通过权限检查后可以被允许执行的操作，有五大类，CREATE,DELETE,READ,WRITE,ADMIN</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/07/07/zookeeper系统模型/">https://corn1ng.github.io/2018/07/07/zookeeper系统模型/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/分布式/">分布式</a>
+            
+              <a href="/tags/ZooKeeper/">ZooKeeper</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2018/07/07/高可用性/">
+        <span class="next-text nav-default">Mysql 高可用性</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
