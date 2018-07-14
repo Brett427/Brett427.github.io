@@ -17,12 +17,12 @@
 
 
 
-  <meta name="description" content="字典树"/>
+  <meta name="description" content="生产者消费者模式与阻塞队列"/>
 
 
 
 
-  <meta name="keywords" content="数据结构, Corn1ng's Blog" />
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-<link rel="canonical" href="https://corn1ng.github.io/2017/10/26/字典树/"/>
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/19/生产者消费者模式与阻塞队列/"/>
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
@@ -81,7 +81,7 @@
 
 
 
-    <title> 字典树 - Corn1ng's Blog </title>\
+    <title> 生产者消费者模式与阻塞队列 - Corn1ng's Blog </title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -218,18 +218,20 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          字典树
+          生产者消费者模式与阻塞队列
         
       </h1>
 
       <div class="post-meta">
         <span class="post-time">
-          2017-10-26
+          2018-01-19
         </span>
         
           <div class="post-category">
             
-              <a href="/categories/计算机基础/">计算机基础</a>
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/多线程/">多线程</a>
             
           </div>
         
@@ -242,44 +244,50 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#字典树"><span class="toc-text">字典树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#性质"><span class="toc-text">性质</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#基本操作"><span class="toc-text">基本操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实现方法"><span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#应用"><span class="toc-text">应用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下面是一些字典树可以解决的面试题"><span class="toc-text">下面是一些字典树可以解决的面试题</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#生产者消费者模式与阻塞队列"><span class="toc-text">生产者消费者模式与阻塞队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Why-生产者消费者模式"><span class="toc-text">Why 生产者消费者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#What-生产者消费者模式"><span class="toc-text">What 生产者消费者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程池与生产者消费者模式"><span class="toc-text">线程池与生产者消费者模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#阻塞队列"><span class="toc-text">阻塞队列</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h2><p>又称单词查找树，Trie树，是一种树形结构，是一种哈希树的变种。典型应用是用于统计，排序和保存大量的字符串（但不仅限于字符串），所以经常被搜索引擎系统用于文本词频统计。它的优点是：利用字符串的公共前缀来减少查询时间，最大限度地减少无谓的字符串比较，查询效率比哈希树高。</p>
-<h4 id="性质"><a href="#性质" class="headerlink" title="性质"></a>性质</h4><p>它有3个基本性质：</p>
-<p>根节点不包含字符，除根节点外每一个节点都只包含一个字符； 从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串； 每个节点的所有子节点包含的字符都不相同。</p>
-<h4 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h4><p>查找、插入和删除,当然删除操作比较少见。</p>
-<h4 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h4><p>搜索字典项目的方法为：</p>
-<p>(1) 从根结点开始一次搜索；</p>
-<p>(2) 取得要查找关键词的第一个字母，并根据该字母选择对应的子树并转到该子树继续进行检索；</p>
-<p>(3) 在相应的子树上，取得要查找关键词的第二个字母,并进一步选择对应的子树进行检索。</p>
-<p>(4) 迭代过程……</p>
-<p>(5) 在某个结点处，关键词的所有字母已被取出，则读取附在该结点上的信息，即完成查找。</p>
-<p>其他操作类似处理</p>
-<h4 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h4><ul>
-<li>串的快速检索</li>
-</ul>
-<p>给出N个单词组成的熟词表，以及一篇全用小写英文书写的文章，请你按最早出现的顺序写出所有不在熟词表中的生词。</p>
-<p>在这道题中，我们可以用数组枚举，用哈希，用字典树，先把熟词建一棵树，然后读入文章进行比较，这种方法效率是比较高的。</p>
+        <h2 id="生产者消费者模式与阻塞队列"><a href="#生产者消费者模式与阻塞队列" class="headerlink" title="生产者消费者模式与阻塞队列"></a>生产者消费者模式与阻塞队列</h2><p>在并发编程中使用生产者和消费者模式能够解决绝大多数并发问题。该模式通过平衡生产线程和消费线程的工作能力来提高程序的整体处理数据的速度。</p>
+<h4 id="Why-生产者消费者模式"><a href="#Why-生产者消费者模式" class="headerlink" title="Why 生产者消费者模式"></a>Why 生产者消费者模式</h4><p>在线程世界里，生产者就是生产数据的线程，消费者就是消费数据的线程。在多线程开发当中，如果生产者处理速度很快，而消费者处理速度很慢，那么生产者就必须等待消费者处理完，才能继续生产数据。同样的道理，如果消费者的处理能力大于生产者，那么消费者就必须等待生产者。<strong>为了解决这种生产消费能力不均衡的问题，所以便有了生产者和消费者模式。</strong></p>
+<h4 id="What-生产者消费者模式"><a href="#What-生产者消费者模式" class="headerlink" title="What 生产者消费者模式"></a>What 生产者消费者模式</h4><p>生产者消费者模式是通过一个容器来解决生产者和消费者的强耦合问题。生产者和消费者彼此之间不直接通讯，而通过阻塞队列来进行通讯，所以生产者生产完数据之后不用等待消费者处理，直接扔给阻塞队列，消费者不找生产者要数据，而是直接从阻塞队列里取，阻塞队列就相当于一个缓冲区，平衡了生产者和消费者的处理能力。</p>
+<h4 id="线程池与生产者消费者模式"><a href="#线程池与生产者消费者模式" class="headerlink" title="线程池与生产者消费者模式"></a>线程池与生产者消费者模式</h4><p>Java中的线程池类其实就是一种生产者和消费者模式的实现方式，其实现方式更加高明。生产者把任务丢给线程池，线程池创建线程并处理任务，如果将要运行的任务数大于线程池的基本线程数就把任务扔到阻塞队列里，这种做法比只使用一个阻塞队列来实现生产者和消费者模式显然要高明很多，因为消费者能够处理直接就处理掉了，这样速度更快，而生产者先存，消费者再取这种方式显然慢一些。</p>
+<p>我们的系统也可以使用线程池来实现多生产者消费者模式。比如创建N个不同规模的Java线程池来处理不同性质的任务，比如线程池1将数据读到内存之后，交给线程池2里的线程继续处理压缩数据。线程池1主要处理IO密集型任务，线程池2主要处理CPU密集型任务。</p>
+<h4 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h4><p>阻塞队列是一个支持两个附件操作的队列，这两个附加的操作支持阻塞的插入和移除方法。</p>
+<p>阻塞队列常用于生产者，消费着的场景，生产者是向队列里添加元素的线程，消费者是从队列里取元素的线程，阻塞队列就是生产者用来存放元素，消费者用来获取元素的容器。</p>
+<p>JDK中提供了7个阻塞队列，分别是</p>
 <ul>
-<li>“串”排序</li>
+<li>ArrayBlockingQueue 一个由数组结构组成的有界阻塞队列</li>
 </ul>
-<p>给定N个互不相同的仅由一个单词构成的英文名，让你将他们按字典序从小到大输出</p>
-<p>用字典树进行排序，采用数组的方式创建字典树，这棵树的每个结点的所有儿子很显然地按照其字母大小排序。对这棵树进行先序遍历即可。</p>
+<p>数组实现的有界阻塞队列，按照先进先出原则对元素进行排序。默认不保证线程公平。</p>
 <ul>
-<li>最长公共前缀</li>
+<li>LinkedBlockingQueue 一个由链表结构组成的有界阻塞队列</li>
 </ul>
-<p>对所有串建立字典树，对于两个串的最长公共前缀的长度即他们所在的结点的公共祖先个数，于是，问题就转化为当时公共祖先问题。</p>
-<h3 id="下面是一些字典树可以解决的面试题"><a href="#下面是一些字典树可以解决的面试题" class="headerlink" title="下面是一些字典树可以解决的面试题"></a>下面是一些字典树可以解决的面试题</h3><ul>
-<li>3、有一个1G大小的一个文件，里面每一行是一个词，词的大小不超过16字节，内存限制大小是1M。返回频数最高的100个词。（字典树当做hash表的作用，用来统计词频。）</li>
-<li>9、1000万字符串，其中有些是重复的，需要把重复的全部去掉，保留没有重复的字符串。请怎么设计和实现？</li>
-<li>10、 一个文本文件，大约有一万行，每行一个词，要求统计出其中最频繁出现的前10个词，请给出思想，给出时间复杂度分析。</li>
-<li>13、寻找热门查询：搜索引擎会通过日志文件把用户每次检索使用的所有检索串都记录下来，每个查询串的长度为1-255字节。假设目前有一千万个记录，这些查询串的重复读比较高，虽然总数是1千万，但是如果去除重复和，不超过3百万个。一个查询串的重复度越高，说明查询它的用户越多，也就越热门。请你统计最热门的10个查询串，要求使用的内存不能超过1G。<br>​</li>
+<p>链表实现的有界阻塞队列，按照先进先出原则对元素进行排序</p>
+<ul>
+<li>priorityBlockingQueue 一个支持优先级排序的无界阻塞队列</li>
 </ul>
+<p>支持优先级的无界阻塞队列，可以自定义实现CompareTo()方法来指定元素排序规则</p>
+<ul>
+<li>DelayQueue 一个使用优先级队列实现的无界阻塞队列</li>
+</ul>
+<p>支持延时获取元素的无界阻塞队列,即当队列中的元素到达延迟时间时才会被取出。</p>
+<ul>
+<li>SynchronousQueue 一个不存储元素的阻塞队列</li>
+</ul>
+<p>不存储元素的阻塞队列，每一个put操作必须等待一个take操作。否则不能继续添加元素。可以看成是一个传球手，负责把生产者线程处理的数据直接传递给消费者线程，队列本身并不存储任何元素，非常适合传递性场景。</p>
+<ul>
+<li>LinkedTransferQueue 一个由链表结构组成的无界阻塞队列</li>
+</ul>
+<p>是一个由链表组成的无界阻塞队列，相对于其他阻塞队列，多了trytransfer 方法和trasnfer方法。</p>
+<p>tansfer方法：如果有消费者正在等待接收元素，transfer可以把生产者传入的元素立刻传输给消费者，如果没有消费者在等待接收元素，transfer方法会将元素存放在队列的tail节点，并等到该元素被消费者消费了才返回。</p>
+<ul>
+<li>LinkedBlockingDueue 一个由链表结构组成的双向阻塞队列</li>
+</ul>
+<p>双向队列指的是可以从队列的两端插入和移除元素。</p>
 
       
     </div>
@@ -295,7 +303,7 @@
     </p>
     <p class="copyright-item">
       <span>Link: </span>
-      <a href="https://corn1ng.github.io/2017/10/26/字典树/">https://corn1ng.github.io/2017/10/26/字典树/</a>
+      <a href="https://corn1ng.github.io/2018/01/19/生产者消费者模式与阻塞队列/">https://corn1ng.github.io/2018/01/19/生产者消费者模式与阻塞队列/</a>
     </p>
     <p class="copyright-item">
       <span>License: </span>
@@ -315,7 +323,7 @@
         
           <div class="post-tags">
             
-              <a href="/tags/数据结构/">数据结构</a>
+              <a href="/tags/Java多线程/">Java多线程</a>
             
           </div>
         
@@ -323,15 +331,15 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2017/10/26/霍夫曼编码/">
+      <a class="prev" href="/2018/01/19/并发包之Future/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">霍夫曼编码</span>
+        <span class="prev-text nav-default">并发包之Future</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/2017/10/24/Servlet/">
-        <span class="next-text nav-default">Servlet</span>
+      <a class="next" href="/2018/01/19/并发包之FutureTask/">
+        <span class="next-text nav-default">并发包之FutureTask</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
