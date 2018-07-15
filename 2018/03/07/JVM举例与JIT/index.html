@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java虚拟机 举例与JIT"/>
+
+
+
+
+  <meta name="keywords" content="Java虚拟机, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/03/07/JVM举例与JIT/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java虚拟机 举例与JIT - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java虚拟机 举例与JIT
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-03-07
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#宏观看JVM"><span class="toc-text">宏观看JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编译时期—语法糖"><span class="toc-text">编译时期—语法糖</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM-实现跨平台"><span class="toc-text">JVM 实现跨平台</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#class文件和JVM"><span class="toc-text">class文件和JVM</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何将类加载到JVM"><span class="toc-text">如何将类加载到JVM</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类加载的详细过程"><span class="toc-text">类加载的详细过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JIT即时编译器"><span class="toc-text">JIT即时编译器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#回到例子"><span class="toc-text">回到例子</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类加载完该干什么"><span class="toc-text">类加载完该干什么</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JVM内存模型"><span class="toc-text">JVM内存模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#例子中的流程"><span class="toc-text">例子中的流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM之JIT"><span class="toc-text">JVM之JIT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#just-in-time"><span class="toc-text">just in time</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#主要技术点"><span class="toc-text">主要技术点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HotSpot-编译"><span class="toc-text">HotSpot 编译</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="宏观看JVM"><a href="#宏观看JVM" class="headerlink" title="宏观看JVM"></a>宏观看JVM</h2><p>先来看一个简单的Java程序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 姓名</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="comment">// 年龄</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line">   	<span class="comment">//.....各种get/set方法/toString</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PersonTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Person person = <span class="keyword">new</span> Person();</span><br><span class="line">        person.setName(<span class="string">"person"</span>);</span><br><span class="line">        System.out.println(person);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>.java文件通过词法分析器，token流，语法分析器，语法树，语义分析器，注解抽象语法树，字节码生成器等步骤将.java文件变为字节码文件</code></p>
+<h4 id="编译时期—语法糖"><a href="#编译时期—语法糖" class="headerlink" title="编译时期—语法糖"></a>编译时期—语法糖</h4><p>语法糖可以看做是<strong>编译器实现的一些小把戏</strong>,这些小把戏可能会使得效率大提升。</p>
+<p>最值得说明的就是泛型，泛型只会在Java源码中存在，编译过后会被替换为原来的原生类型了，这个过程也被称为泛型擦除。</p>
+<h3 id="JVM-实现跨平台"><a href="#JVM-实现跨平台" class="headerlink" title="JVM 实现跨平台"></a>JVM 实现跨平台</h3><p>.class文件是不能直接运行的，不像C语言(编译cpp后生成的exe是可以直接运行的)</p>
+<p>这些.class文件是要交给JVM来解析运行。</p>
+<h3 id="class文件和JVM"><a href="#class文件和JVM" class="headerlink" title="class文件和JVM"></a>class文件和JVM</h3><p>前面例子中的两个文件都会被直接加载到JVM中吗。并不会</p>
+<p>虚拟机规范则是严格规定了有且只有5种情况必须<strong>立即对类进行“初始化”</strong>(class文件加载到JVM中)：</p>
+<ul>
+<li>创建类的实例(new 的方式)。访问某个类或接口的静态变量，或者对该静态变量赋值，调用类的静态方法</li>
+<li>反射的方式</li>
+<li>初始化某个类的子类，则其父类也会被初始化</li>
+<li>Java虚拟机启动时被标明为启动类的类，直接使用java.exe命令来运行某个主类（包含main方法的那个类）</li>
+<li>当使用JDK1.7的动态语言支持时(….)</li>
+</ul>
+<p>所以说</p>
+<p>Java类的加载是动态的，它并不会一次性将所有类全部加载后再运行，而是保证程序运行的基础类(像是基类)完全加载到jvm中，至于其他类，<strong>则在需要的时候才加载</strong>。这当然就是为了<strong>节省内存开销</strong>。</p>
+<h4 id="如何将类加载到JVM"><a href="#如何将类加载到JVM" class="headerlink" title="如何将类加载到JVM"></a>如何将类加载到JVM</h4><p>class 文件通过类的加载器装载到jvm中的。</p>
+<p>默认三种类加载器。</p>
+<p>各个加载器的工作责任：</p>
+<ul>
+<li>1）Bootstrap ClassLoader：负责加载$JAVA_HOME中jre/lib/<strong>rt.jar</strong>里所有的class，由C++实现，不是ClassLoader子类</li>
+<li>2）Extension ClassLoader：负责加载java平台中<strong>扩展功能</strong>的一些jar包，包括$JAVA_HOME中jre/lib/*.jar或-Djava.ext.dirs指定目录下的jar包</li>
+<li>3）App ClassLoader：负责记载<strong>classpath</strong>中指定的jar包及目录中class</li>
+</ul>
+<p><strong>类加载器在成功加载某个类之后，会把得到的java.lang.Class 类的实例缓存起来，下次再请求加载该类加载的时候，类加载器会直接使用缓存的类的实例，而不会尝试再次加载</strong></p>
+<h4 id="类加载的详细过程"><a href="#类加载的详细过程" class="headerlink" title="类加载的详细过程"></a>类加载的详细过程</h4><p>加载器加载到jvm中，接下来其实又分了<strong>好几个步骤</strong>：</p>
+<ul>
+<li>加载，查找并加载类的二进制数据，在Java堆中也<strong>创建一个java.lang.Class类的对象</strong>。</li>
+<li>连接，连接又包含三块内容：验证、准备、初始化。<ul>
+<li>1）验证，文件格式、元数据、字节码、符号引用验证；</li>
+<li>2）准备，为类的静态变量分配内存，并将其初始化为默认值；</li>
+<li>3）解析，把类中的符号引用转换为直接引用</li>
+</ul>
+</li>
+<li>初始化，为类的静态变量赋予正确的初始值。</li>
+</ul>
+<h4 id="JIT即时编译器"><a href="#JIT即时编译器" class="headerlink" title="JIT即时编译器"></a>JIT即时编译器</h4><p>一般我们想，JVM在加载了这些class文件以后，针对这些字节码，逐条取出，逐条执行，解析器解析。</p>
+<p>实际上。JVM会把字节码重新编译优化，生成机器码，让CPU直接执行，这样编出来的代码效率会更高。编译也是要花时间的，JVM一般会对热点代码做编译，非热点代码直接解析就好了。</p>
+<blockquote>
+<p>热点代码就是1 多次调用的方法 2 多次执行的循环体</p>
+</blockquote>
+<p>使用热点探测来检测是否为热点代码，热点探测有两种方式：采样和计数器</p>
+<p>目前HotSpot使用的是<strong>计数器的方式</strong>，它为每个方法准备了两类计数器：</p>
+<ul>
+<li>方法调用计数器（Invocation  Counter）</li>
+<li>回边计数器（Back  EdgeCounter）。</li>
+<li>在确定虚拟机运行参数的前提下，这两个计数器都有一个确定的阈值，<strong>当计数器超过阈值溢出了，就会触发JIT编译</strong>。</li>
+</ul>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-14%20%E4%B8%8A%E5%8D%8812.00.10.png" alt=""></p>
+<h4 id="回到例子"><a href="#回到例子" class="headerlink" title="回到例子"></a>回到例子</h4><p>按我们程序来走，我们的PersonTest.class 文件会被AppClassLoader加载器加载到JVM中。随后发现了要使用Peron这个类，所以Person.class 文件会被APPClassLoader加载器加载到JVM中。</p>
+<h3 id="类加载完该干什么"><a href="#类加载完该干什么" class="headerlink" title="类加载完该干什么"></a>类加载完该干什么</h3><h4 id="JVM内存模型"><a href="#JVM内存模型" class="headerlink" title="JVM内存模型"></a>JVM内存模型</h4><p>堆：<strong>存放对象实例</strong>，几乎所有的对象实例都在这里分配内存</p>
+<p>虚拟机栈：虚拟机栈描述的是<strong>Java方法执行的内存模型</strong>：每个方法被执行的时候都会同时创建一个<strong>栈帧</strong>（Stack Frame）用于存储局部变量表、操作栈、动态链接、方法出口等信息</p>
+<p>本地方法栈：本地方法栈则是为虚拟机使用到的<strong>Native方法服务</strong>。</p>
+<p>方法区：存储已<strong>被虚拟机加载的类元数据信息</strong>(元空间)</p>
+<p>程序计数器：当前线程所执行的字节码的<strong>行号指示器</strong></p>
+<h4 id="例子中的流程"><a href="#例子中的流程" class="headerlink" title="例子中的流程"></a>例子中的流程</h4><p>1、通过<code>java.exe</code>运行<code>PersonTest.class</code>，随后被加载到JVM中，<strong>元空间存储着类的信息</strong>(包括类的名称、方法信息、字段信息..)。</p>
+<p>2、然后JVM找到PersonTest的主函数入口(main)，为main函数创建栈帧，开始执行main函数</p>
+<p>3、main函数的第一条命令是<code>Person person = new Person();</code>就是让JVM创建一个Person对象，但是这时候方法区中没有Person类的信息，所以JVM马上加载PErson类，把Person类的类型信息放到方法区中(元空间)</p>
+<p>4、加载完Person类之后，Java虚拟机做的第一件事情就是在堆区中为一个新的Person实例分配内存, 然后调用构造函数初始化Person实例，这个<strong>Person实例持有着指向方法区的Person类的类型信息</strong>（其中包含有方法表，java动态绑定的底层实现）的引用</p>
+<p>5、当使用<code>person.setName(&quot;Person&quot;);</code>的时候，JVM<strong>根据person引用找到Person对象</strong>，然后根据Person对象持有的引用定位到方法区中Person类的类型信息的<strong>方法表</strong>，获得<code>setName()</code>函数的字节码的地址</p>
+<p>6、为<code>setName()</code>函数创建栈帧，开始运行<code>setName()</code>函数</p>
+<h2 id="JVM之JIT"><a href="#JVM之JIT" class="headerlink" title="JVM之JIT"></a>JVM之JIT</h2><h4 id="just-in-time"><a href="#just-in-time" class="headerlink" title="just in time"></a>just in time</h4><p>just in time 编译，也叫做运行时编译，不同于C/C++语言直接被翻译成机器指令，Java把Java的源文件翻译成了class文件，而class文件中全都是Java字节码，那么，JVM在加载了这些class文件之后，针对这些字节码，逐条取出，逐条执行，这种方法就是解释执行。</p>
+<p>还有一种，就是把这些Java字节码重新编译优化，生成机器码，让CPU直接执行，这样编出来额代码效率会更高，通常，我们不必把所有的Java方法都编译成机器码，只需要把调用最频繁，占据CPU时间最长的方法找出来将其编译成机器码，这种调用最频繁的Java方法就是常说的热点方法。</p>
+<p>这种在运行时按需编译的方式就是just in time</p>
+<h4 id="主要技术点"><a href="#主要技术点" class="headerlink" title="主要技术点"></a>主要技术点</h4><p>JIT的主要技术点，从大的框架来说，非常简单，就是申请一块既有写权限，又有执行权限的内存，然后把你要编译的Java方法，翻译成机器码，写到这块内存里，当再需要调用原来的Java方法时，就转向调用这块内存。</p>
+<h4 id="HotSpot-编译"><a href="#HotSpot-编译" class="headerlink" title="HotSpot 编译"></a>HotSpot 编译</h4><p>当JVM执行代码时，它并不立即开始编译代码，主要有两个原因：</p>
+<p>首先，如果这段代码本身在将来只会被执行一次，那么从本质上来看，编译就是在浪费精力，因为直接解释执行相对于编译这段代码并执行代码来说，要快很多。</p>
+<p>当然，如果一段代码频繁的调用方法，或者是一个循环，也就是这段代码被执行多次，那么编译就非常值得了，Hot Spot VM 采用了 JIT compile 技术，将运行频率很高的字节码直接编译为机器指令执行以提高性能，所以当字节码被 JIT 编译为机器码的时候，要说它是编译执行的也可以。也就是说，运行时，部分代码可能由 JIT 翻译为目标机器指令（以 method 为翻译单位，还会保存起来，第二次执行就不用翻译了）直接执行。</p>
+<p>第二个原因是最优化，当 JVM 执行某一方法或遍历循环的次数越多，就会更加了解代码结构，那么 JVM 在编译代码的时候就做出相应的优化。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/03/07/JVM举例与JIT/">https://corn1ng.github.io/2018/03/07/JVM举例与JIT/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java虚拟机/">Java虚拟机</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/03/20/正则表达式/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">正则表达式</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/03/03/Java 运行和编译的过程/">
+        <span class="next-text nav-default">Java 运行和编译的过程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2018
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
