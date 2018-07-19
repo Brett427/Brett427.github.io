@@ -244,7 +244,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Executor-框架简介"><span class="toc-text">Executor 框架简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor的两级调度模型"><span class="toc-text">Executor的两级调度模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor框架的结构与成员"><span class="toc-text">Executor框架的结构与成员</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#使用流程"><span class="toc-text">使用流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架成员"><span class="toc-text">框架成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FutureTask-详解"><span class="toc-text">FutureTask 详解</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Executor-框架简介"><span class="toc-text">Executor 框架简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor的两级调度模型"><span class="toc-text">Executor的两级调度模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Executor框架的结构与成员"><span class="toc-text">Executor框架的结构与成员</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#使用流程"><span class="toc-text">使用流程</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架成员"><span class="toc-text">框架成员</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FixedThreadPool"><span class="toc-text">FixedThreadPool</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SingleThreadExecutor"><span class="toc-text">SingleThreadExecutor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CachedThreadPool-详解"><span class="toc-text">CachedThreadPool 详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ScheduledThreadPoolExecutor-详解"><span class="toc-text">ScheduledThreadPoolExecutor 详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FutureTask-详解"><span class="toc-text">FutureTask 详解</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FutureTask-的使用-与实现"><span class="toc-text">FutureTask 的使用 与实现</span></a></li></ol></li></ol>
     </div>
   </div>
 
@@ -259,7 +259,7 @@
 <h5 id="Executor框架的结构与成员"><a href="#Executor框架的结构与成员" class="headerlink" title="Executor框架的结构与成员"></a>Executor框架的结构与成员</h5><p>首先是结构: Executor 框架主要由三大部分组成</p>
 <ul>
 <li>任务。包括被执行任务需要实现的接口:Runnable接口或Callable接口。</li>
-<li>任务的执行。包括任务执行机制的核心接口Executor,以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口(ThreadPoolExecutor和ScheduledThreadPoolExecutor)。</li>
+<li>任务的执行。包括任务执行机制的核心接口Executor,以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口(<strong>ThreadPoolExecutor</strong>和<strong>ScheduledThreadPoolExecutor</strong>)。</li>
 <li>异步计算的结果。包括接口Future和实现Future接口的FutureTask类。</li>
 </ul>
 <p>下面是类和接口的简介</p>
@@ -269,27 +269,35 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Executor</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>虽然Executor是一个简单的接口,那是它为灵活且强大的异步任务执行框架提供了基础,它提供了一种标准的方法把任务的提交过程和执行过程解耦开来.</p>
 <ul>
-<li>ThreadPoolExecutor是线程池的核心实现类,用来执行被提交的任务</li>
-<li>ScheduledThreadPoolExecutor是一个实现类,可以在给定的延迟后运行命令,或者定期执行命令。ScheduledThreadPoolExecutor比Timer更灵活,功能更强大。</li>
+<li>ThreadPoolExecutor是线程池的核心实现类,实现了ExecutorService 接口，用来执行被提交的任务。</li>
+<li>ScheduledThreadPoolExecutor是一个实现类,也实现了ExecutorService 接口，可以在给定的延迟后运行命令,或者定期执行命令。ScheduledThreadPoolExecutor比Timer更灵活,功能更强大。</li>
 <li>Future接口和实现Future接口的FutureTask类,代表异步计算的结果。</li>
 <li>Runnable接口和Callable接口的实现类,都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。</li>
 </ul>
 <p>使用示意图如下:</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-19%20%E4%B8%8A%E5%8D%889.27.19.png" width="70%"></p>
 <p><img src="http://blog-1252095801.cosgz.myqcloud.com/1711161.png" width="60%"></p>
-<h6 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h6><p>主线程首先要创建实现Runnable或者Callable接口的任务对象。工具类Executors可以把一个Runnable对象封装为一个Callable对象(<code>Executors.callable(Runnable task)</code>或<br><code>Executors.callable(Runnable task,Object resule)</code>)。<br>然后可以把Runnable对象直接交给ExecutorService执行(<code>ExecutorService.execute(Runnable command)</code>);或者也可以把Runnable对象或Callable对象提交给ExecutorService执行(<code>ExecutorService.submit(Runnable task)</code>或<code>ExecutorService.submit(Callable&lt;T&gt;task)</code>)。<br>如果执行<code>ExecutorService.submit(...)</code>,ExecutorService将返回一个实现Future接口的对象(到目前为止的JDK中,返回的是FutureTask对象)。由于FutureTask实现了Runnable,程序员也可以创建FutureTask,然后直接交给ExecutorService执行。<br>最后,主线程可以执行FutureTask.get()方法来等待任务执行完成。主线程也可以执行<code>FutureTask.cancel(boolean mayInterruptIfRunning)</code>来取消此任务的执行。</p>
+<h6 id="使用流程"><a href="#使用流程" class="headerlink" title="使用流程"></a>使用流程</h6><p>主线程首先要创建实现Runnable或者Callable接口的任务对象。工具类Executors可以把一个Runnable对象封装为一个Callable对象(<code>Executors.callable(Runnable task)</code>或<code>Executors.callable(Runnable task,Object resule)</code>)。<br>然后可以把Runnable对象直接交给ExecutorService执行(<code>ExecutorService.execute(Runnable command)</code>);或者也可以把Runnable对象或Callable对象提交给ExecutorService执行(<code>ExecutorService.submit(Runnable task)</code>或<code>ExecutorService.submit(Callable&lt;T&gt;task)</code>)。</p>
+<p>如果执行<code>ExecutorService.submit(...)</code>,ExecutorService将返回一个实现Future接口的对象(到目前为止的JDK中,返回的是FutureTask对象)。由于FutureTask实现了Runnable,程序员也可以创建FutureTask,然后直接交给ExecutorService执行。<br>最后,主线程可以执行FutureTask.get()方法来等待任务执行完成。主线程也可以执行<code>FutureTask.cancel(boolean mayInterruptIfRunning)</code>来取消此任务的执行。</p>
 <h3 id="框架成员"><a href="#框架成员" class="headerlink" title="框架成员"></a>框架成员</h3><p>介绍Executor框架的主要成员:ThreadPoolExecutor, ScheduledThreadPoolExecutor、Future接口、Runnable接口、Callable接口和Executors。</p>
 <ul>
 <li>ThreadPoolExecutor</li>
 </ul>
 <p>ThreadPoolExecutor通常使用工厂类Executors来创建。Executors可以创建3种类型的ThreadPoolExecutor:SingleThreadExecutor、FixedThreadPool和CachedThreadPool。</p>
-<p>其中,FixedThreadPool是创建固定线程数的API,FixedThreadpool适用于为了满足资源管理的需求,而需要限制当前线程数量的应用场景,适用于负载较重的服务器.</p>
-<p>singleThreadExecutor是创建单个线程的SingleThreadExecutor的API</p>
-<p>CachedThreadPool。下是Executors提供的,创建一个会根据需要创建新线程的<br>CachedThreadPool的API。CachedThreadPool 是大小无界的线程池,适用于执行很多的短期异步任务的小程序,或者是负载较轻的服务器</p>
+<p>其中,</p>
+<hr>
+<p>FixedThreadPool是创建固定线程数的API,FixedThreadpool适用于为了满足资源管理的需求,而需要限制当前线程数量的应用场景,适用于负载较重的服务器.使用的队列是LinkedBlcokingQueue。</p>
+<hr>
+<p>singleThreadExecutor是创建单个线程的SingleThreadExecutor的API，使用的队列也是LinkedBlockingQueue。</p>
+<hr>
+<p>CachedThreadPool。创建一个会根据需要创建新线程的CachedThreadPool的API。CachedThreadPool 是大小无界的线程池,适用于执行很多的短期异步任务的小程序,或者是负载较轻的服务器.使用的是SynchronousQueue。</p>
+<hr>
 <ul>
 <li>ScheduledThreadPoolExecutor</li>
 </ul>
 <p>ScheduledThreadPoolExecutor通常使用工厂类Executors来创建。Executors可以创建2种类型的ScheduledThreadPoolExecutor,如下。<br>1)ScheduledThreadPoolExecutor。包含若干个线程的ScheduledThreadPoolExecutor。<br>2)SingleThreadScheduledExecutor。只包含一个线程的ScheduledThreadPoolExecutor。</p>
 <p>ScheduledThreadPoolExecutor适用于需要多个后台线程执行周期任务,同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景。</p>
+<p>SingleThreadScheduledExecutor 适用于需要单个后台线程执行周期任务，同时需要保证顺序地执行各个任务的应用场景。</p>
 <ul>
 <li>Future接口</li>
 </ul>
@@ -300,10 +308,35 @@
 <li>Runnable 接口和Callable 接口</li>
 </ul>
 <p>Runnable接口和Callable接口的实现类,都可以被ThreadPoolExecutor或Scheduled-<br>ThreadPoolExecutor执行。它们之间的区别是Runnable不会返回结果,而Callable可以返回结果。<br>除了可以自己创建实现Callable接口的对象外,还可以使用工厂类Executors来把一个<br>Runnable包装成一个Callable。</p>
+<p>###ThreadPoolExecutor 详解</p>
+<p>Executor框架最核心的类是ThreadPoolExecutor，它是线程池的实现类，主要由下列四个组件构成。corepool 核心线程池的大小maximusPool 最大线程池的大小Blockingqueue 用来暂存任务的工作队列rejectExecutionHandler 饱和策略</p>
+<p>通过Executors工具类，<strong>里面有三种类型的静态方法来创建三种线程池。</strong></p>
+<h4 id="FixedThreadPool"><a href="#FixedThreadPool" class="headerlink" title="FixedThreadPool"></a>FixedThreadPool</h4><p>可重用固定线程数的线程池，corepoolsize 和maximuspoolsize 都被设置为创建时指定的nThread。当线程数大于corepoolsize时，keepAlivetime 为多余的空闲线程等待新任务的最长时间，超过这个时间后多余的线程将会被终止。fixedThreadPool设置的是立即终止。</p>
+<p>1）如果当前运行的线程数少于corePoolSize，则创建新线程来执行任务。<br>2）在线程池完成预热之后（当前运行的线程数等于corePoolSize），将任务加入<br>LinkedBlockingQueue。<br>3）线程执行完1中的任务后，会在循环中反复从LinkedBlockingQueue获取任务来执行。</p>
+<p>FixedThreadPool使用无界队列LinkedBlockingQueue作为线程池的工作队列（队列的容量为Integer.MAX_VALUE）。</p>
+<h4 id="SingleThreadExecutor"><a href="#SingleThreadExecutor" class="headerlink" title="SingleThreadExecutor"></a>SingleThreadExecutor</h4><p>SingleThreadExecutor 是使用单个Worker线程的Executor.SingleThreadExecutor 的corePoolSize 和maximumPoolSize 被设置为1，其他参数与FixedTheadPool一样，SingleThreadExecutor 也使用无界队列LinkedBlockingQueue作为线程池的工作队列（队列容量为Integer.MAX_VALUE）</p>
+<p>1）如果当前运行的线程数少于corePoolSize（即线程池中无运行的线程），则创建一个新线程来执行任务。<br>2）在线程池完成预热之后（当前线程池中有一个运行的线程），将任务加入LinkedBlockingQueue。<br>3）线程执行完1中的任务后，会在一个无限循环中反复从LinkedBlockingQueue获取任务来执行。</p>
+<h4 id="CachedThreadPool-详解"><a href="#CachedThreadPool-详解" class="headerlink" title="CachedThreadPool 详解"></a>CachedThreadPool 详解</h4><p>CachedThreadPool是一个会根据需要创建线程的线程池，CachedThreadPool的corePoolSize被设置为0，即corePool为空，maximumPoolSize 被设置为Integer.MAX_VALUE,即maximumPool 是无界的，这里把keepAliveTime 设置为60L,意味着CachedThreadPool 中的空闲线程等待新任务的最长时间为60s, 空闲线程超过60s后将会被终止。CachedThreadPool 使用没有容量的SynchronousQueue作为线程池的工作队列，但是CachedThreadPool 的maximumPool 是无界的。这意味着，如果主线程提交任务的速度高于maximumPool中线程处理任务的速度时，CachedThreadPool 会不断创建新线程，极端情况下，CachedThreadPool 会因为创建过多线程而耗尽CPU和内存资源。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-19%20%E4%B8%8B%E5%8D%8810.06.16.png" width="60%"></p>
+<p>1）首先执行<code>SynchronousQueue.offer(Runnable task)</code>。如果当前maximumPool中有空闲线程正在执行<code>SynchronousQueue.poll（keepAliveTimeTimeUnit.NANOSECONDS)</code>，那么主线程执行offer操作与空闲线程执行的poll操作配对成功，主线程把任务交给空闲线程执行，execute()方法执行完成；否则执行下面的步骤2。<br>2）当初始maximumPool为空，或者maximumPool中当前没有空闲线程时，将没有线程执行<code>SynchronousQueue.poll(keepAliveTime，TimeUnit.NANOSECONDS)</code>。这种情况下，步骤1）将失败。此时<code>CachedThreadPool</code>会创建一个新线程执行任务，execute()方法执行完成。<br>3）在步骤2中新创建的线程将任务执行完后，会执行<code>SynchronousQueue.poll（keepAliveTime，TimeUnit.NANOSECONDS)</code>。这个poll操作会让空闲线程最多在SynchronousQueue中等待60秒钟。如果60秒钟内主线程提交了一个新任务（主线程执行步骤1）），那么这个空闲线程将执行主线程提交的新任务；否则，这个空闲线程将终止。由于空闲60秒的空闲线程会被终止，因此长时间保持空闲的CachedThreadPool不会使用任何资源。</p>
+<p>SynchronousQueue 是一个没有容量的阻塞队列，每个插入操作必须等待另一个线程的对应移除操作，反之亦然。CachedThreadPool 使用SynchronousQueue,把主线城提交的任务<strong>传递</strong>传递给空闲线程执行，CachedThreadPool 中任务传递的示意图如下</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-19%20%E4%B8%8B%E5%8D%8810.13.03.png" width="70%"></p>
+<h3 id="ScheduledThreadPoolExecutor-详解"><a href="#ScheduledThreadPoolExecutor-详解" class="headerlink" title="ScheduledThreadPoolExecutor 详解"></a>ScheduledThreadPoolExecutor 详解</h3><p>ScheduledThreadExecutor 继承自ThreadPoolExecutor,主要用来在给定的延迟之后运行任务，或者定期执行任务，ScheduledThreadPoolExecutor 可以在构造函数中指定多个对应的后台线程数。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-19%20%E4%B8%8B%E5%8D%8810.25.07.png" width="70%"></p>
 <h3 id="FutureTask-详解"><a href="#FutureTask-详解" class="headerlink" title="FutureTask 详解"></a>FutureTask 详解</h3><p>Future接口和实现Future接口的FutureTask类,代表异步计算的结果。</p>
-<h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>FutureTask除了实现Future接口外,还实现了Runnable接口。因此,FutureTask可以交给Executor执行,也可以由调用线程直接执行(FutureTask.run())。根FutureTask.run()方法被执行的时机,FutureTask可以处于下面3种状态。<br>1)未启动。FutureTask.run()方法还没有被执行之前,FutureTask处于未启动状态。当创建一个FutureTask,且没有执行FutureTask.run()方法之前,这个FutureTask处于未启动状态。<br>2)已启动。FutureTask.run()方法被执行的过程中,FutureTask处于已启动状态。<br>3)已完成。FutureTask.run()方法执行完后正常结束,或被取消(FutureTask.cancel(…)),或执行FutureTask.run()方法时抛出异常而异常结束,FutureTask处于已完成状态。</p>
+<h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>FutureTask除了实现Future接口外,还实现了Runnable接口。因此,FutureTask可以交给Executor执行,也可以由调用线程直接执行<code>(FutureTask.run())</code>。根FutureTask.run()方法被执行的时机,<code>FutureTask</code>可以处于下面3种状态。</p>
+<ul>
+<li>1)未启动。FutureTask.run()方法还没有被执行之前,FutureTask处于未启动状态。当创建一个FutureTask,且没有执行FutureTask.run()方法之前,这个FutureTask处于未启动状态。</li>
+<li>2)已启动。FutureTask.run()方法被执行的过程中,FutureTask处于已启动状态。</li>
+<li>3)已完成。FutureTask.run()方法执行完后正常结束,或被取消(FutureTask.cancel(…)),或执行FutureTask.run()方法时抛出异常而异常结束,FutureTask处于已完成状态。</li>
+</ul>
 <p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-20%2019-37-03.png" width="60%"></p>
 <p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-16%2022-30-14.png" alt=""></p>
+<p>当FutureTask 处于未启动或者已启动状态时，执行futureTask.get()方法将导致调用线程阻塞；当FutureTask 处于已完成状态时，执行FutureTask .get()方法会导致调用线程立即返回结果或抛出异常。</p>
+<p>当FutureTask 处于未启动状态时，执行FutureTask.cancel()方法将导致此任务永远不会被执行；当FutureTask处于已启动状态时，执行FutureTask.cancel(true) 方法将以中断执行此任务线程的方式来试图停止任务，当FutureTask 处于已启动状态时，执行FutureTask.cancel(false) 方法将不会对正在执行此任务的线程产生影响。当FutureTask处于已完成状态时，执行FutureTask.cancel()方法会返回false.</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-19%20%E4%B8%8B%E5%8D%8810.33.15.png" width="70%"></p>
+<h4 id="FutureTask-的使用-与实现"><a href="#FutureTask-的使用-与实现" class="headerlink" title="FutureTask 的使用 与实现"></a>FutureTask 的使用 与实现</h4><p>可以把FutureTask交给Executor执行，也可以通过ExecutorService.submit()方法返回一个utureTask，然后执行FutureTask.get()方法或FutureTask.cancel()方法，除此之外，还可以单独使用FutureTask。</p>
+<p>FutureTask 的实现是基于AQS的，</p>
 <blockquote>
 <p>参考文献:Java并发编程的艺术</p>
 </blockquote>
@@ -357,8 +390,8 @@
       </a>
     
     
-      <a class="next" href="/2018/01/19/并发包之Future/">
-        <span class="next-text nav-default">并发包之Future</span>
+      <a class="next" href="/2018/01/19/生产者消费者模式与阻塞队列/">
+        <span class="next-text nav-default">生产者消费者模式与阻塞队列</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
