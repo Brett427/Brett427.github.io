@@ -244,7 +244,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#队列同步器"><span class="toc-text">队列同步器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#state的访问方式有三种"><span class="toc-text">state的访问方式有三种:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义同步器时需要重写的方法"><span class="toc-text">自定义同步器时需要重写的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#流程"><span class="toc-text">流程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AQS-的实现分析"><span class="toc-text">AQS 的实现分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#同步队列"><span class="toc-text">同步队列</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程获取锁过程"><span class="toc-text">线程获取锁过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程释放锁过程："><span class="toc-text">线程释放锁过程：</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#队列同步器"><span class="toc-text">队列同步器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#state的访问方式有三种"><span class="toc-text">state的访问方式有三种:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义同步器时需要重写的方法"><span class="toc-text">自定义同步器时需要重写的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#流程"><span class="toc-text">流程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Voliatile"><span class="toc-text">Voliatile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AQS-的实现分析"><span class="toc-text">AQS 的实现分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Acquire-int"><span class="toc-text">Acquire(int)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tryAcquire-int"><span class="toc-text">tryAcquire(int)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#addWaiter-Node"><span class="toc-text">addWaiter(Node)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#enq-Node"><span class="toc-text">enq(Node)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#acquireQueued-Node-int"><span class="toc-text">acquireQueued(Node,int)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重入锁的实现原理"><span class="toc-text">重入锁的实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#读写锁的实现原理"><span class="toc-text">读写锁的实现原理</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
@@ -264,7 +264,7 @@
 <li>compareAndSetState()</li>
 </ul>
 <p>AQS定义两种资源共享方式：Exclusive（独占，只有一个线程能执行，如ReentrantLock）和Share（共享，多个线程可同时执行，如Semaphore/CountDownLatch）。</p>
-<h4 id="自定义同步器时需要重写的方法"><a href="#自定义同步器时需要重写的方法" class="headerlink" title="自定义同步器时需要重写的方法"></a>自定义同步器时需要重写的方法</h4><p><strong>不同的自定义同步器争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源state的获取与释放方式即可</strong>，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS已经在底层实现好了。自定义同步器实现时主要实现以下几种方法：</p>
+<h4 id="自定义同步器时需要重写的方法"><a href="#自定义同步器时需要重写的方法" class="headerlink" title="自定义同步器时需要重写的方法"></a>自定义同步器时需要重写的方法</h4><p><strong>不同的自定义同步器争用共享资源的方式也不同。自定义同步器在实现时只需要实现共享资源state的获取与释放方式即可</strong>，至于具体线程等待队列的维护（如获取资源失败入队/唤醒出队等），AQS已经在底层实现好了。<strong>自定义同步器</strong>实现时主要实现以下几种方法：</p>
 <ul>
 <li>isHeldExclusively()：该线程是否正在独占资源。只有用到condition才需要去实现它。</li>
 <li>tryAcquire(int)：独占方式。尝试获取资源，成功则返回true，失败则返回false。</li>
@@ -282,39 +282,44 @@
 <li>acquireQueued()使线程在等待队列中休息，有机会时（轮到自己，会被unpark()）会去尝试获取资源。获取到资源后才返回。如果在整个等待过程中被中断过，则返回true，否则返回false。</li>
 <li>如果线程在等待过程中被中断过，它是不响应的。只是获取资源后才再进行自我中断selfInterrupt()，将中断补上。</li>
 </ol>
-<h4 id="AQS-的实现分析"><a href="#AQS-的实现分析" class="headerlink" title="AQS 的实现分析"></a>AQS 的实现分析</h4><p>主要包括同步队列,独占式同步状态获取与释放,共享式同步状态获取与释放.以及超时获取同步状态等同步器的核心数据结构和模板方法</p>
-<h5 id="同步队列"><a href="#同步队列" class="headerlink" title="同步队列"></a>同步队列</h5><p>同步器依赖内部一个FIFO的双向队列来完成同步状态的管理,当前线程获取同步状态失败时,同步器会把当前线程以及等待状态构造成一个节点并将其加入同步队列,同时会阻塞当前线程,当同步状态释放时,会把首节点中的线程唤醒,使其再次尝试获取同步状态.</p>
-<p>节点是构成同步队列的基础,同步器拥有首节点和尾节点,没有成功获取同步状态的线程将会成为节点加入该队列的尾部,同步队列的基本结构如下图所示:<strong>下图中头结点head是此时获取到同步器的节点</strong> tail 节点始终指向队列中的最后一个元素。</p>
-<p>每个节点中， 除了存储了当前线程，前后节点的引用以外，还有一个waitStatus变量，用于描述节点当前的状态。多线程并发执行时，队列中会有多个节点存在，这个waitStatus其实代表对应线程的状态：有的线程可能获取锁因为某些原因放弃竞争；有的线程在等待满足条件，满足之后才能执行等等。一共有4中状态：</p>
+<h4 id="Voliatile"><a href="#Voliatile" class="headerlink" title="Voliatile"></a>Voliatile</h4><p>为了保持可见性，prev ，next 这两个Node 类型的节点指针都是volatile 的，waitStatus(每个节点的等待状态也是)， thread(获取同步状态的线程也是) 当然，同步状态status 肯定也是。</p>
+<h3 id="AQS-的实现分析"><a href="#AQS-的实现分析" class="headerlink" title="AQS 的实现分析"></a>AQS 的实现分析</h3><h4 id="Acquire-int"><a href="#Acquire-int" class="headerlink" title="Acquire(int)"></a>Acquire(int)</h4><p>此方法是独占模式下线程获取共享资源的顶层入口。如果获取到资源，线程直接返回，否则进入等待队列，直到获取到资源为止，且整个过程忽略中断的影响。这也正是lock()的语义，当然不仅仅只限于lock()。获取到资源后，线程就可以去执行其临界区代码了。下面是acquire()的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">         acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">         selfInterrupt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数流程包括：</p>
+<p>1 tryAcquire() 尝试直接去获取资源，如果成功则直接返回。</p>
+<p>2 addWaiter() 将该线程加入等待队列的尾部，并标记为独占模式。</p>
+<p>3 acquireQueued() 使线程在等待队列中获取资源，一直获取到资源后才返回，如果在整个等待过程中被中断过，则返回true，否则返回false。</p>
+<p>4 如果线程在等待过程中被中断过，它是不响应的。只是获取资源后才再进行自我中断selfInterrupt()，将中断补上。</p>
+<p><strong>如果直接获取到同步状态或者在队列中获取到就算获取到了同步状态</strong></p>
+<h4 id="tryAcquire-int"><a href="#tryAcquire-int" class="headerlink" title="tryAcquire(int)"></a>tryAcquire(int)</h4><p>此方法尝试去获取独占资源。如果获取成功，则直接返回true，否则直接返回false。这也正是tryLock()的语义，当然不仅仅只限于tryLock()。如下是tryAcquire()的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<p>AQS这里只定义了一个接口，具体资源的获取交由自定义同步器去实现了（通过state的get/set/CAS）！！！至于能不能重入，能不能加塞，那就看具体的自定义同步器怎么去设计了！！！当然，自定义同步器在进行资源访问时要考虑线程安全的影响。</p>
+<h4 id="addWaiter-Node"><a href="#addWaiter-Node" class="headerlink" title="addWaiter(Node)"></a>addWaiter(Node)</h4><p>此方法用于将当前线程加入到等待队列的队尾，并返回当前线程所在的结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">addWaiter</span><span class="params">(Node mode)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//以给定模式构造结点。mode有两种：EXCLUSIVE（独占）和SHARED（共享）</span></span><br><span class="line">    Node node = <span class="keyword">new</span> Node(Thread.currentThread(), mode);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//尝试快速方式直接放到队尾。</span></span><br><span class="line">    Node pred = tail;</span><br><span class="line">    <span class="keyword">if</span> (pred != <span class="keyword">null</span>) &#123;</span><br><span class="line">        node.prev = pred;</span><br><span class="line">        <span class="keyword">if</span> (compareAndSetTail(pred, node)) &#123;</span><br><span class="line">            pred.next = node;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//上一步失败则通过enq入队。</span></span><br><span class="line">    enq(node);</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Node结点是对每一个访问同步代码的线程的封装，其包含了需要同步的线程本身以及线程的状态，如是否被阻塞，是否等待唤醒，是否已经被取消等。变量waitStatus则表示当前被封装成Node结点的等待状态，共有4种取值CANCELLED、SIGNAL、CONDITION、PROPAGATE。</p>
+<ul>
+<li>CANCELLED：值为1，在同步队列中等待的线程等待超时或被中断，需要从同步队列中取消该Node的结点，其结点的waitStatus为CANCELLED，即结束状态，进入该状态后的结点将不会再变化。</li>
+<li>SIGNAL：值为-1，被标识为该等待唤醒状态的后继结点，当其前继结点的线程释放了同步锁或被取消，将会通知该后继结点的线程执行。说白了，就是处于唤醒状态，只要前继结点释放锁，就会通知标识为SIGNAL状态的后继结点的线程执行。</li>
+<li>CONDITION：值为-2，与Condition相关，该标识的结点处于<strong>等待队列</strong>中，结点的线程等待在Condition上，当其他线程调用了Condition的signal()方法后，CONDITION状态的结点将<strong>从等待队列转移到同步队列中</strong>，等待获取同步锁。</li>
+<li>PROPAGATE：值为-3，与共享模式相关，在共享模式中，该状态标识结点的线程处于可运行状态。</li>
+<li>0状态：值为0，代表初始化状态。</li>
+</ul>
+<p>AQS在判断状态时，通过用waitStatus&gt;0表示取消状态，而waitStatus&lt;0表示有效状态。</p>
+<h4 id="enq-Node"><a href="#enq-Node" class="headerlink" title="enq(Node)"></a>enq(Node)</h4><p>此方法用于将node 加入队尾。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Node <span class="title">enq</span><span class="params">(<span class="keyword">final</span> Node node)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//CAS"自旋"，直到成功加入队尾</span></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        Node t = tail;</span><br><span class="line">        <span class="keyword">if</span> (t == <span class="keyword">null</span>) &#123; <span class="comment">// 队列为空，创建一个空的标志结点作为head结点，并将tail也指向它。</span></span><br><span class="line">            <span class="keyword">if</span> (compareAndSetHead(<span class="keyword">new</span> Node()))</span><br><span class="line">                tail = head;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;<span class="comment">//正常流程，放入队尾</span></span><br><span class="line">            node.prev = t;</span><br><span class="line">            <span class="keyword">if</span> (compareAndSetTail(t, node)) &#123;</span><br><span class="line">                t.next = node;</span><br><span class="line">                <span class="keyword">return</span> t;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="acquireQueued-Node-int"><a href="#acquireQueued-Node-int" class="headerlink" title="acquireQueued(Node,int)"></a>acquireQueued(Node,int)</h4><p>OK，通过tryAcquire()和addWaiter()，该线程获取资源失败，已经被放入等待队列尾部了。聪明的你立刻应该能想到该线程下一部该干什么了吧：<strong>进入等待状态休息，直到其他线程彻底释放资源后唤醒自己，自己再拿到资源，然后就可以去干自己想干的事了</strong>。没错，就是这样！是不是跟医院排队拿号有点相似~~acquireQueued()就是干这件事：<strong>在等待队列中排队拿号（中间没其它事干可以休息），直到拿到号后再返回</strong>。</p>
+<p><strong>节点进入同步队列后，就进入了一个自旋的状态，每个节点（每个线程）都在自省的观察，当条件满足（这里的条件就是前驱是头节点且拿到了同步状态，见下面感叹号标识的那一行，），获取到了同步状态，就可以从这个自旋状态中退出。否则依然保留在这个自旋状态中（并阻塞这个节点表示的线程，也就是说，每个节点都会自旋，但是只有发现自己的前驱是头节点且获取同步状态后才会从自旋状态出退出，通过LockSupport.unpark()这个方法来唤醒阻塞的节点。其他前驱不是头结点的仍然一直阻塞在自旋状态中，并且，先知道自己的前驱是头结点，才会尝试获取同步状态）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">acquireQueued</span><span class="params">(<span class="keyword">final</span> Node node, <span class="keyword">int</span> arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> failed = <span class="keyword">true</span>;<span class="comment">//标记是否成功拿到资源</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">boolean</span> interrupted = <span class="keyword">false</span>;<span class="comment">//标记等待过程中是否被中断过</span></span><br><span class="line">        <span class="comment">//又是一个“自旋”！</span></span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">final</span> Node p = node.predecessor();<span class="comment">//拿到前驱</span></span><br><span class="line">            <span class="comment">//如果前驱是head，即该结点已成老二，那么便有资格去尝试获取资源（可能是老大释放完资源唤醒自己的，当然也可能被interrupt了）。</span></span><br><span class="line"> &lt;!!!!!!!!!&gt;  <span class="keyword">if</span> (p == head &amp;&amp; tryAcquire(arg)) &#123;</span><br><span class="line">                setHead(node);<span class="comment">//拿到资源后，将head指向该结点。所以head所指的标杆结点，就是当前获取到资源的那个结点或null。</span></span><br><span class="line">                p.next = <span class="keyword">null</span>; <span class="comment">// setHead中node.prev已置为null，此处再将head.next置为null，就是为了方便GC回收以前的head结点。也就意味着之前拿完资源的结点出队了！</span></span><br><span class="line">                failed = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">return</span> interrupted;<span class="comment">//返回等待过程中是否被中断过</span></span><br><span class="line">            &#125;        </span><br><span class="line">            <span class="comment">//如果自己可以休息了，就进入waiting状态，直到被unpark()</span></span><br><span class="line">            <span class="keyword">if</span> (shouldParkAfterFailedAcquire(p, node) &amp;&amp;</span><br><span class="line">                parkAndCheckInterrupt())</span><br><span class="line">                interrupted = <span class="keyword">true</span>;<span class="comment">//如果等待过程中被中断过，哪怕只有那么一次，就将interrupted标记为true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (failed)</span><br><span class="line">            cancelAcquire(node);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ol>
-<li>CANCELLED 取消状态</li>
-<li>SIGNAL 等待触发状态</li>
-<li>CONDITION 等待条件状态</li>
-<li>PROPAGATE 状态需要向后传播</li>
+<li>结点进入队尾后，检查状态，找到安全休息点；</li>
+<li>调用park()进入waiting状态，等待unpark()或interrupt()唤醒自己；</li>
+<li>被唤醒后，看自己是不是有资格能拿到号。如果拿到，head指向当前结点，并返回从入队到拿到号的整个过程中是否被中断过；如果没拿到，继续流程1。</li>
 </ol>
-<p>等待队列是FIFO先进先出，只有前一个节点的状态为SIGNAL时，当前节点的线程才能被挂起。 </p>
-<p><img src="http://two-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-03-16%2016-19-15.png?sign=A92z/NwpTnTLlvJl765sYRKqXU9hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTIzNzgwMzk4JnQ9MTUyMTE4ODM5OCZyPTk1MjU4NzI3NSZmPS9TY3JlZW5zaG90JTIwZnJvbSUyMDIwMTgtMDMtMTYlMjAxNi0xOS0xNS5wbmcmYj10d28=" alt=""></p>
-<p>同步器包含了两个节点类型的引用,一个指向头节点,另一个指向尾节点,因为当一个线程成功的获取了同步状态,其他线程将无法获取到同步状态,转而被构造成为节点并加入到同步队列中,而这个加入的过程必须是线程安全的,因此同步器提供了一个基于CAS的设置尾节点的方法:<code>compareAndSetTail(Node expect,Node update)</code>,它需要传递当前线程认为的尾节点和当前节点,只有设置成功后,当前节点才正式与之前的尾节点建立关联.</p>
-<h4 id="线程获取锁过程"><a href="#线程获取锁过程" class="headerlink" title="线程获取锁过程"></a>线程获取锁过程</h4><p>1线程A执行CAS执行成功，state值被修改并返回true，线程A继续执行。</p>
-<p>2线程A执行CAS指令失败，说明线程B也在执行CAS指令且成功，这种情况下线程A会执行步骤3。</p>
-<p>3生成新Node节点node，并通过CAS指令插入到等待队列的队尾（同一时刻可能会有多个Node节点插入到等待队列中），如果tail节点为空，则将head节点指向一个空节点（代表线程B），</p>
-<p>4node插入到队尾后，该线程不会立马挂起，会进行自旋操作。因为在node的插入过程，线程B（即之前没有阻塞的线程）可能已经执行完成，所以要判断该node的前一个节点pred是否为head节点（代表线程B），如果pred == head，表明当前节点是队列中第一个“有效的”节点，因此再次尝试tryAcquire获取锁，</p>
-<ul>
-<li>如果成功获取到锁，表明线程B已经执行完成，线程A不需要挂起。</li>
-<li>如果获取失败，表示线程B还未完成，至少还未修改state值。进行步骤5。</li>
-</ul>
-<p>5前面我们已经说过只有前一个节点pred的线程状态为SIGNAL时，当前节点的线程才能被挂起。</p>
-<ul>
-<li>如果pred的waitStatus == 0，则通过CAS指令修改waitStatus为Node.SIGNAL。</li>
-<li>如果pred的waitStatus &gt; 0，表明pred的线程状态CANCELLED，需从队列中删除。</li>
-<li>如果pred的waitStatus为Node.SIGNAL，则通过LockSupport.park()方法把线程A挂起，并等待被唤醒，被唤醒后进入步骤6。</li>
-</ul>
-<p>6线程每次被唤醒时，都要进行中断检测，如果发现当前线程被中断，那么抛出InterruptedException并退出循环。从无限循环的代码可以看出，并不是被唤醒的线程一定能获得锁，必须调用tryAccquire重新竞争，因为锁是非公平的，有可能被新加入的线程获得，从而导致刚被唤醒的线程再次被阻塞，这个细节充分体现了“非公平”的精髓。</p>
-<h4 id="线程释放锁过程："><a href="#线程释放锁过程：" class="headerlink" title="线程释放锁过程："></a>线程释放锁过程：</h4><p>1如果头结点head的waitStatus值为-1，则用CAS指令重置为0；</p>
-<p>2找到waitStatus值小于0的节点s，通过LockSupport.unpark(s.thread)唤醒线程。</p>
-<blockquote>
-<p><a href="https://www.cnblogs.com/waterystone/p/4920797.html" target="_blank" rel="noopener">https://www.cnblogs.com/waterystone/p/4920797.html</a></p>
-</blockquote>
+<h4 id="重入锁的实现原理"><a href="#重入锁的实现原理" class="headerlink" title="重入锁的实现原理"></a>重入锁的实现原理</h4><p>重入锁的非公平方法增加了再次获取同步状态的逻辑，非重入锁只要status==1 表示获取锁，重入锁通过判断当前线程是否为获取锁的线程来决定获取操作能否成功。如果获取锁的线程再次请求，则将同步状态值进行增加并返回ture, 表示获取同步状态成功。</p>
+<p>如果是公平锁，还应该在判断条件那加上hasQueuedPredecessors()方法，即加入了同步队列中当前节点是否有前驱节点的判断，如果该方法返回true,则表示有线程比当前线程更早的请求获取锁，因此需要等待前驱线程获取并释放锁之后才能继续获取锁。</p>
+<h4 id="读写锁的实现原理"><a href="#读写锁的实现原理" class="headerlink" title="读写锁的实现原理"></a>读写锁的实现原理</h4><p>读写锁同样依赖AQS, 读写锁将变量分成了两个部分，高16位表示读，低16位表示写，读写锁通过位运算快速的确定读和写各自的状态，</p>
+<p>写锁是一个支持重进入的排它锁，如果当前线程已经获取了写锁，则增加写状态，如果当前线程在获取写锁时，读锁已经被获取或者改线程不是已经获取写锁的线程，则当前线程进入等待状态。</p>
+<p>写锁也有可能锁降级，锁降级指的是把持住写锁，再获取到读锁，随后释放写锁的过程。</p>
 
       
     </div>
@@ -358,15 +363,15 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/01/19/生产者消费者模式与阻塞队列/">
+      <a class="prev" href="/2018/01/19/并发包之Future/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">生产者消费者模式与阻塞队列</span>
+        <span class="prev-text nav-default">并发包之Future</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/2018/01/19/锁的升级与对比/">
-        <span class="next-text nav-default">锁的升级与对比</span>
+      <a class="next" href="/2018/01/19/CAS/">
+        <span class="next-text nav-default">Java多线程之CAS</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>

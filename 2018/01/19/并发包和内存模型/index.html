@@ -244,14 +244,16 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Current包的实现"><span class="toc-text">Current包的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-内存模型"><span class="toc-text">Java 内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#happens-before规则"><span class="toc-text">happens - before规则</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java内存模型的基础"><span class="toc-text">Java内存模型的基础</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Current包的实现"><span class="toc-text">Current包的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-内存模型"><span class="toc-text">Java 内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#happens-before规则"><span class="toc-text">happens - before规则</span></a>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="Current包的实现"><a href="#Current包的实现" class="headerlink" title="Current包的实现"></a>Current包的实现</h2><p>由于java的CAS同时具有 volatile 读和volatile写的内存语义，因此Java线程之间的通信现在有了下面四种方式：</p>
+        <h3 id="Java内存模型的基础"><a href="#Java内存模型的基础" class="headerlink" title="Java内存模型的基础"></a>Java内存模型的基础</h3><p>并发编程中，需要处理两个关键问题，线程之间如何通信和线程之间如何同步。通信是指线程之间以何种机制来交换信息，线程间的通信机制有两种，共享内存和消息传递。</p>
+<p>Java线程之间的通信由Java内存模型JMM控制，JMM定义了线程和主内存之间的抽象关系，</p>
+<h2 id="Current包的实现"><a href="#Current包的实现" class="headerlink" title="Current包的实现"></a>Current包的实现</h2><p>由于java的CAS同时具有 volatile 读和volatile写的内存语义，因此Java线程之间的通信现在有了下面四种方式：</p>
 <ol>
 <li>A线程写volatile变量，随后B线程读这个volatile变量。</li>
 <li>A线程写volatile变量，随后B线程用CAS更新这个volatile变量。</li>
