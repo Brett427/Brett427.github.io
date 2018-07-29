@@ -244,7 +244,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java内存模型的基础"><span class="toc-text">Java内存模型的基础</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Current包的实现"><span class="toc-text">Current包的实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-内存模型"><span class="toc-text">Java 内存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#happens-before规则"><span class="toc-text">happens - before规则</span></a>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java内存模型的基础"><span class="toc-text">Java内存模型的基础</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-内存模型"><span class="toc-text">Java 内存模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#happens-before规则"><span class="toc-text">happens - before规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#as-if-serial-语义"><span class="toc-text">as-if-serial 语义</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#顺序一致性（理想化的模型）"><span class="toc-text">顺序一致性（理想化的模型）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#volatile-的内存语义"><span class="toc-text">volatile 的内存语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#锁的内存语义"><span class="toc-text">锁的内存语义</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Current包的实现"><span class="toc-text">Current包的实现</span></a>
     </div>
   </div>
 
@@ -252,7 +252,43 @@
     <div class="post-content">
       
         <h3 id="Java内存模型的基础"><a href="#Java内存模型的基础" class="headerlink" title="Java内存模型的基础"></a>Java内存模型的基础</h3><p>并发编程中，需要处理两个关键问题，线程之间如何通信和线程之间如何同步。通信是指线程之间以何种机制来交换信息，线程间的通信机制有两种，共享内存和消息传递。</p>
-<p>Java线程之间的通信由Java内存模型JMM控制，JMM定义了线程和主内存之间的抽象关系，</p>
+<p>在共享内存的并发模型里，线程之间共享程序的公共状态，通过写-读内存中的公共状态进行隐式通信，</p>
+<p>Java的并发采用的是<strong>共享内存模型</strong>，Java线程之间的通信总是隐式进行，整个通信过程对程序员完全透明。</p>
+<h2 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h2><p>Java线程之间的通信由Java内存模型JMM控制，JMM决定一个线程对共此享变量的写入何时对另一个线程可见，从抽象的角度讲，JMM定义了线程和主内存之间的抽象关系。</p>
+<p>Java 内存模型把虚拟机内部划分为线程栈和堆。　每一个运行在Java虚拟机中的线程都有自己的线程栈。线程栈包含了这个线程调用的方法当前执行点相关的信息。一个线程只能访问自己的线程栈。一个线程创建的本地变量对其他线程不可见，仅自己可见。即使两个线程执行同样的代码，这两个线程任然在在自己的线程栈中的代码来创建本地变量。因此，每个线程拥有每个本地变量的独有版本。所有原始类型的本地变量都存放在线程栈上，因此对其他线程不可见。一个线程可能向另一个线程传递一个原始类型变量的拷贝，但是它不能共享这个原始类型变量自身。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/2017-10-21-2.png" alt=""></p>
+<p>一个本地变量可能是原始类型，这种情况下，它总是待在线程栈上。</p>
+<p>一个本地变量也可能是指向一个对象的一个引用，这种情况下，这个引用存放在线程栈上，对象本身还是在堆中。</p>
+<p>一个对象可能包含方法，这些方法可能包含本地变量。这些本地变量任然存放在线程栈上，即使这些方法所属的对象存放在堆上。</p>
+<p>一个对象的成员变量可能随着这个对象自身存放在堆上。不管这个成员变量是原始类型还是引用类型。</p>
+<p>静态成员变量跟随着类定义一起也存放在堆上。</p>
+<p>存放在堆上的对象可以被所有持有对这个对象引用的线程访问。当一个线程可以访问一个对象时，它也可以访问这个对象的成员变量。如果两个线程同时调用同一个对象上的同一个方法，它们将会都访问这个对象的成员变量，但是每一个线程都拥有这个本地变量的私有拷贝。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/2017-10-21-3.png" alt=""></p>
+<h4 id="happens-before规则"><a href="#happens-before规则" class="headerlink" title="happens - before规则"></a>happens - before规则</h4><p>JDK5开始，使用happens-before的概念来阐述操作之间的内存可见性，在JMM中，如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系，这两个操作可以是一个线程内，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</span><br><span class="line"><span class="number">2</span> 监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</span><br><span class="line"><span class="number">3</span> <span class="keyword">volatile</span> 变量规则：对一个<span class="keyword">volatile</span>域的写，happens-before于任意后续对这个<span class="keyword">volatile</span>域的读。</span><br><span class="line"><span class="number">4</span> 传递性：如果A happens-before B B happens-before C 那么A happens-before C</span><br><span class="line"><span class="number">5</span> start()规则：如果线程A执行ThreadB.start()(启动线程B)那么A线程的threadB.start()操作happens-before 线程B中的任意操作。</span><br><span class="line"><span class="number">6</span> join规则：如果线程A执行ThreadB.join()并成功返回，那么B中的任意操作happens-before线程A从ThreadB.join()操作成功返回。</span><br></pre></td></tr></table></figure>
+<p>两个操作之间具有happens-before关系，并不意味着前一个操作必须要在后一个操作之前执行，happens-before仅仅要求前一个操作的结果对后一个操作可见，且前一个操作按顺序排在第二个操作之前。</p>
+<h4 id="as-if-serial-语义"><a href="#as-if-serial-语义" class="headerlink" title="as-if-serial 语义"></a>as-if-serial 语义</h4><p>As-if-serial 的意思是 不管怎么重排序，程序的执行结果不能被改变，编译器，runtime和处理器都必须遵守as-if-serial 语义。</p>
+<p>为了遵守as-if-serial 语义，编译器和处理器不会对存在数据依赖关系的操作做重排序，因为这种重排序会改变执行结果，但是，如果操作之前不存在数据依赖关系，这些操作就可能被编译器和处理器重排序。</p>
+<h3 id="顺序一致性（理想化的模型）"><a href="#顺序一致性（理想化的模型）" class="headerlink" title="顺序一致性（理想化的模型）"></a>顺序一致性（理想化的模型）</h3><p>顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参照。</p>
+<p>顺序一致性模型有两大特性1 一个线程中的所有操作必须按照程序的顺序来执行。</p>
+<p>2（不管程序是否同步）所有线程都只能看到一个单一的操作执行顺序，在顺序一致性内存模型中，每个操作都必须原子执行且立刻对所有线程可见。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-29%20%E4%B8%8B%E5%8D%888.27.48.png" width="50%"></p>
+<h4 id="volatile-的内存语义"><a href="#volatile-的内存语义" class="headerlink" title="volatile 的内存语义"></a>volatile 的内存语义</h4><ul>
+<li>特性：可见性 原子性</li>
+</ul>
+<p>锁的happens-before规则保证释放锁和获取锁的两个线程之间的内存可见性，这意味着对一个volatile 变量的读，总是能看到任意线程对这个volatile 变量最后的写入。</p>
+<p>同时，对任意单个volatile变量的读、写具有原子性，但类似volaile++这种复合操作不具有原子性。</p>
+<ul>
+<li>写-读的内存语义</li>
+</ul>
+<p>线程A写一个volatile变量，实质上是线程A向接下来将要读这个变量的某个线程发出了（其对共享变量所做修改的）消息</p>
+<p>线程B读一个volatile变量，实质上是线程B接收了之前某个线程发出（在写这个volatile变量之前对共享变量所做修改的）消息。</p>
+<p>线程A写一个volatile变量，随后线程B读这个volatile 变量，这个过程实质上是线程A通过主内存向线程B发送消息。</p>
+<p><strong>内存语义的实现主要通过插入内存屏障来实现</strong></p>
+<h4 id="锁的内存语义"><a href="#锁的内存语义" class="headerlink" title="锁的内存语义"></a>锁的内存语义</h4><p>锁除了让临界区互斥执行外，还可以让释放锁的线程向获取同一个锁的线程发送消息。</p>
+<p>线程A释放一个锁，实质上是线程A向接下来将要获取这个锁的某个线程发出了（线程A对共享变量做修改的）消息</p>
+<p>线程B获取一个锁，实质上是线程B接收了之前某个线程发出的（在释放这个锁之前对共享变量所做修改的）消息</p>
+<p>线程A释放锁，随后线程B获取这个锁，这个过程实质上是线程A通过主内存向线程B发送消息。</p>
 <h2 id="Current包的实现"><a href="#Current包的实现" class="headerlink" title="Current包的实现"></a>Current包的实现</h2><p>由于java的CAS同时具有 volatile 读和volatile写的内存语义，因此Java线程之间的通信现在有了下面四种方式：</p>
 <ol>
 <li>A线程写volatile变量，随后B线程读这个volatile变量。</li>
@@ -269,20 +305,6 @@
 </ol>
 <p>AQS，非阻塞数据结构和原子变量类（java.util.concurrent.atomic包中的类），这些concurrent包中的基础类都是使用这种模式来实现的，而concurrent包中的高层类又是依赖于这些基础类来实现的。从整体来看，concurrent包的实现示意图如下：</p>
 <p><img src="http://blog-1252095801.cosgz.myqcloud.com/171111.png" width="50%"></p>
-<h2 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h2><p>Java内存模型规范了Java虚拟机与计算机内存是如何协同工作的。Java虚拟机是一个完整的计算机的一个模型，因此这个模型自然也包含一个内存模型——又称为Java内存模型。</p>
-<p>Java 内存模型把虚拟机内部划分为线程栈和堆。　每一个运行在Java虚拟机中的线程都有自己的线程栈。线程栈包含了这个线程调用的方法当前执行点相关的信息。一个线程只能访问自己的线程栈。一个线程创建的本地变量对其他线程不可见，仅自己可见。即使两个线程执行同样的代码，这两个线程任然在在自己的线程栈中的代码来创建本地变量。因此，每个线程拥有每个本地变量的独有版本。所有原始类型的本地变量都存放在线程栈上，因此对其他线程不可见。一个线程可能向另一个线程传递一个原始类型变量的拷贝，但是它不能共享这个原始类型变量自身。</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/2017-10-21-2.png" alt=""></p>
-<p>一个本地变量可能是原始类型，这种情况下，它总是待在线程栈上。</p>
-<p>一个本地变量也可能是指向一个对象的一个引用，这种情况下，这个引用存放在线程栈上，对象本身还是在堆中。</p>
-<p>一个对象可能包含方法，这些方法可能包含本地变量。这些本地变量任然存放在线程栈上，即使这些方法所属的对象存放在堆上。</p>
-<p>一个对象的成员变量可能随着这个对象自身存放在堆上。不管这个成员变量是原始类型还是引用类型。</p>
-<p>静态成员变量跟随着类定义一起也存放在堆上。</p>
-<p>存放在堆上的对象可以被所有持有对这个对象引用的线程访问。当一个线程可以访问一个对象时，它也可以访问这个对象的成员变量。如果两个线程同时调用同一个对象上的同一个方法，它们将会都访问这个对象的成员变量，但是每一个线程都拥有这个本地变量的私有拷贝。</p>
-<p><img src="http://blog-1252095801.cosgz.myqcloud.com/2017-10-21-3.png" alt=""></p>
-<p>Java内存模式是通过各种操作来定义的,包括对变量的读/写操作.监视器的加锁和释放操作,以及线程的启动和合并操作.JMM为程序中所有的操作定义了一个偏序关系,称之为Happens-before.要想保证执行操作B的线程看到操作A的结果,那么A,B之间必须满足happens-before关系,如果两个操作之间缺乏happens-before关系,那么JVM可以对他们任意的排序.</p>
-<h2 id="happens-before规则"><a href="#happens-before规则" class="headerlink" title="happens - before规则"></a>happens - before规则</h2><p>现代的CPU里都有很多寄存器，多级cache，他们比内存的存取速度高多了。某个线程执行时，内存中的一份数据，会存在于该线程的工作存储中（<strong>working memory，是cache和寄存器的一个抽象，为避免混淆，这里称其为工作存储，每个线程都有自己的工作存储</strong>）并在某个特定时候回写到内存。单线程时，这没有问题，如果是多线程要同时访问同一个变量呢？内存中一个变量会存在于多个工作存储中，线程1修改了变量a的值什么时候对线程2可见？此外，编译器或运行时为了效率可以在允许的时候对指令进行<strong>重排序</strong>，重排序后的执行顺序就与代码不一致了，这样线程2读取某个变量的时候线程1可能还没有进行写入操作呢，虽然代码顺序上写操作是在前面的。这就是可见性问题的由来。指令冲排序的原因是为了让CPU在执行流水线时尽可能少的中断,中断一次的开销很大.</p>
-<p>我们无法枚举所有的场景来规定某个线程修改的变量何时对另一个线程可见。但可以制定一些通用的规则，这就是happens-before。它是一个偏序关系 。happens-before规则不是描述实际操作的先后顺序，<em>它是用来描述可见性的一种规则。也就是说happens-before定义了一些规则，这些规则对程序员来说，就是为程序员提供了内存可见性的保证，程序员通过这些规则就知道哪些是可见的，哪些是不可见的了。</em>（实际CPU执行时可能并不是，但是都被JMM屏蔽掉了，程序员按照happens-before规则就是对的。）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 程序顺序规则：一个线程中的每个操作，happens-before于该线程中的任意后续操作。</span><br><span class="line"><span class="number">2</span> 监视器锁规则：对一个锁的解锁，happens-before于随后对这个锁的加锁。</span><br><span class="line"><span class="number">3</span> <span class="keyword">volatile</span> 变量规则：对一个<span class="keyword">volatile</span>域的写，happens-before于任意后续对这个<span class="keyword">volatile</span>域的读。</span><br><span class="line"><span class="number">4</span> 传递性：如果A happens-before B B happens-before C 那么A happens-before C</span><br><span class="line"><span class="number">5</span> start()规则：如果线程A执行ThreadB.start()(启动线程B)那么A线程的threadB.start()操作happens-       before 线程B中的任意操作。</span><br><span class="line"><span class="number">6</span> join规则：如果线程A执行ThreadB.join()并成功返回，那么B中的任意操作happens-before线程A从ThreadB.join()操作成功返回。</span><br></pre></td></tr></table></figure>
 <p>## </p>
 
       
