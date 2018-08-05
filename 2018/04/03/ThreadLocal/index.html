@@ -249,7 +249,11 @@
 
     <div class="post-content">
       
-        <h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><h4 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h4><p>首先，它是一个数据结构，有点像HashMap，可以保存<code>&quot;key : value&quot;</code>键值对，但是一个ThreadLocal只能保存一个，并且各个线程的数据互不干扰。</p>
+        <h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><h4 id="ThreadLocal-是什么"><a href="#ThreadLocal-是什么" class="headerlink" title="ThreadLocal 是什么"></a>ThreadLocal 是什么</h4><p>threadLocal ，很多地方叫做线程本地变量，也有些地方叫做线程本地存储，ThreadLocal为变量在每个线程中都创建了一个副本，那么每个线程都可以访问自己内部的副本变量。</p>
+<p>先看ThreadLocal 类提供的几个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span> <span class="params">(T value)</span></span>&#123; &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> T <span class="title">initialValue</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>get() 方法是用来获取ThreadLocal 在当前线程中保存的变量副本，set()用来设置当前线程中变量的副本，remove() 用来移除当前线程中变量的副本，initialValue()是一个protect方法，一般是用来在使用时进行重写的，它是一个延迟加载方法。</p>
+<p>首先，它是一个数据结构，有点像HashMap，可以保存<code>&quot;key : value&quot;</code>键值对，但是一个ThreadLocal只能保存一个，并且各个线程的数据互不干扰。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ThreadLocal&lt;String&gt; localName = <span class="keyword">new</span> ThreadLocal();</span><br><span class="line">localName.set(<span class="string">"wkn"</span>);</span><br><span class="line">String name = localName.get();</span><br></pre></td></tr></table></figure>
 <p>在线程1中初始化了一个ThreadLocal对象localName，并通过set方法，保存了一个值 <code>wkn</code>，同时在线程1中通过 <code>localName.get()</code>可以拿到之前设置的值，但是如果在线程2中，拿到的将是一个null。</p>
 <p>下面是<code>set(T value)</code>和<code>get()</code>方法的源码</p>
@@ -257,7 +261,7 @@
 <p>可以发现，每个线程中都有一个 <code>ThreadLocalMap</code>数据结构，当执行set方法时，其值是保存在当前线程的 <code>threadLocals</code>变量中，当执行set方法中，是从当前线程的 <code>threadLocals</code>变量获取。</p>
 <p>所以在线程1中set的值，对线程2来说是摸不到的，而且在线程2中重新set的话，也不会影响到线程1中的值，保证了线程之间不会相互干扰。</p>
 <h4 id="ThreadLocalMap"><a href="#ThreadLocalMap" class="headerlink" title="ThreadLocalMap"></a>ThreadLocalMap</h4><p>从名字上看，可以猜到它也是一个类似HashMap的数据结构，但是在ThreadLocal中，并没实现Map接口。</p>
-<p>在ThreadLoalMap中，也是初始化一个大小16的Entry数组，Entry对象用来保存每一个key-value键值对，只不过这里的key永远都是ThreadLocal对象，通过ThreadLocal对象的set方法，结果把ThreadLocal对象自己当做key，放进了ThreadLoalMap中。</p>
+<p>在ThreadLocalMap中，也是初始化一个大小16的Entry数组，Entry对象用来保存每一个key-value键值对，只不过这里的key永远都是ThreadLocal对象，通过ThreadLocal对象的set方法，结果把ThreadLocal对象自己当做key，放进了ThreadLoalMap中。</p>
 <p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-30%2017-09-06%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=rCkbAp/lBrLQ9Z9n21SKrAs2DzRhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTkyOTg4JnQ9MTUyMjQwMDk4OCZyPTE4MzQ4OTkxNjkmZj0vMjAxOC0wMy0zMCUyMDE3LTA5LTA2JUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
 <p>这里需要注意的是，ThreadLoalMap的Entry是继承WeakReference，和HashMap很大的区别是，Entry中没有next字段，所以就不存在链表的情况了。</p>
 <h4 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h4><p>没有链表结构，那发生hash冲突了怎么办？先看看ThreadLoalMap中插入一个key-value的实现。</p>
@@ -312,9 +316,9 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2018/04/04/Linux 使用SSR/">
+      <a class="prev" href="/2018/04/04/IaaS、PaaS、SaaS/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Linux 使用SSR</span>
+        <span class="prev-text nav-default">IaaS、PaaS、SaaS</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
