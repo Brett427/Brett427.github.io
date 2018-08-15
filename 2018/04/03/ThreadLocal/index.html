@@ -263,7 +263,7 @@
 <h4 id="ThreadLocalMap"><a href="#ThreadLocalMap" class="headerlink" title="ThreadLocalMap"></a>ThreadLocalMap</h4><p>从名字上看，可以猜到它也是一个类似HashMap的数据结构，但是在ThreadLocal中，并没实现Map接口。</p>
 <p>在ThreadLocalMap中，也是初始化一个大小16的Entry数组，Entry对象用来保存每一个key-value键值对，只不过这里的key永远都是ThreadLocal对象，通过ThreadLocal对象的set方法，结果把ThreadLocal对象自己当做key，放进了ThreadLoalMap中。</p>
 <p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-30%2017-09-06%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=rCkbAp/lBrLQ9Z9n21SKrAs2DzRhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTkyOTg4JnQ9MTUyMjQwMDk4OCZyPTE4MzQ4OTkxNjkmZj0vMjAxOC0wMy0zMCUyMDE3LTA5LTA2JUU1JUIxJThGJUU1JUI5JTk1JUU2JTg4JUFBJUU1JTlCJUJFLnBuZyZiPXR3bw==" alt=""></p>
-<p>这里需要注意的是，ThreadLoalMap的Entry是继承WeakReference，和HashMap很大的区别是，Entry中没有next字段，所以就不存在链表的情况了。</p>
+<p>这里需要注意的是，<strong>ThreadLoalMap的Entry是继承WeakReference</strong>，和HashMap很大的区别是，Entry中没有next字段，所以就不存在链表的情况了。</p>
 <h4 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h4><p>没有链表结构，那发生hash冲突了怎么办？先看看ThreadLoalMap中插入一个key-value的实现。</p>
 <p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-30%2017-14-09%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=bsVVhFGjyFt/qDTiL6BaXflMlYRhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTkzMjYwJnQ9MTUyMjQwMTI2MCZyPTMwNDQ5NTIyMiZmPS8yMDE4LTAzLTMwJTIwMTctMTQtMDklRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
 <p>每个ThreadLocal对象都有一个hash值 <code>threadLocalHashCode</code>，每初始化一个ThreadLocal对象，hash值就增加一个固定的大小 <code>0x61c88647</code>。（也就是每有一个ThreadLocal对象，第一次为0的话，第二个的Hashcodee就是0x61c88647,第三个就是0x61c88647*2）</p>
