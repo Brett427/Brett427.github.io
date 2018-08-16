@@ -242,7 +242,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#B-树"><span class="toc-text">B 树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B-树-1"><span class="toc-text">B + 树</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#B-树"><span class="toc-text">B 树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B-树-1"><span class="toc-text">B + 树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#m阶b-树和m阶B树的区别"><span class="toc-text">m阶b+树和m阶B树的区别</span></a></li></ol>
     </div>
   </div>
 
@@ -252,9 +252,9 @@
         <h4 id="B-树"><a href="#B-树" class="headerlink" title="B 树"></a>B 树</h4><p>数据库结构使用树的结构索引，从算法逻辑上看，二叉查找树的查找速度和比较次数都是最小的。数据库的索引存储在磁盘上，当数据量比较大的时候，索引的大小可能有几个G 甚至更多。</p>
 <p>当我们利用索引查询的时候，不可能把整个索引加载到内存，能做的只有逐一加载每一个磁盘页，磁盘页对应索引树的节点。<br><a id="more"></a><br>当利用二叉查找树时，每一层都是进行一次IO操作（即把对应的索引装入内存），因此最坏的情况下，磁盘的IO次数就等于索引树的高度。</p>
 <p>为了减少IO次数，就需要把层数降低，也就是B-树</p>
-<p>B树是一种多路平衡查找树，每一个节点最多包含k个孩子，k称为b树的阶，k的大小取决于磁盘页的大小，</p>
+<p>B树是一种多路平衡查找树，</p>
 <p>m阶b树具有以下的特征。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.根结点至少有两个子女。</span><br><span class="line">2.每个中间节点都包含k-1个元素和k个孩子，其中 m/2 &lt;= k &lt;= m</span><br><span class="line">3.每一个叶子节点都包含k-1个元素，其中 m/2 &lt;= k &lt;= m</span><br><span class="line">4.所有的叶子结点都位于同一层。</span><br><span class="line">5.每个节点中的元素从小到大排列，节点当中k-1个元素正好是k个孩子包含的元素的值域分划。</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">每个结点至多拥有m棵子树；</span><br><span class="line">根结点至少拥有两颗子树（存在子树的情况下）；</span><br><span class="line">除了根结点以外，其余每个分支结点至少拥有 m/2 棵子树；</span><br><span class="line">所有的叶结点都在同一层上；</span><br><span class="line">有 k 棵子树的分支结点则存在 k-1 个关键码，关键码按照递增次序进行排列；</span><br><span class="line">关键字数量需要满足ceil(m/2)-1 &lt;= n &lt;= m-1；</span><br></pre></td></tr></table></figure>
 <p>可以知道，b树在查询中的比较次数其实不比二叉查找树少，尤其当单一节点中元素数量很多时，但是相比磁盘IO的速度，内存中的比较耗时几乎可以忽略，所以只要树足够低，IO次数就足够少，就可以提升性能。</p>
 <p>b树主要应用于文件系统以及部分数据库索引（MongoDB）</p>
 <h4 id="B-树-1"><a href="#B-树-1" class="headerlink" title="B + 树"></a>B + 树</h4><p>B+ 树是B 树的一种变体，比B树的查询性能更高。</p>
@@ -265,6 +265,20 @@
 <p>需要补充的是，在数据库的聚集索引（Clustered Index）中，叶子节点直接包含卫星数据。在非聚集索引（NonClustered Index）中，叶子节点带有指向卫星数据的指针。</p>
 <p>B+树的好处主要体现在查询性能上，单点查询时，由于B+树中间节点没有数据，所有同样的磁盘页可以容纳更多的节点，也就是说，在数据量相同的情况下，b+ 树的结构比b树更加矮胖，IO次数也就更少。B+ 树的查询必须查到叶子节点，B树查询到匹配元素即可，所以B树查询性能不稳定。范围查询时，B 树只能中序遍历，而B+树只需要在链表中做遍历即可。所以B+ 树范围查询更加方便。</p>
 <p>综合起来，B+ 树IO 次数少，查询性能稳定，范围查询更加方便。</p>
+<h4 id="m阶b-树和m阶B树的区别"><a href="#m阶b-树和m阶B树的区别" class="headerlink" title="m阶b+树和m阶B树的区别"></a>m阶b+树和m阶B树的区别</h4><ol>
+<li>所有叶子节点包含全部关键字信息，及指向含有这些关键字记录的指针，且叶子节点中关键字进行有序链接</li>
+<li>非叶子结点相当于是叶子结点的索引（稀疏索引），叶子结点相当于是存储（关键字）数据的数据层；</li>
+</ol>
+<p>B+树比B树更适合操作系统的文件索引和数据库索引的原因：</p>
+<ul>
+<li>B+树的磁盘读写代价更低，B+树的内部节点没有指向关键字具体信息的指针，因此内部节点相对B树更小。如果把所有同一内部节点的关键字放在同一块磁盘中，盘块所能容纳的关键字数量也就越多，一次性读入内存中的需要查找的关键字也就越多，相对IO读写次数降低</li>
+<li>B+树的查询效率更加稳定<br>由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</li>
+</ul>
+<p><strong>总结</strong></p>
+<ul>
+<li>B-树：多路搜索树，每个结点存储M/2到M个关键字，非叶子结点存储指向关键字范围的子结点；所有关键字在整颗树中出现，且只出现一次，非叶子结点可以命中；</li>
+<li>B+树：在B-树基础上，为叶子结点增加链表指针，所有关键字都在叶子结点 中出现，非叶子结点作为叶子结点的索引；B+树总是到叶子结点才命中；</li>
+</ul>
 <blockquote>
 <p><a href="https://mp.weixin.qq.com/s?__biz=MzI1MTIzMzI2MA==&amp;mid=2650561244&amp;idx=1&amp;sn=df3abafd3aa2f5a3abfe507bfc26982f&amp;chksm=f1feec5fc6896549f89cbb82ee3d8010c63da76814030b285fa29322795de512ccca207064ee&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">https://mp.weixin.qq.com/s?__biz=MzI1MTIzMzI2MA==&amp;mid=2650561244&amp;idx=1&amp;sn=df3abafd3aa2f5a3abfe507bfc26982f&amp;chksm=f1feec5fc6896549f89cbb82ee3d8010c63da76814030b285fa29322795de512ccca207064ee&amp;scene=21#wechat_redirect</a></p>
 </blockquote>
