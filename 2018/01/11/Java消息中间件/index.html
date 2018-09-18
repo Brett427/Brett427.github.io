@@ -17,7 +17,7 @@
 
 
 
-  <meta name="description" content="Java消息中间件"/>
+  <meta name="description" content="互联网时代的消息中间件"/>
 
 
 
@@ -81,7 +81,7 @@
 
 
 
-    <title> Java消息中间件 - Corn1ng's Blog </title>\
+    <title> 互联网时代的消息中间件 - Corn1ng's Blog </title>\
     <style type="text/css">
     .content-wrapper:{top:200px;}
     .footer:{top:200px;}
@@ -218,7 +218,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Java消息中间件
+          互联网时代的消息中间件
         
       </h1>
 
@@ -231,6 +231,8 @@
             
               <a href="/categories/Java/">Java</a>
             
+              <a href="/categories/Java/分布式/">分布式</a>
+            
           </div>
         
         
@@ -242,20 +244,44 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#消息中间件"><span class="toc-text">消息中间件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是中间件"><span class="toc-text">什么是中间件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是消息中间件"><span class="toc-text">什么是消息中间件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JMS"><span class="toc-text">JMS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AMQP"><span class="toc-text">AMQP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JMS-消息模式"><span class="toc-text">JMS 消息模式</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#消息中间件"><span class="toc-text">消息中间件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JMS"><span class="toc-text">JMS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是中间件"><span class="toc-text">什么是中间件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何解决消息发送一致性"><span class="toc-text">如何解决消息发送一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#JMS-是否有方案？"><span class="toc-text">JMS 是否有方案？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#另外的方案"><span class="toc-text">另外的方案</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#消息队列模型"><span class="toc-text">消息队列模型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Queue-模型"><span class="toc-text">Queue 模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Topic-模型"><span class="toc-text">Topic 模型</span></a></li></ol></li></ol></li></ol></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h2><h4 id="什么是中间件"><a href="#什么是中间件" class="headerlink" title="什么是中间件"></a>什么是中间件</h4><p>非底层操作系统软件,非业务应用软件,不是直接给最终用户使用的,不能直接给客户带来价值的软件都统称为中间件</p>
-<h4 id="什么是消息中间件"><a href="#什么是消息中间件" class="headerlink" title="什么是消息中间件"></a>什么是消息中间件</h4><p>关注于数据的发送与接收,利用高效可靠的异步消息传递机制集成分布式系统.</p>
-<p>应用A通过应用程序接口向消息中间件发送消息,消息中间件再通过应用B的应用程序接口向应用B发送消息.</p>
+        <h2 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h2><h4 id="JMS"><a href="#JMS" class="headerlink" title="JMS"></a>JMS</h4><p>JMS 是Java Message Service  的缩写，它是Java EE 中的一个关于消息的规范。而Hornetq,ActiceMq 等产品都是对这个规范的实现。如果是企业内部或者一些小型的系统，直接使用JMS 的实现产品是一个经济的选择，而在大型系统中有一些场景不适合使用JMS。</p>
+<p>在大型互联网中，采用消息中间件可以进行应用之间的解耦以及操作的异步。这是消息中间件的两个最基本的特点，也正是我们需要的。在此基础上，更多考虑的是消息的顺序保证，扩展性，可靠性，业务操作与消息发送一致性。以及多集群订阅等方面的问题。</p>
+<h4 id="什么是中间件"><a href="#什么是中间件" class="headerlink" title="什么是中间件"></a>什么是中间件</h4><p>非底层操作系统软件,非业务应用软件,不是直接给最终用户使用的,不能直接给客户带来价值的软件都统称为中间件</p>
 <a id="more"></a>
-<h4 id="JMS"><a href="#JMS" class="headerlink" title="JMS"></a>JMS</h4><p>Java 消息服务,Java Message Service ,是一个Java平台中关于面向消息中间件的API,用于在两个应用程序之间,或分布式系统中发送消息,进行异步通信.</p>
-<h4 id="AMQP"><a href="#AMQP" class="headerlink" title="AMQP"></a>AMQP</h4><p>AMQP advanced message queuing protocol 是一个提供统一消息服务的应用层标准协议,基于此协议的客户端与消息中间件可传递消息,并不受客户端/中间件不同产品,不同开发语言等条件的限制.</p>
-<h4 id="JMS-消息模式"><a href="#JMS-消息模式" class="headerlink" title="JMS 消息模式"></a>JMS 消息模式</h4><p>主题,队列两种模式</p>
+<h4 id="如何解决消息发送一致性"><a href="#如何解决消息发送一致性" class="headerlink" title="如何解决消息发送一致性"></a>如何解决消息发送一致性</h4><p>首先 ，消息发送一致性是指产生消息的业务动作与消息发送的一致，也就是说，如果业务操作成功了，那么由这个操作产生的消息一定要发送出去。否则就丢失消息了，另一方面，如果这个业务行为没有发生或者失败，那么久不应该把消息发送出去。</p>
+<h5 id="JMS-是否有方案？"><a href="#JMS-是否有方案？" class="headerlink" title="JMS 是否有方案？"></a>JMS 是否有方案？</h5><p>主要是用XA开头的接口来实现，XA系列的接口支持了分布式事务的支持，（即发送消息和业务操作用事务包住）</p>
+<p>但是此做法有相应的问题：</p>
+<ul>
+<li>引入了分布式事务，这会带来一些开销并增加复杂性</li>
+<li>对于业务操作有限制，要求业务操作的资源必须支持XA协议，才能够与发送消息一起来做分布式事务。这会成为一个限制，因为并不是所有需要与发送消息一起做成分布式事务的业务操作都支持XA协议。</li>
+</ul>
+<p><strong>XA是一个分布式事务协议，由Tuxedo提出。XA中大致分为两部分：事务管理器和本地资源管理器。其中本地资源管理器往往由数据库实现，比如Oracle、DB2这些商业数据库都实现了XA接口，而事务管理器作为全局的调度者，负责各个本地资源的提交和回滚。</strong></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-08-22%20%E4%B8%8A%E5%8D%889.44.40.png" alt=""></p>
+<p>总的来说，XA协议比较简单，而且一旦商业数据库实现了XA协议，使用分布式事务的成本也比较低。但是，XA也有致命的缺点，那就是性能不理想，特别是在交易下单链路，往往并发量很高，XA无法满足高并发场景。XA目前在商业数据库支持的比较理想，在mysql数据库中支持的不太理想，mysql的XA实现，没有记录prepare阶段日志，主备切换回导致主库与备库数据不一致。许多nosql也没有支持XA，这让XA的应用场景变得非常狭隘。</p>
+<h5 id="另外的方案"><a href="#另外的方案" class="headerlink" title="另外的方案"></a>另外的方案</h5><p><img src="http://four-1252095801.cosbj.myqcloud.com/51534902495_.pic.jpg" alt=""></p>
+<p>1 业务处理应用首先把消息发送给消息中间件，标记消息的状态为待处理。</p>
+<p>2 消息中间件收到消息后，把消息存储在消息存储中，并不投递该消息。</p>
+<p>3 消息中间件返回消息处理的结果（仅是入库的结果），结果是成功或者失败。</p>
+<p>4 业务方收到消息中间件返回的结果并进行处理。</p>
+<ul>
+<li>如果收到的结果是失败 那么就放弃业务处理，结束。</li>
+<li>如果收到的结果是成功，则进行业务自身的操作。</li>
+</ul>
+<p>5 业务操作完成，把业务操作的结果发送给消息中间件。</p>
+<p>6 消息中间件收到业务操作结果，根据结果进行处理。</p>
+<ul>
+<li>如果业务失败，则删除消息存储中的消息，结束。</li>
+<li>如果业务成功，则更新消息存储中的消息状态为可发送，并且进行调度，进行消息的投递。</li>
+</ul>
+<h4 id="消息队列模型"><a href="#消息队列模型" class="headerlink" title="消息队列模型"></a>消息队列模型</h4><h5 id="Queue-模型"><a href="#Queue-模型" class="headerlink" title="Queue 模型"></a>Queue 模型</h5><p>多个消费者，消费的消息是不同的，多个消费者的消费消息和是全部消息。</p>
+<h5 id="Topic-模型"><a href="#Topic-模型" class="headerlink" title="Topic 模型"></a>Topic 模型</h5><p>所有消费者是可以收到所有的消费消息的</p>
 
       
     </div>
