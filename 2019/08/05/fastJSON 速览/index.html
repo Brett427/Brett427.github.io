@@ -242,14 +242,31 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-对象"><span class="toc-text">JSON 对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-对象数组"><span class="toc-text">JSON 对象数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-字符串"><span class="toc-text">JSON 字符串</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fastJSON"><span class="toc-text">fastJSON</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-值"><span class="toc-text">JSON 值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-对象"><span class="toc-text">JSON 对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-对象数组"><span class="toc-text">JSON 对象数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#JSON-字符串"><span class="toc-text">JSON 字符串</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fastJSON"><span class="toc-text">fastJSON</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用"><span class="toc-text">使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最佳实践"><span class="toc-text">最佳实践</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#序列化一个Java对象成JSON字符串"><span class="toc-text">序列化一个Java对象成JSON字符串</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#反序列化一个JSON字符串成Java对象"><span class="toc-text">反序列化一个JSON字符串成Java对象</span></a></li></ol></li></ol></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h4 id="JSON-对象"><a href="#JSON-对象" class="headerlink" title="JSON 对象"></a>JSON 对象</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"ID"</span>:<span class="number">1001</span>,</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">"nnn"</span>,</span><br><span class="line">    <span class="attr">"age"</span>:<span class="number">23</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>JSON 语法是 JavaScript 对象表示语法的子集。</p>
+<ul>
+<li>数据在名称/值对中</li>
+<li>数据由逗号分隔</li>
+<li>大括号保存对象</li>
+<li>中括号保存数组</li>
+</ul>
+<h4 id="JSON-值"><a href="#JSON-值" class="headerlink" title="JSON 值"></a>JSON 值</h4><p>JSON 值可以是：</p>
+<ul>
+<li>数字（整数或浮点数）</li>
+<li>字符串（在双引号中）</li>
+<li>逻辑值（true 或 false）</li>
+<li>数组（在中括号中）</li>
+<li>对象（在大括号中）</li>
+<li>null</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;syn:[1,2,3]&#125; 表示syn的值是一个数组，里面有三个元素 1 2 3</span><br><span class="line">或者 &#123;syn:[&#123;'value':1&#125;,&#123;'value':2&#125;,&#123;'value':3&#125;]&#125;;  syn的值是一个数组 ，数组里每个对元素是一个对象。</span><br></pre></td></tr></table></figure>
+<h4 id="JSON-对象"><a href="#JSON-对象" class="headerlink" title="JSON 对象"></a>JSON 对象</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"ID"</span>:<span class="number">1001</span>,</span><br><span class="line">    <span class="attr">"name"</span>:<span class="string">"nnn"</span>,</span><br><span class="line">    <span class="attr">"age"</span>:<span class="number">23</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="JSON-对象数组"><a href="#JSON-对象数组" class="headerlink" title="JSON 对象数组"></a>JSON 对象数组</h4><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;<span class="attr">"ID"</span>:<span class="number">1001</span>,<span class="attr">"name"</span>:<span class="string">"zhangsan"</span>,<span class="attr">"age"</span>:<span class="number">24</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">"ID"</span>:<span class="number">1002</span>,<span class="attr">"name"</span>:<span class="string">"lisi"</span>,<span class="attr">"age"</span>:<span class="number">252222</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">"ID"</span>:<span class="number">1003</span>,<span class="attr">"name"</span>:<span class="string">"wangwu"</span>,<span class="attr">"age"</span>:<span class="number">2224</span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <h4 id="JSON-字符串"><a href="#JSON-字符串" class="headerlink" title="JSON 字符串"></a>JSON 字符串</h4><ul>
 <li>它必须是一个字符串，由<code>&quot;&quot;</code>或者<code>&#39;&#39;</code>包裹数据，支持字符串的各种操作。</li>
@@ -258,6 +275,7 @@
 <h3 id="fastJSON"><a href="#fastJSON" class="headerlink" title="fastJSON"></a>fastJSON</h3><p>fastJSON可以方便的实现json对象与JavaBean对象的转换，实现JavaBean对象与json字符串的转换，实现json对象与json字符串的转换。</p>
 <h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>在fastJSON中，可以发现三个主要的类，JSON，JSONObject，JSONArray。</p>
 <p>三者的关系是JSONObject 和JSONArray 继承JSON。</p>
+<p><strong>JSONObject是JSON字符串与pojo对象转换过程中的中间表达类型，实现了Map接口，可以看做是一个模拟JSON对象键值对再加上多层嵌套的数据集合，对象的每一个基本类型属性是map里的一个key-value，一个非基本类型属性是一个嵌套的JSONObject对象（key是属性名称，value是表示这个属性值的对象的JSONObject）。</strong></p>
 <p>可以发现，<strong>JSONObject代表json对象，JSONArray代表json对象数组，JSON代表JSONObject和JSONArray的转化。</strong></p>
 <hr>
 <p>JSONObject 对象JSON对象，通过各种形式的get()方法可以获取json对象中的数据，也可利用诸如size()，isEmpty()等方法获取”键：值”对的个数和判断是否为空。其本质是通过实现Map接口并调用接口中的方法完成的。</p>
@@ -266,14 +284,16 @@
 <hr>
 <p>JSON类主要是实现转化用的，最后的数据获取，还是要通过上面的JSONObject和JSONArray来实现。</p>
 <ul>
-<li><p>JSON.toJSONString()方法，实现JSON对象转换为json字符串和Javabean 转换为json字符串。</p>
-</li>
-<li><p>JSON.parseObject()方法，实现json字符串转换为json对象或javabean对象，该方法返回JSONObject对象，用于实现json字符串向json对象的转化。json字符串与javaBean之间的转换可以使用 Class这个类。</p>
-</li>
+<li>JSON.toJSONString()方法，实现JSON对象转换为json字符串和Javabean 转换为json字符串。</li>
+<li>JSON.parseObject()方法，实现json字符串转换为json对象或javabean对象，该方法返回JSONObject对象，用于实现json字符串向json对象的转化。json字符串与javaBean之间的转换可以使用 Class这个类。</li>
 <li>JSON.parseArray()将json字符串转化为json对象数组或转化成包含泛型的List</li>
 <li>JSON.toJSON()方法，实现JavaBean对象转换为json对象。</li>
 <li>JSON.toJavaObject()方法，实现json对象转化为javabean对象</li>
 </ul>
+<p><strong>对于jsonstring转POJO（或POJO转jsonstring），尽量使用直接转的方式，而不是先转成JSONObject过渡的方式。特别是对于Fastjson，由于性能优化的考虑，这两个执行的代码是不一样的，可能导致不一样的结果。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">String jsonstring = <span class="string">"&#123;\"a\":12&#125;"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不推荐这种方式</span></span><br><span class="line"><span class="comment">// 除非这里需要对jsonObject做一些简单处理</span></span><br><span class="line">JSONObject jsonObject = JSON.parseObject(jsonstring);</span><br><span class="line">A a = jsonObject.toJavaObject(A.class);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 推荐方式</span></span><br><span class="line">A a = JSON.parseObject(jsonstring, A.class);</span><br></pre></td></tr></table></figure>
+<h4 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h4><h5 id="序列化一个Java对象成JSON字符串"><a href="#序列化一个Java对象成JSON字符串" class="headerlink" title="序列化一个Java对象成JSON字符串"></a>序列化一个Java对象成JSON字符串</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">User user = <span class="keyword">new</span> User();</span><br><span class="line">user.setName(<span class="string">"校长"</span>);</span><br><span class="line">user.setAge(<span class="number">3</span>);</span><br><span class="line">user.setSalary(<span class="keyword">new</span> BigDecimal(<span class="string">"123456789.0123"</span>));</span><br><span class="line">String jsonString = JSON.toJSONString(user);</span><br><span class="line">System.out.println(jsonString);</span><br><span class="line"><span class="comment">// 输出 &#123;"age":3,"name":"校长","old":false,"salary":123456789.0123&#125;</span></span><br></pre></td></tr></table></figure>
+<h5 id="反序列化一个JSON字符串成Java对象"><a href="#反序列化一个JSON字符串成Java对象" class="headerlink" title="反序列化一个JSON字符串成Java对象"></a>反序列化一个JSON字符串成Java对象</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> String jsonString = <span class="string">"&#123;\"age\":3,\"birthdate\":1496738822842,\"name\":\"校长\",\"old\":true,\"salary\":123456789.0123&#125;"</span>;</span><br><span class="line"> User u = JSON.parseObject(jsonString ,User.class);</span><br><span class="line"> System.out.println(u.getName());</span><br><span class="line"> <span class="comment">// 输出 校长</span></span><br><span class="line"></span><br><span class="line">String jsonStringArray = <span class="string">"[&#123;\"age\":3,\"birthdate\":1496738822842,\"name\":\"校长\",\"old\":true,\"salary\":123456789.0123&#125;]"</span>;</span><br><span class="line">List&lt;User&gt; userList = JSON.parseArray(jsonStringArray, User.class);</span><br><span class="line">System.out.println(userList.size());</span><br><span class="line"><span class="comment">// 输出 1</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
