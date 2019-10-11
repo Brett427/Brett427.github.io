@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Git 工作总结"/>
+
+
+
+
+  <meta name="keywords" content="Git, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/03/git 工作总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Git 工作总结 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Git 工作总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-03
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/工具/">工具</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#git-工作总结"><span class="toc-text">git 工作总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#易忘操作"><span class="toc-text">易忘操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#撤销修改"><span class="toc-text">撤销修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#远程操作"><span class="toc-text">远程操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分支"><span class="toc-text">分支</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解决冲突"><span class="toc-text">解决冲突</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bug分支"><span class="toc-text">bug分支</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="git-工作总结"><a href="#git-工作总结" class="headerlink" title="git 工作总结"></a>git 工作总结</h3><h4 id="易忘操作"><a href="#易忘操作" class="headerlink" title="易忘操作"></a>易忘操作</h4><ul>
+<li><p>要随时掌握⼯作区的状态，使⽤git status命令。</p>
+</li>
+<li><p>如果git status告诉你有⽂件被修改过，⽤git diff可以查看修改内容。</p>
+</li>
+<li><p>git log 查看日志</p>
+</li>
+<li>在Git 中，用HEAD表示当前版本，也就是最新的提交，上⼀个版本就是<code>HEAD^</code>，上上⼀个版本就是<code>HEAD^^</code>，当然往上100 个版本写100个^⽐较容易数不过来， 所以写成<code>HEAD~100</code>。</li>
+<li>回退版本时，使用git reset 命令。<code>git reset --hard HEAD^</code></li>
+<li>git reflog 记录每一次命令。</li>
+</ul>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190920143835.png" width="50%"></p>
+<p>左边是工作区，add 以后是暂存区，然后commit 提交到分支。</p>
+<h4 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h4><p><code>git checkout -- file</code>可以丢弃⼯作区的修改.</p>
+<p>命令git checkout – readme.txt意思就是，把readme.txt⽂件在⼯作区的修改全部撤销，这 ⾥有两种情况：</p>
+<p>⼀种是readme.txt⾃修改后还没有被放到暂存区，现在，撤销修改就回到和版本库⼀模⼀ 样的状态；</p>
+<p>⼀种是readme.txt已经添加到暂存区后，⼜作了修改，现在，撤销修改就回到添加到暂存 区后的状态。</p>
+<p>总之，就是让这个⽂件回到最近⼀次git commit或git add时的状态。</p>
+<p><strong>git checkout – file命令中的“–”很重要，没有“–”，就变成了“创建⼀个新分⽀”的命 令，我们在后⾯的分⽀管理中会再次遇到git checkout命令。</strong></p>
+<p><strong>git reset命令既可以回退版本，也可以把暂存区的修改回退到⼯作区。当我们⽤HEAD时， 表⽰最新的版本。</strong></p>
+<p><code>git reset HEAD readme.txt</code> 就可以把暂存区的修改退出工作区。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">read.txt 还没有add ，想丢弃修改，用 git checkout --read.txt</span><br><span class="line">read.txt 已经add了，但是想丢弃修改，用 git reset HEAD readme.txt</span><br></pre></td></tr></table></figure>
+<p><strong>git checkout –file其实是⽤版本库⾥的版本替换⼯作区的版本，⽆论⼯作区是修改还是删除，都 可以“⼀键还原”。</strong></p>
+<h4 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h4><ul>
+<li><p>要关联⼀个远程库，使⽤命令git remote add origin git@server-name:path/repo-name.git；</p>
+</li>
+<li><p>关联后，使⽤命令git push -u origin master第⼀次推送master分⽀的所有内容；</p>
+</li>
+<li><p>此后，每次本地提交后，只要有必要，就可以使⽤命令git push origin master推送最新修改；</p>
+</li>
+</ul>
+<h4 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h4><p>HEAD严格来说不是指向提交，⽽是指向master，master才是指向提交的，所以，HEAD指向的就是当前分⽀。</p>
+<p>⼀开始的时候，master分⽀是⼀条线，Git⽤master指向最新的提交，再⽤HEAD指向 master，就能确定当前分⽀，以及当前分⽀的提交点：</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190920164414.png" width="50%"></p>
+<p>每次提交，master分⽀都会向前移动⼀步，这样，随着你不断提交，master分⽀的线也越 来越⻓长。</p>
+<p>当我们创建新的分⽀，例如dev时，Git新建了⼀个指针叫dev，指向master相同的提交， 再把HEAD指向dev，就表⽰当前分⽀在dev上：</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190920190313.png" width="50%"></p>
+<p>创建分支 <code>git checkout -b dev</code>创建dev分支，并切换到dev分支。</p>
+<p>git checkout命令加上-b参数表⽰创建并切换，相当于以下两条命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git branch dev</span><br><span class="line">git checkout dev</span><br></pre></td></tr></table></figure>
+<p>git branch 查看所有分支</p>
+<p>现在，我们把dev分⽀的⼯作成果合并到master分⽀上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge dev</span><br></pre></td></tr></table></figure>
+<p>git merge命令⽤于合并指定分⽀到当前分⽀。</p>
+<h4 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h4><p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190920194120.png" width="50%"></p>
+<p>这种情况下不能快速合并分支（直接改变master的位置）,git 会进行试图合并。合并完成下面的样子</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190920194225.png" width="50%"></p>
+<h4 id="bug分支"><a href="#bug分支" class="headerlink" title="bug分支"></a>bug分支</h4><p>Git还提供了⼀个stash功能，可以把当前⼯作现场“储藏”起来，等以后恢复现场后继续⼯作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git stash</span><br><span class="line">Saved working directory and index state WIP on dev: 6224937 add merge HEAD is now at 6224937 add merge</span><br></pre></td></tr></table></figure>
+<p>现在，⽤git status查看⼯作区，就是干净的（除⾮有没有被Git管理的⽂件），因此可以放⼼地创建分⽀来修复bug。</p>
+<p>修复完bug后，返回之前的分支，可以看到工作区是干净的，用<code>git stash list</code>查看工作现场。</p>
+<p>⼯作现场还在，Git把stash内容存在某个地⽅了，但是需要恢复⼀下，有两个办法： ⼀是⽤<code>git stash apply</code>恢复，但是恢复后，stash内容并不删除，你需要⽤git stash drop来删 除； 另⼀种⽅式是⽤<code>git stash pop</code>，恢复的同时把stash内容也删了。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/03/git 工作总结/">https://corn1ng.github.io/2019/10/03/git 工作总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Git/">Git</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/10/03/mysql 抖动/">
+        <span class="next-text nav-default">mysql 解密七 抖动</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

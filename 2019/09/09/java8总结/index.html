@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java8 新特性总结"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/09/09/java8总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java8 新特性总结 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java8 新特性总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-09
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda-表达式"><span class="toc-text">lambda 表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方法引用"><span class="toc-text">方法引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Optional"><span class="toc-text">Optional</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream"><span class="toc-text">Stream</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="lambda-表达式"><a href="#lambda-表达式" class="headerlink" title="lambda 表达式"></a>lambda 表达式</h3><p>java8的最大变化就是引入了lambda表达式，一个紧凑的传递行为的方式。</p>
+<p>最简单的Lambda表达式可以用逗号分隔的参数列表<code>-&gt;</code>符号和功能语句块来表示。<code>-&gt;</code>前面的是参数，<code>-&gt;</code>后面的处理的流程。</p>
+<p>示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).forEach( e -&gt; System.out.println( e ) );</span><br></pre></td></tr></table></figure>
+<p>注意到编译器会根据上下文来推测参数的类型，或者也可以显示地指定参数类型，只需要将类型包在括号里。举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).forEach( ( String e ) -&gt; System.out.println( e ) );</span><br></pre></td></tr></table></figure>
+<p>如果Lambda的功能语句块太复杂，我们可以用大括号包起来，跟普通的Java方法一样，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String separator = <span class="string">","</span>;</span><br><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).forEach(</span><br><span class="line">    ( String e ) -&gt; System.out.print( e + separator ) );</span><br></pre></td></tr></table></figure>
+<p>Lambda表达式可能会引用类的成员或者局部变量（会被隐式地转变成final类型），下面两种写法的效果是一样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String separator = <span class="string">","</span>;</span><br><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).forEach(</span><br><span class="line">    ( String e ) -&gt; System.out.print( e + separator ) );</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> String separator = <span class="string">","</span>;</span><br><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).forEach(</span><br><span class="line">    ( String e ) -&gt; System.out.print( e + separator ) );</span><br></pre></td></tr></table></figure>
+<p>Lambda表达式可能会有返回值，编译器会根据上下文推断返回值的类型。如果lambda的语句块只有一行，不需要return关键字。下面两个写法是等价的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).sort( ( e1, e2 ) -&gt; e1.compareTo( e2 ) );</span><br><span class="line"></span><br><span class="line">Arrays.asList( <span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"d"</span> ).sort( ( e1, e2 ) -&gt; &#123;</span><br><span class="line">    <span class="keyword">int</span> result = e1.compareTo( e2 );</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125; );</span><br></pre></td></tr></table></figure>
+<p>为了让现有功能和lambda 表达式友好兼容，有了函数接口的概念，<strong>函数接口是一种只有一个方法的接口</strong>。函数接口可以隐式的转换成lambda表达式。</p>
+<p>如下定义了一个函数式接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GreetingService</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">sayMessage</span><span class="params">(String message)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么就可以使用Lambda表达式来表示该接口的一个实现.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GreetingService greetService1 = message -&gt; System.out.println(<span class="string">"Hello "</span> + message);</span><br></pre></td></tr></table></figure>
+<h4 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h4><p>方法引用提供了一个很有用的语义来<strong>直接访问类或者实例的已经存在的方法或者构造方法</strong>。结合Lambda表达式，方法引用使语法结构紧凑简明。不需要复杂的引用。</p>
+<p>下面以Car 类做示例说明支持的4种方法引用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Car <span class="title">create</span><span class="params">( <span class="keyword">final</span> Supplier&lt; Car &gt; supplier )</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> supplier.get();</span><br><span class="line">    &#125;              </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">collide</span><span class="params">( <span class="keyword">final</span> Car car )</span> </span>&#123;</span><br><span class="line">        System.out.println( <span class="string">"Collided "</span> + car.toString() );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">follow</span><span class="params">( <span class="keyword">final</span> Car another )</span> </span>&#123;</span><br><span class="line">        System.out.println( <span class="string">"Following the "</span> + another.toString() );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">repair</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println( <span class="string">"Repaired "</span> + <span class="keyword">this</span>.toString() );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一种方法引用是构造方法引用，语法是：<code>Class::new</code> ，</p>
+<p>对于泛型来说语法是：<code>Class&lt;T &gt;::new</code>，注意构造方法没有参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Car car = Car.create( Car::<span class="keyword">new</span> );</span><br><span class="line"><span class="keyword">final</span> List&lt; Car &gt; cars = Arrays.asList( car );</span><br></pre></td></tr></table></figure>
+<p>第二种方法引用是静态方法引用，语法是：<code>Class::static_method</code>注意这个静态方法只支持一个类型为Car的参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cars.forEach( Car::collide );</span><br></pre></td></tr></table></figure>
+<p>第三种方法引用是类实例的方法引用，语法是：<code>Class::method</code>注意方法没有参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cars.forEach( Car::repair );</span><br></pre></td></tr></table></figure>
+<p>最后一种方法引用是引用特殊类的方法，语法是：<code>instance::method</code>，注意只接受Car类型的一个参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Car police = Car.create( Car::<span class="keyword">new</span> );</span><br><span class="line">cars.forEach( police::follow );</span><br></pre></td></tr></table></figure>
+<h4 id="Optional"><a href="#Optional" class="headerlink" title="Optional"></a>Optional</h4><p>Optional 是核心类库新设计的一个数据类型，用来替换null值。人们常用null值来表示值不存在，Optional对象可以更好的表达这个概念，使用null表示值最大的问题在于NullPointerException。一旦引用一个存储null值的变量，程序会立即崩溃。</p>
+<p>Optional 是个容器：它可以保存类型T的值，或者仅仅保存null。Optional提供很多有用的方法，这样我们就不用显式进行空值检测。<strong>Optional 类的引入很好的解决空指针异常。</strong></p>
+<p>使用工厂方法of,可以从某个值创建出一个Optional对象，Optional对象相当于值的容器，该值可以通过get方法提取。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Optional&lt;String&gt; a = Optional.of(<span class="string">"a"</span>);</span><br></pre></td></tr></table></figure>
+<p>Optional 对象也可能为空，因此还有一个对应的工厂方法empty（创建一个空值在Optional中）。另外一个工厂方法ofNullable则可以将一个空值转换为Optional对象。还有一个方法isPresent 表示一个Optional对象里是否有值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Optinoal emptyOptional = Optional.empty();</span><br><span class="line">Optional alsoEmpty = Optional.ofNullable(<span class="keyword">null</span>);</span><br><span class="line">Boolean b = a.isPresent();</span><br></pre></td></tr></table></figure>
+<p><code>T orElse(T other)</code> 方法表示如果存在值，则返回值，否则返回other。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer value1 = a.orElse(new Integer(0));</span><br></pre></td></tr></table></figure>
+<h4 id="Stream"><a href="#Stream" class="headerlink" title="Stream"></a>Stream</h4><p>Stream API引入了函数式编程。Stream 是用函数式编程方式在集合类上进行复杂操作的工具。首先注意stream()方法的调用，返回了内部迭代中的相应接口：Stream。</p>
+<p>例如要计算来自北京的艺术家人数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> count = allArtists.steeam().filter(artist-&gt;artist.isForm(<span class="string">"Beijing"</span>).count());</span><br></pre></td></tr></table></figure>
+<p>上面分为两步，分别是1找出所有来自北京的艺术家2计算人数。每个操作都对应stream接口的一个方法。为了找出来自北京的，需要对stream对象进行过滤：使用了filter。count()方法计算给定Stream里包含多少个对象。</p>
+<p>Stream里的一些方法虽然是普通的Java方法，但返回的Stream对象却不是一个新集合。而是创建新集合的配方。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allArtists.stream().filter(artist-&gt;artist.isFrom(<span class="string">"Beijing"</span>) );<span class="comment">//只过滤不计数</span></span><br></pre></td></tr></table></figure>
+<p>这行代码并没有做什么实际性的工作，filter只刻画了Stream,但是没有产生新的集合，像filter这样只描述Stream最终不产生新集合的方法叫做惰性求值方法，而像count这样最终会从Stream产生值的方法叫作及早求值方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">流的特点：</span><br><span class="line"> 元素序列——就像集合一样，流也提供了一个接口，可以访问特定元素类型的一组有序值。因为集合是数据结构，所以它的主要目的是以特定的时间/空间复杂度存储和访问元</span><br><span class="line">素（如`ArrayList` 与 `LinkedList`）。但流的目的在于表达计算，比如 `filter`、`sorted`和`map`。集合讲的是数据，流讲的是计算。</span><br><span class="line"> 源——流会使用一个提供数据的源，如集合、数组或输入/输出资源。 请注意，从有序集合生成流时会保留原有的顺序。由列表生成的流，其元素顺序与列表一致。</span><br><span class="line"> 数据处理操作——流的数据处理功能支持类似于数据库的操作，如`filter`、`map`、`reduce`、`find`、`match`、`sort`等。流操作可以顺序执行，也可并行执行。</span><br><span class="line"> 流水线——很多流操作本身会返回一个流，这样多个操作就可以链接起来，形成一个大的流水线。流水线的操作可以看作对数据源进行数据库式查询。</span><br><span class="line"> 内部迭代——与使用迭代器显式迭代的集合不同，流的迭代操作是在背后进行的。</span><br><span class="line"></span><br><span class="line">流与集合的区别：</span><br><span class="line"> <span class="number">1</span>、集合是一个内存中的数据结构，它包含数据结构中目前所有的值—— 集合中的每个元素都得先算出来才能添加到集合中。</span><br><span class="line"> <span class="number">2</span>、流则是在概念上固定的数据结构（你不能添加或删除元素），其元素则是按需计算的。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--------------------------------------------</span><br><span class="line">流的操作：</span><br><span class="line"><span class="number">1</span>、中间操作：中间操作会返回另一个流，比如`filter、map、sort、distinct`等操作</span><br><span class="line"><span class="number">2</span>、终端操作： 终端操作会从流的流水线生成结果，比如`forEach、count、collect`</span><br><span class="line">--------------------------------------------</span><br></pre></td></tr></table></figure>
+<p>在过滤器中加入一条print语句，来输出艺术家的名字，就能看出不同。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">allArtiest.stream().filter(artiest-&gt;&#123;System.out.println(artiest.getName());&#125;) <span class="comment">// 由于使用了惰性求值，没有输出艺术家的名字。</span></span><br></pre></td></tr></table></figure>
+<p>如果将同样的输出语句加入一个拥有终止操作的流，如一个计数操作，艺术家的名字就会被输出。</p>
+<p>常用的流操作主要有：</p>
+<p>collect(toList()) 方法由Stream里的值生成一个列表，是一个及早求值操作。</p>
+<p>Stream的of方法使用一组初始值生成新的Stream。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; collected =Stream.of(<span class="string">"a"</span>,<span class="string">"b"</span>,<span class="string">"c"</span>).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>上面是使用collect(toList())方法从Stream中生成一个列表。由于很多Stream操作都是惰性操作，因此调用Stream上一系列方法后，还需要最后再调用一个类似collect的及早求值方法。</p>
+<p>map 函数可以将一种类型的值转换成另外一种新的类型。</p>
+<p>filter用来遍历元素并检查其中的元素。</p>
+<p>flatmap 可以用Stream替换值，然后将多个Stream连接成一个Stream.</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/09/09/java8总结/">https://corn1ng.github.io/2019/09/09/java8总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/26/mysql 解密一/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Mysql解密一</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/04/Guava-Cache/">
+        <span class="next-text nav-default">Guava-Cache</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
