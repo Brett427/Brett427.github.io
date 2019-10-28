@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql解密九 函数对索引的影响"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/24/Mysql解密九 函数对索引的影响/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql解密九 函数对索引的影响 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql解密九 函数对索引的影响
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-24
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#函数不走索引"><span class="toc-text">函数不走索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#案例一-条件字段函数操作"><span class="toc-text">案例一 条件字段函数操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例二-隐式类型转换"><span class="toc-text">案例二 隐式类型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例三-隐式字符编码转换"><span class="toc-text">案例三 隐式字符编码转换</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="函数不走索引"><a href="#函数不走索引" class="headerlink" title="函数不走索引"></a>函数不走索引</h2><p>在 MySQL 中，有很多看上去逻辑相同，但性能却差异巨大的 SQL 语句。对这些语句使用 不当的话，就会不经意间导致整个数据库的压力变大。</p>
+<h3 id="案例一-条件字段函数操作"><a href="#案例一-条件字段函数操作" class="headerlink" title="案例一 条件字段函数操作"></a>案例一 条件字段函数操作</h3><p>假设现在维护了一个交易系统，其中交易记录表 tradelog 包含交易流水号 （tradeid）、交易员 id（operator）、交易时间（t_modified）等字段。为了便于描述， 先忽略其他字段。这个表的建表语句如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE TABLE `tradelog` (</span><br><span class="line">     `id` int(11) NOT NULL,</span><br><span class="line">     `tradeid` varchar(32) DEFAULT NULL,</span><br><span class="line">     `operator` int(11) DEFAULT NULL,</span><br><span class="line">     `t_modified` datetime DEFAULT NULL,</span><br><span class="line">     PRIMARY KEY (`id`),</span><br><span class="line">     KEY `tradeid` (`tradeid`),</span><br><span class="line">     KEY `t_modified` (`t_modified`)</span><br><span class="line">     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</span><br></pre></td></tr></table></figure>
+<p>假设，现在已经记录了从 2016 年初到 2018 年底的所有数据，运营部门有一个需求是，要统计发生在所有年份中 7 月份的交易记录总数。这个逻辑看上去并不复杂，你的 SQL 语句 可能会这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from tradelog where month(t_modified)=7;</span><br></pre></td></tr></table></figure>
+<p>虽然t_modified字段上有索引，但是返回的特别慢。<strong>如果对字段做了函数计算，就用不上索引了，这是 MySQL 的规定。</strong></p>
+<p>下面是<code>t_modified</code>索引的示意图，方框上面的数字就是month()函数对应的值。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191028194234.png" alt=""></p>
+<p>如果你的 SQL 语句条件用的是 where t_modified=’2018-7-1’的话，引擎就会按照上面 绿色箭头的路线，快速定位到 t_modified=’2018-7-1’需要的结果。实际上，B+ 树提供的这个快速定位能力，来源于同一层兄弟节点的有序性。</p>
+<p>但是，如果计算 month() 函数的话，你会看到传入 7 的时候，在树的第一层就不知道该怎么办了。也就是说，<strong>对索引字段做函数操作，可能会破坏索引值的有序性，因此优化器就决定放弃走树搜索功能。</strong></p>
+<p><em>需要注意的是，优化器并不是要放弃使用这个索引。</em></p>
+<p>在这个例子里，放弃了树搜索功能，优化器可以选择遍历主键索引，也可以选择遍历索引 t_modified，优化器对比索引大小后发现，索引 t_modified 更小，遍历这个索引比遍历主 键索引来得更快。因此最终还是会选择索引 t_modified。<strong>也就是说仍然会使用索引，但是会扫描索引中的所有值，并没有使用索引快速定位的能力。</strong></p>
+<h3 id="案例二-隐式类型转换"><a href="#案例二-隐式类型转换" class="headerlink" title="案例二 隐式类型转换"></a>案例二 隐式类型转换</h3><p>看下面的一句sql</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tradelog where tradeid = 110717;</span><br></pre></td></tr></table></figure>
+<p>交易编号 tradeid 这个字段上，本来就有索引，但是 explain 的结果却显示，这条语句需 要走全表扫描。可以发现，tradeid 的字段类型是 varchar(32)，而输入的参数却是 整型，所以需要做类型转换。有两个问题需要解决：</p>
+<ul>
+<li>1数据类型转换的规则是什么？ 2为什么有数据类型转换，就要走全索引扫描</li>
+</ul>
+<p>在MySQL里，字符串和数字做比较的话，是将字符串转换成数字。</p>
+<p>因此，上面语句对优化器来说，相当于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tradelog where CAST(tradid AS signed int) = 110717;</span><br></pre></td></tr></table></figure>
+<p>触发了案例一中的规则，所以就会走全索引扫描。</p>
+<h3 id="案例三-隐式字符编码转换"><a href="#案例三-隐式字符编码转换" class="headerlink" title="案例三 隐式字符编码转换"></a>案例三 隐式字符编码转换</h3><p>假设系统里还有一个表trade_detail ，用以记录交易的操作细节。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `trade_detail` (</span><br><span class="line">     `id` int(11) NOT NULL,</span><br><span class="line">     `tradeid` varchar(32) DEFAULT NULL,</span><br><span class="line">     `trade_step` int(11) DEFAULT NULL, /* 操作步骤 */</span><br><span class="line">     `step_info` varchar(32) DEFAULT NULL, /* 步骤信息 */</span><br><span class="line">     PRIMARY KEY (`id`),</span><br><span class="line">     KEY `tradeid` (`tradeid`)</span><br><span class="line">     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure>
+<p>这时，如果要查询id=2的交易的所有操作步骤信息，SQL语句可以这么写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select d.* from tradelog l, trade_detail d where d.tradeid=l.tradeid and l.id=2;</span><br></pre></td></tr></table></figure>
+<p>一共分为三步执行：</p>
+<p>第 1 步，是根据 id 在 tradelog 表里找到 L2 这一行；</p>
+<p>第 2 步，是从 L2 中取出 tradeid 字段的值；</p>
+<p>第 3 步，是根据 tradeid 值到 trade_detail 表中查找条件匹配的行。explain 的结果里 面第二行的 key=NULL 表示的就是，这个过程是通过遍历主键索引的方式，一个一个地 判断 tradeid 的值是否匹配。</p>
+<p>通过explain可以发现，第三步中根据 tradeid 值到 trade_detail 表中查找条件匹配的行，这个过程是通过遍历主键索引的方式，一个一个地 判断 tradeid 的值是否匹配。这不符合我们的预期。因为表 trade_detail 里 tradeid 字段上 是有索引的，本来是希望通过使用 tradeid 索引能够快速定位到等值的行。但这里 并没有。</p>
+<p>这里的原因是因为这两个表的字符集不同，一个是 utf8，一 个是 utf8mb4，所以做表连接查询的时候用不上关联字段的索引。字符集 utf8mb4 是 utf8 的超集，所以当这两个 类型的字符串在做比较的时候，MySQL 内部的操作是，先把 utf8 字符串转成 utf8mb4 字 符集，再做比较。</p>
+<p>单独将第三步写成sql，就是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from trade_detail where tradeid=$L2.tradeid.value;</span><br><span class="line">其中，$L2.tradeid.value 的字符集是 utf8mb4。</span><br></pre></td></tr></table></figure>
+<p>实际执行的时候，执行的是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select * from trade_detail where CONVERT(traideid USING utf8mb4)=$L2.tradeid.value;</span><br><span class="line">// 如果反过来，加到参数上，就可以使用索引，就像</span><br><span class="line">select operator from tradelog where traideid =CONVERT($R4.tradeid.value USING utf8mb4)</span><br></pre></td></tr></table></figure>
+<p>这再次触发了上面的原则，因此做了全表扫描。</p>
+<hr>
+<p>上面的例子，都说明了一件事，<strong>对索引字段做函数操作，可能会被破坏索引值的有序性，因此优化器就决定放弃走树搜索功能</strong></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/24/Mysql解密九 函数对索引的影响/">https://corn1ng.github.io/2019/10/24/Mysql解密九 函数对索引的影响/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/10/24/Maven 详细总结/">
+        <span class="next-text nav-default">Maven 详细总结</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
