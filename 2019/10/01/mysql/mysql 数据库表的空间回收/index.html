@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql解密六 数据库表的空间回收"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/01/mysql/mysql 数据库表的空间回收/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql解密六 数据库表的空间回收 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql解密六 数据库表的空间回收
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-01
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库表的空间回收"><span class="toc-text">数据库表的空间回收</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#参数innodb-file-per-table"><span class="toc-text">参数innodb_file_per_table</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据删除流程"><span class="toc-text">数据删除流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重建表"><span class="toc-text">重建表</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="数据库表的空间回收"><a href="#数据库表的空间回收" class="headerlink" title="数据库表的空间回收"></a>数据库表的空间回收</h2><p>一个 InnoDB 表包 含两部分，即：表结构定义和数据。在 MySQL 8.0 版本以前，表结构是存在以.frm 为后缀 的文件里。而 MySQL 8.0 版本，则已经允许把表结构定义放在系统数据表中了。因为表结构定义占用的空间很小，所以主要讨论的是表数据。</p>
+<h4 id="参数innodb-file-per-table"><a href="#参数innodb-file-per-table" class="headerlink" title="参数innodb_file_per_table"></a>参数innodb_file_per_table</h4><p>表数据既可以存在共享表空间里，也可以是单独的文件，这个行为是由参数innodb_file_per_table 控制的，OFF表示表的数据放在系统共享表空间，也就是跟数据字典放在一起，ON表示每个InnoDB表数据存储在一个以<code>.ibd</code>为后缀的文件中。从5.6.6版本后，默认值为ON。建议你不论使用 MySQL 的哪个版本，都将这个值设置为 ON。因为，一个表单独存储为 一个文件更容易管理，而且在你不需要这个表的时候，通过 drop table 命令，系统就会直 接删除这个文件。而如果是放在共享表空间中，即使表删掉了，空间也是不会回收的。</p>
+<p><strong>所以，将 innodb_file_per_table 设置为 ON，是推荐做法，接下来的讨论都是基于 这个设置展开的。</strong></p>
+<h4 id="数据删除流程"><a href="#数据删除流程" class="headerlink" title="数据删除流程"></a>数据删除流程</h4><p>先再来看一下 InnoDB 中一个索引的示意图。InnoDB 里的数据都是用 B+ 树的结构组织的。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191009194048.png" width="50%"></p>
+<p>假设要删除R4这个记录，InnoDB引擎只会把R4这个记录标记为删除，如果之后再插入一个ID为300和600之间的记录时，可能会复用这个位置。但是，磁盘文件的大小并不会缩小。</p>
+<p>如果删掉了一个数据页上的所有记录，那么整个数据页都可以复用，但是，<strong>数据页的复用跟记录的复用是不同的，</strong> 记录的复用，只限于符合范围条件的数据，而整个页从B+树上删除以后，可以复用到任何位置。</p>
+<p>如果相邻的两个数据页利用率都很小，系统就会把这两个页上的数据合到其中一个页上，另 外一个数据页就被标记为可复用。</p>
+<p>进一步地，如果我们用 delete 命令把整个表的数据删除呢？结果就是，所有的数据页都会 被标记为可复用。但是磁盘上，文件不会变小。</p>
+<p>你现在知道了，delete 命令其实只是把记录的位置，或者数据页标记为了“可复用”，但磁盘文件的大小是不会变的。也就是说，<strong>通过 delete 命令是不能回收表空间的。这些可以 复用，而没有被使用的空间，看起来就像是“空洞”。</strong></p>
+<p><strong>实际上，不止是删除数据会造成空洞，插入数据也会。</strong></p>
+<p>如果数据是按照索引递增顺序插入的，那么索引是紧凑的。但如果数据是随机插入的，就可 能造成索引的数据页分裂。</p>
+<p>例如上图中PageA已经满了，这时要再插入一行数据，会咋样</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191009195123.png" width="50%"></p>
+<p>可以看到，由于 page A 满了，再插入一个 ID 是 550 的数据时，就不得不再申请一个新的 页面 page B 来保存数据了。页分裂完成后，page A 的末尾就留下了空洞（注意：实际 上，可能不止 1 个记录的位置是空洞）。另外，更新索引上的值，可以理解为删除一个旧的值，再插入一个新值。不难理解，这也是 会造成空洞的。</p>
+<p>也就是说，经过大量增删改的表，都是可能是存在空洞的。所以，如果能够把这些空洞去 掉，就能达到收缩表空间的目的。<strong>而重建表，就可以达到这样的目的。</strong></p>
+<h4 id="重建表"><a href="#重建表" class="headerlink" title="重建表"></a>重建表</h4><p>如果有一个表A，需要做空间压缩，为了把表中的空洞去掉，怎么做。可以新建一个与A结构相同的表B，然后按照主键ID递增的顺序，把数据一行一行的从A里读出来再插入到B中。</p>
+<p>这里，你可以使用 <code>alter table A engine=InnoDB</code> 命令来重建表。在 MySQL 5.5 版本之 前，这个命令的执行流程跟我们前面描述的差不多，区别只是这个临时表 B 不需要你自己 创建，MySQL 会自动完成转存数据、交换表名、删除旧表的操作。</p>
+<p><strong>花时间最多的步骤是往临时表插入数据的过程，如果在这个过程中，有新的数据要写入到表 A 的话，就会造成数据丢失。因此，在整个 DDL 过程中，表 A 中不能有更新。也 就是说，这个 DDL 不是 Online 的。</strong></p>
+<p>而在MySQL 5.6 版本开始引入的 Online DDL，对这个操作流程做了优化。</p>
+<p>下面简单描述引入了Online DDL之后，重建表的流程。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191009200257.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 建立一个临时文件，扫描表 A 主键的所有数据页；</span><br><span class="line">2. 用数据页中表 A 的记录生成 B+ 树，存储到临时文件中；</span><br><span class="line">3. 生成临时文件的过程中，将所有对 A 的操作记录在一个日志文件（row log）中，对应 的是图中 state2 的状态；</span><br><span class="line">4. 临时文件生成后，将日志文件中的操作应用到临时文件，得到一个逻辑数据上与表 A 相 同的数据文件，对应的就是图中 state3 的状态；</span><br><span class="line">5. 用临时文件替换表 A 的数据文件。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/01/mysql/mysql 数据库表的空间回收/">https://corn1ng.github.io/2019/10/01/mysql/mysql 数据库表的空间回收/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/01/kafka （一）/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kafka 术语与重要配置</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/30/mysql/mysql  五抖动/">
+        <span class="next-text nav-default">Mysql解密五 抖动</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

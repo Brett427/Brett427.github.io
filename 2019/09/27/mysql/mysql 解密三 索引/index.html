@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql解密三 索引"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/09/27/mysql/mysql 解密三 索引/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql解密三 索引 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql解密三 索引
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-09-27
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#索引的常见模型"><span class="toc-text">索引的常见模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#InnoDB的索引模型※※※"><span class="toc-text">InnoDB的索引模型※※※</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#索引维护"><span class="toc-text">索引维护</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#例子"><span class="toc-text">例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#覆盖索引"><span class="toc-text">覆盖索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最左前缀原则（联合索引相关）"><span class="toc-text">最左前缀原则（联合索引相关）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#普通索引还是唯一索引"><span class="toc-text">普通索引还是唯一索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#change-buffer"><span class="toc-text">change buffer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用场景"><span class="toc-text">使用场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#结论"><span class="toc-text">结论</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-选择索引"><span class="toc-text">mysql 选择索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#给字符串加索引—-前缀索引"><span class="toc-text">给字符串加索引— 前缀索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#前缀索引对覆盖索引的影响"><span class="toc-text">前缀索引对覆盖索引的影响</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p>一句话简单来说，索引的出现其实就是为了提高数据查询的效率，就像书的目录一样。</p>
+<h4 id="索引的常见模型"><a href="#索引的常见模型" class="headerlink" title="索引的常见模型"></a>索引的常见模型</h4><p>索引的出现是为了提高查询效率，但是实现索引的方式却有很多种，所以这里也就引入了索 引模型的概念。可以用于提高读写效率的数据结构很多，三种常见、也比 较简单的数据结构，分别是哈希表、有序数组和搜索树。</p>
+<p>假设现在维护着一个身份证和姓名的表，需要根据身份证号查询对应的名字，对应的哈希索引如图。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926203051.png" width="50%"></p>
+<p>由于哈希表的结构数据不是连续的，所以哈希表适用于只有等值查询的场景。</p>
+<p>有序数组在等值查询和范围查询场景中的性能十分优秀。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926203151.png" width="50%"></p>
+<p>这里假设身份证号没有重复，这个数组就是按照身份证号递增的顺序保存的。这时候如 果你要查 ID_card_n2 对应的名字，用二分法就可以快速得到。如果仅仅看查询效率，有序数组就是最好的数据结构了。但是，在需要更新数据的时候就麻烦了，你往中间插入一个记录就必须得挪动后面所有的记录，成本太高。</p>
+<p><strong>所以，有序数组索引只适用于静态存储引擎。</strong></p>
+<p>用二叉搜索树实现，如图所示。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926203832.png" width="70%"></p>
+<p>二叉搜索树的特点是：每个节点的左儿子小于父节点，父节点又小于右儿子。这样如果你要 查 ID_card_n2 的话，按照图中的搜索顺序就是按照 UserA -&gt; UserC -&gt; UserF -&gt; User2 这个路径得到。这个时间复杂度是 O(log(N))。</p>
+<p><strong>二叉树是搜索效率最高的，但是实际上大多数的数据库存储却并不使用二叉树。 其原因是，索引不止存在内存中，还要写到磁盘上。（因为内存放不下）</strong>为了让一个查询尽量少地读磁盘，就必须让查询过程访问尽量少的数据块。那么，我们就不 应该使用二叉树，而是要使用“N 叉”树。这里，“N 叉”树中的“N”取决于数据块的 大小。<strong>树根的数据块是肯定在内存中的，树的第二层很大概率也在内存中，那么从第三次层开始的数据块都是在磁盘中，获取里面的数据都要把所在的数据块先加载到内存中，这样的开销极大，所以树一般都为矮胖型</strong>。</p>
+<h4 id="InnoDB的索引模型※※※"><a href="#InnoDB的索引模型※※※" class="headerlink" title="InnoDB的索引模型※※※"></a>InnoDB的索引模型※※※</h4><p>在 InnoDB 中，<strong>表都是根据主键顺序以索引的形式存放的，</strong>这种存储方式的表称为索引组织表。又因为前面我们提到的，<strong>InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。</strong></p>
+<p>每一个索引在InnoDB里面都对应一颗B+树。</p>
+<p>假设 有一个主键列为ID的表，表中有字段k,并且在k上有索引，建表语句就是</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> T( </span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">int</span> primary <span class="keyword">key</span>, </span><br><span class="line">    k <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span>, </span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">16</span>),</span><br><span class="line">    <span class="keyword">index</span> (k))<span class="keyword">engine</span>=<span class="keyword">InnoDB</span>;</span><br></pre></td></tr></table></figure>
+<p>R1~R5 的 (ID,k) 值分别为 (100,1)、(200,2)、(300,3)、(500,5) 和 (600,6)，两棵树 的示例示意图如下。（如果ID 和K的顺序是不对应的，那么右边的图中K的顺序仍然是12356，下面的100，200，300，500，600取与K对应的值即可）</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926210624.png" alt=""></p>
+<p>根据叶子节点的内容，索引类型分为主键索引和非主键索引。</p>
+<p><strong>主键索引的叶子节点存的是整行数据。在 InnoDB 里，主键索引也被称为聚簇索引 （clustered index）。</strong></p>
+<p><strong>非主键索引的叶子节点内容是主键的值。在 InnoDB 里，非主键索引也被称为二级索引</strong></p>
+<p>基于主键索引和普通索引的查询的区别在于</p>
+<p>如果语句是 select <em> from T where ID=500，即主键查询方式，则只需要搜索 ID 这棵 B+ 树；如果语句是 select </em> from T where k=5，即普通索引查询方式，则需要先搜索 k 索引 树，得到 ID 的值为 500，再到 ID 索引树搜索一次。这个过程称为<strong>回表</strong>。</p>
+<p>也就是说，基于非主键索引的查询需要多扫描一棵索引树。因此，我们在应用中应该尽量使 用主键查询。</p>
+<h4 id="索引维护"><a href="#索引维护" class="headerlink" title="索引维护"></a>索引维护</h4><p>B+ 树为了维护索引有序性，在插入新值的时候需要做必要的维护。</p>
+<p>以上面的为例，如果插入的新的行ID值为700，则只需要在 R5 的记录后面插入一个新记录。如果新插入的 ID 值为 400，就相对麻烦了，需要逻辑上挪动后面的数据，空出位置。而更糟的情况是，如果 R5 所在的数据页已经满了，根据 B+ 树的算法，这时候需要申请一 个新的数据页，然后挪动部分数据过去。这个过程称为页分裂。在这种情况下，性能自然会 受影响。</p>
+<hr>
+<p>根据上述说明，分析下哪些场景下应该使用自增主键，哪些不该。</p>
+<p>自增主键是指自增列上定义的主键，一般定义为NOT NULL PRIMARY KEY AUTO_INCREMENT。插入新记录的时候可以不指定 ID 的值，系统会获取当前 ID 最大值加 1 作为下一条记录的 ID 值。<strong>也就是说，自增主键的插入数据模式，正符合了我们前面提到的递增插入的场景。每次插入 一条新记录，都是追加操作，都不涉及到挪动其他记录，也不会触发叶子节点的分裂。</strong>而有业务逻辑的字段做主键，则往往不容易保证有序插入，这样写数据成本相对较高。同时，从存储空间的角度看，主键的自增字段占用空间小，叶子节点也小。所以，从性能和存储空间方面考量，自增主键往往是更合理的选择。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> T (</span><br><span class="line"><span class="keyword">ID</span> <span class="built_in">int</span> primary <span class="keyword">key</span>,</span><br><span class="line">k <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>, </span><br><span class="line">s <span class="built_in">varchar</span>(<span class="number">16</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span>,</span><br><span class="line"><span class="keyword">index</span> k(k))</span><br><span class="line"><span class="keyword">engine</span>=<span class="keyword">InnoDB</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> T <span class="keyword">values</span>(<span class="number">100</span>,<span class="number">1</span>, <span class="string">'aa'</span>),(<span class="number">200</span>,<span class="number">2</span>,<span class="string">'bb'</span>),(<span class="number">300</span>,<span class="number">3</span>,<span class="string">'cc'</span>),(<span class="number">500</span>,<span class="number">5</span>,<span class="string">'ee'</span>),(<span class="number">600</span>,<span class="number">6</span>,<span class="string">'ff'</span>),(<span class="number">700</span>,<span class="number">7</span>,<span class="string">'gg'</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926235950.png" alt=""></p>
+<p>下面是select * from T where k between 3 and 5 这条语句的执行流程。</p>
+<ul>
+<li><p>在 k 索引树上找到 k=3 的记录，取得 ID = 300；</p>
+</li>
+<li><p>再到 ID 索引树查到 ID=300 对应的 R3；</p>
+</li>
+<li><p>在 k 索引树取下一个值 k=5，取得 ID=500；</p>
+</li>
+<li><p>再回到 ID 索引树查到 ID=500 对应的 R4；</p>
+</li>
+<li><p>在 k 索引树取下一个值 k=6，不满足条件，循环结束。</p>
+</li>
+</ul>
+<p>在这个过程中，回到主键索引树搜索的过程，我们称为回表。可以看到，这个查询过程读了 k 索引树的 3 条记录（步骤 1、3 和 5），回表了两次（步骤 2 和 4）。**</p>
+<h4 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h4><p>如果执行的语句是 select ID from T where k between 3 and 5，这时只需要查 ID 的值， <strong>而 ID 的值已经在 k 索引树上了，因此可以直接提供查询结果，不需要回表。也就是说，在 这个查询里面，索引 k 已经“覆盖了”我们的查询需求，我们称为覆盖索引。</strong></p>
+<p>由于覆盖索引可以减少树的搜索次数，显著提升查询性能，所以使用覆盖索引是一个常用的性能优化手段。</p>
+<h4 id="最左前缀原则（联合索引相关）"><a href="#最左前缀原则（联合索引相关）" class="headerlink" title="最左前缀原则（联合索引相关）"></a>最左前缀原则（联合索引相关）</h4><p>B+树这种索引结构，可以利用索引的最左前缀，来定位记录。以(name,age)这个联合索引来分析。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190927103647.png" alt=""></p>
+<p>可以看到，索引项按照索引里定义里出现的字段顺序排序的。</p>
+<p>当逻辑需求是查到所有名字是“张三”的人时，可以快速定位到 ID4，然后向后遍历得 到所有需要的结果。可以看到，不只是索引的全部定义，只要满足最左前缀，就可以利用索引来加速检索。这个 最左前缀可以是联合索引的最左 N 个字段，也可以是字符串索引的最左 M 个字符。</p>
+<h3 id="普通索引还是唯一索引"><a href="#普通索引还是唯一索引" class="headerlink" title="普通索引还是唯一索引"></a>普通索引还是唯一索引</h3><p>仍然是上面的例子</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926235950.png" alt=""></p>
+<p>假设，执行查询的语句是 select id from T where k=5。这个查询语句在索引树上查找的 过程，先是通过 B+ 树从树根开始，按层搜索到叶子节点，也就是图中右下角的这个数据 页，然后可以认为数据页内部通过二分法来定位记录。</p>
+<p><strong>对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直 到碰到第一个不满足 k=5 条件的记录。</strong></p>
+<p><strong>对于唯一索引来说，由于索引定义了唯一性，查找到第一个满足条件的记录后，就会停止 继续检索。</strong></p>
+<p>InnoDB 的数据是按数据页为单位来读写的。也就是说，当需要读一条记录的时 候，并不是将这个记录本身从磁盘读出来，而是以页为单位，将其整体读入内存。在 InnoDB 中，每个数据页的大小默认是 16KB。因为引擎是按页读写的，所以说，当找到 k=5 的记录的时候，它所在的数据页就都在内存 里了。那么，对于普通索引来说，要多做的那一次“查找和判断下一条记录”的操作，就只 需要一次指针寻找和一次计算。</p>
+<h4 id="change-buffer"><a href="#change-buffer" class="headerlink" title="change buffer"></a>change buffer</h4><p>当需要更新一个数据页时，如果数据页在内存中就直接更新，而如果这个数据页还没有在内 存中的话，在不影响数据一致性的前提下，InooDB 会将这些更新操作缓存在 change buffer 中，这样就不需要从磁盘中读入这个数据页了。在下次查询需要访问这个数据页的 时候，将数据页读入内存，然后执行 change buffer 中与这个页有关的操作。通过这种方 式就能保证这个数据逻辑的正确性。</p>
+<p>需要说明的是，虽然名字叫作 change buffer，实际上它是可以持久化的数据。也就是说， change buffer 在内存中有拷贝，也会被写入到磁盘上。将 change buffer 中的操作应用到原数据页，得到最新结果的过程称为 merge。除了访问 这个数据页会触发 merge 外，系统有后台线程会定期 merge。在数据库正常关闭 （shutdown）的过程中，也会执行 merge 操作。</p>
+<p>显然，如果能够将更新操作先记录在 change buffer，减少读磁盘，语句的执行速度会得到 明显的提升。而且，数据读入内存是需要占用 buffer pool 的，所以这种方式还能够避免占 用内存，提高内存利用率。</p>
+<p><strong>唯一索引的更新不能使用change buffer ，普通索引才可以使用</strong>。这是因为对于唯一索引来说，所有的更新操作都要先判断这个操作是否违反唯一性约束。比如，要插 入 (4,400) 这个记录，就要先判断现在表中是否已经存在 k=4 的记录，而这必须要将数据 页读入内存才能判断。如果都已经读入到内存了，那直接更新内存会更快，就没必要使用 change buffer 了。</p>
+<p>现在来看一下 如果要往上面的例子中插入一个新纪录（4，400） 的话，InnoDB的处理流程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">第一种情况是，这个记录要更新的目标页在内存中。这时，InnoDB 的处理流程如下：</span><br><span class="line">对于唯一索引来说，找到 3 和 5 之间的位置，判断到没有冲突，插入这个值，语句执行 结束；</span><br><span class="line">对于普通索引来说，找到 3 和 5 之间的位置，插入这个值，语句执行结束。</span><br><span class="line"></span><br><span class="line">这样看来，普通索引和唯一索引对更新语句性能影响的差别，只是一个判断，只会耗费微小 的 CPU 时间。</span><br><span class="line">但，这不是我们关注的重点。</span><br><span class="line"></span><br><span class="line">第二种情况是，这个记录要更新的目标页不在内存中。这时，InnoDB 的处理流程如下：</span><br><span class="line">对于唯一索引来说，需要将数据页读入内存，判断到没有冲突，插入这个值，语句执行结 束；</span><br><span class="line">对于普通索引来说，则是将更新记录在 change buffer，语句执行就结束了。</span><br><span class="line"></span><br><span class="line">将数据从磁盘读入内存涉及随机 IO 的访问，是数据库里面成本最高的操作之一。change buffer 因为减少了随机磁盘访问，所以对更新性能的提升是会很明显的。</span><br></pre></td></tr></table></figure>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><p>普通索引的所有场景，使用 change buffer 都可以起到加速作用吗？</p>
+<p>因为 merge 的时候是真正进行数据更新的时刻，而 change buffer 的主要目的就是将记录 的变更动作缓存下来，所以在一个数据页做 merge 之前，change buffer 记录的变更越多 （也就是这个页面上要更新的次数越多），收益就越大。</p>
+<p>因此，对于写多读少的业务来说，页面在写完以后马上被访问到的概率比较小，此时 change buffer 的使用效果最好。这种业务模型常见的就是账单类、日志类的系统。</p>
+<p>反过来，假设一个业务的更新模式是写入之后马上会做查询，那么即使满足了条件，将更新 先记录在 change buffer，但之后由于马上要访问这个数据页，会立即触发 merge 过程。 这样随机访问 IO 的次数不会减少，反而增加了 change buffer 的维护代价。所以，对于这 种业务模式来说，change buffer 反而起到了副作用。</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>其实，这两类索引在查询能 力上是没差别的，主要考虑的是对更新性能的影响。所以，我建议你尽量选择普通索引。如果所有的更新后面，都马上伴随着对这个记录的查询，那么你应该关闭 change buffer。 而在其他情况下，change buffer 都能提升更新性能。</p>
+<h3 id="mysql-选择索引"><a href="#mysql-选择索引" class="headerlink" title="mysql 选择索引"></a>mysql 选择索引</h3><p>MYSQL中一张表可以支持多个索引，使用哪个索引是由MYSQL来确定的。</p>
+<p>选择索引是优化器的工作，而优化器选择索引的目的，是找到一个最优的执行方案，并用最小的代价去执行语句。在数 据库里面，扫描行数是影响执行代价的因素之一。扫描的行数越少，意味着访问磁盘数据的 次数越少，消耗的 CPU 资源越少。当然，扫描行数并不是唯一的判断标准，优化器还会结合是否使用临时表、是否排序等因素 进行综合判断。</p>
+<p><strong>扫描行数是如何判断的？</strong></p>
+<p>MySQL 在真正开始执行语句之前，并不能精确地知道满足这个条件的记录有多少条，而只 能根据统计信息来估算记录数。</p>
+<p>这个统计信息就是索引的“区分度”。显然，一个索引上不同的值越多，这个索引的区分度 就越好。而一个索引上不同的值的个数，我们称之为“基数”（cardinality）。也就是说， 这个基数越大，索引的区分度越好。</p>
+<p>可以使用show index 方法，看到一个索引的基数。但是并不准确。MYSQL获得索引基数的方法是通过采样统计的方法。</p>
+<p>采样统计的时候，InnoDB 默认会选择 N 个数据页，统计这些页面上的不同值，得到一个 平均值，然后乘以这个索引的页面数，就得到了这个索引的基数。而数据表是会持续更新的，索引统计信息也不会固定不变。所以，当变更的数据行数超过 1/M 的时候，会自动触发重新做一次索引统计。</p>
+<p>对于由于索引统计信息不准确导致的问题，可以用 analyze table 来解决。</p>
+<p>而对于其他优化器误判的情况，可以在应用端用 force index 来强行指定索引，也可以通过修改语句来引导优化器，还可以通过增加或者删除索引来绕过这个问题。</p>
+<h3 id="给字符串加索引—-前缀索引"><a href="#给字符串加索引—-前缀索引" class="headerlink" title="给字符串加索引— 前缀索引"></a>给字符串加索引— 前缀索引</h3><p>假设给一个邮箱加索引，有两种方法，一种是对整个email加索引，另一种是对email的一部分加索引，在存储上，这两个索引如下所示。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191008201959.png" width="50%"></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191008202019.png" width="50%"></p>
+<p>由于 email(6) 这个索引结构中每个邮箱字段都只取前 6 个字节（即： zhangs），所以占用的空间会更小，这就是使用前缀索引的优势。但，这同时带来的损失是，可能会增加额外的记录扫描次数。</p>
+<p>假如是下面的语句，<code>select id,name,email from SUser where email=&#39;zhangssxyz@xxx.com&#39;;</code></p>
+<p>如果使用的是 index1（即 email 整个字符串的索引结构），执行顺序是这样的：</p>
+<ol>
+<li><p>从 index1 索引树找到满足索引值是<a href="mailto:`zhangssxyz@xxx.com" target="_blank" rel="noopener">`zhangssxyz@xxx.com</a>`的这条记录，取得 ID2 的值；</p>
+</li>
+<li><p>到主键上查到主键值是 ID2 的行，判断 email 的值是正确的，将这行记录加入结果集；</p>
+</li>
+<li><p>取 index1 索引树上刚刚查到的位置的下一条记录，发现已经不满足 <a href="mailto:email=`zhangssxyz@xxx.com" target="_blank" rel="noopener">email=`zhangssxyz@xxx.com</a>`的条件了，循环结束。</p>
+</li>
+</ol>
+<p>这个过程中，只需要回主键索引取一次数据，所以系统认为只扫描了一行。</p>
+<p>如果使用的是index2 （即 email(6) 索引结构），执行顺序是这样的：</p>
+<ol>
+<li><p>从 index2 索引树找到满足索引值是’zhangs’的记录，找到的第一个是 ID1；</p>
+</li>
+<li><p>到主键上查到主键值是 ID1 的行，判断出 email 的值不是<a href="mailto:`zhangssxyz@xxx.com" target="_blank" rel="noopener">`zhangssxyz@xxx.com</a>`， 这行记录丢弃；</p>
+</li>
+<li><p>取 index2 上刚刚查到的位置的下一条记录，发现仍然是’zhangs’，取出 ID2，再到 ID 索引上取整行然后判断，这次值对了，将这行记录加入结果集；</p>
+</li>
+<li><p>重复上一步，直到在 idxe2 上取到的值不是’zhangs’时，循环结束。</p>
+</li>
+</ol>
+<p>在这个过程中，要回主键索引取 4 次数据，也就是扫描了 4 行。</p>
+<h5 id="前缀索引对覆盖索引的影响"><a href="#前缀索引对覆盖索引的影响" class="headerlink" title="前缀索引对覆盖索引的影响"></a>前缀索引对覆盖索引的影响</h5><p>如果查询语句从 <code>select id,email from SUser where email=&#39;zhangssxyz@xxx.com&#39;;</code>换成<code>select id,name,email from SUser where email=&#39;zhangssxyz@xxx.com&#39;;</code>这个语句只要求返回id 和eamil .</p>
+<p>所以，如果使用 index1（即 email 整个字符串的索引结构）的话，可以利用覆盖索引，从 index1 查到结果后直接就返回了，不需要回到 ID 索引再去查一次。而如果使用 index2（即 email(6) 索引结构）的话，就不得不回到 ID 索引再去判断 email 字段的值。<strong>也就是说，使用前缀索引就用不上覆盖索引对查询性能的优化了。</strong></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/09/27/mysql/mysql 解密三 索引/">https://corn1ng.github.io/2019/09/27/mysql/mysql 解密三 索引/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/29/mysql/mysql Count() --14/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Mysql解密四 Count 的实现</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/26/mysql/mysql 解密二 事务隔离/">
+        <span class="next-text nav-default">Mysql解密二 事务隔离</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
