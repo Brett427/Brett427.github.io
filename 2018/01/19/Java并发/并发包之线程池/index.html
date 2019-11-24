@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="并发包之线程池"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/01/19/Java并发/并发包之线程池/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 并发包之线程池 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          并发包之线程池
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-01-19
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#线程池的实现原理"><span class="toc-text">线程池的实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程池的使用"><span class="toc-text">线程池的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Java中的阻塞队列"><span class="toc-text">Java中的阻塞队列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建线程池"><span class="toc-text">创建线程池</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#向线程池提交任务"><span class="toc-text">向线程池提交任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关闭线程池"><span class="toc-text">关闭线程池</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#核心线程池的内部实现"><span class="toc-text">核心线程池的内部实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#几种阻塞队列"><span class="toc-text">几种阻塞队列:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#几种拒绝策略"><span class="toc-text">几种拒绝策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自定义线程创建-ThreadFactory"><span class="toc-text">自定义线程创建 ThreadFactory</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <p>Java中的线程池是运用场景最多的并发框架,几乎所有需要异步或并发执行任务的程序<br>都可以使用线程池。</p>
+<p>使用线程池的好处。<br>第一:降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。<br>第二:提高响应速度。当任务到达时,任务可以不需要等到线程创建就能立即执行。<br>第三:提高线程的可管理性。线程是稀缺资源,如果无限制地创建,不仅会消耗系统资源,<br>还会降低系统的稳定性,使用线程池可以进行统一分配、调优和监控。</p>
+<a id="more"></a>
+<h3 id="线程池的实现原理"><a href="#线程池的实现原理" class="headerlink" title="线程池的实现原理"></a>线程池的实现原理</h3><p>线程池的处理流程</p>
+<p>1)线程池判断核心线程池里的线程是否都在执行任务。如果不是,则创建一个新的工作<br>线程来执行任务。如果核心线程池里的线程都在执行任务,则进入下个流程。<br>2)线程池判断工作队列是否已经满。如果工作队列没有满,则将新提交的任务存储在这<br>个工作队列里。如果工作队列满了,则进入下个流程。<br>3)线程池判断线程池的线程是否都处于工作状态。如果没有,则创建一个新的工作线程<br>来执行任务。如果已经满了,则交给饱和策略来处理这个任务。</p>
+<p><img src="http://blog-1252095801.cosgz.myqcloud.com/Screenshot%20from%202017-12-19%2020-32-11.png" width="95%"></p>
+<p>ThreadPoolExecutor执行Executor方法分下面4种情况</p>
+<p>1)如果当前运行的线程少于corePoolSize,则创建新线程来执行任务(注意,执行这一步骤<br>需要获取全局锁)。<br>2)如果运行的线程等于或多于corePoolSize,则将任务加入BlockingQueue。<br>3)如果无法将任务加入BlockingQueue(队列已满),则创建新的线程来处理任务(注意,执行这一步骤需要获取全局锁)。<br>4)如果创建新线程将使当前运行的线程超出maximumPoolSize,任务将被拒绝,并调用<br>RejectedExecutionHandler.rejectedExecution()方法。</p>
+<p>ThreadPoolExecutor采取上述步骤的总体设计思路,是为了在执行execute()方法时,尽可能<br>地避免获取全局锁(那将会是一个严重的可伸缩瓶颈)。在ThreadPoolExecutor完成预热之后(当前运行的线程数大于等于corePoolSize),几乎所有的execute()方法调用都是执行步骤2,而步骤2不需要获取全局锁。</p>
+<p><strong>工作线程</strong> 线程池创建线程时，会将线程封装成工作线程Worker，Worker在执行完任务后，还会循环获取工作队列里的任务来执行。</p>
+<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h4 id="Java中的阻塞队列"><a href="#Java中的阻塞队列" class="headerlink" title="Java中的阻塞队列"></a>Java中的阻塞队列</h4><p>ArrayListBlockingQueue: 一个由数组结构组成的有界阻塞队列</p>
+<p>LinkedBlockingQueue: 一个由链表结构组成的无界阻塞队列</p>
+<p>PriorityBlockingQueue: 一个支持优先级排序的无界阻塞队列</p>
+<p>DelayQueue: 一个使用优先级队列实现的无界阻塞队列</p>
+<p>SynchronousQueue 一个不存储元素的阻塞队列</p>
+<p>LinkedtransferQueue 一个由链表结构组成的无界阻塞队列</p>
+<p>LinkedBlockingDeque 一个由链表结构组成的双向阻塞对列</p>
+<h4 id="创建线程池"><a href="#创建线程池" class="headerlink" title="创建线程池"></a>创建线程池</h4><p>通过ThreadPoolExecutor 来创建一个线程池</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ThreadPoolExecutor(corepoolsize,maxiumPoolsize,keepalivetime,millseconds,runnabelTaskQueue,handler);</span><br></pre></td></tr></table></figure>
+<p><strong>一个线程池要实现ExecutorService接口,ExecutorService 继承自Executor.</strong></p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/Screenshot%20from%202018-01-16%2022-40-03.png" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService es = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="向线程池提交任务"><a href="#向线程池提交任务" class="headerlink" title="向线程池提交任务"></a>向线程池提交任务</h4><p>两个方法向线程池提交任务.分别为execute()和submit()</p>
+<p>execute()方法用于提交不需要返回值的任务,所以无法判断任务是否被线程池执行成功.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">threadpool.execute(<span class="keyword">new</span> Runnable()</span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">                       </span>&#123;</span><br><span class="line">                           <span class="comment">//TODO</span></span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;);</span><br></pre></td></tr></table></figure>
+<p>submit方法用于提交需要返回值的任务,线程池会返回一个future类型的对象,通过这个future对象可以判断任务是否执行成功,并且可以通过future的get()方法来获取值,get方法会阻塞当前线程直到任务完成,而使用get(long timeout, TimeUnit unit) 方法则会阻塞当前线程一段时间后立即返回,这时候可能任务还没执行完</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Future&lt;Object&gt; future  =executor.submit(harReturnValuetask);</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    Object s= future.get();</span><br><span class="line">&#125;<span class="keyword">catch</span>(InterruptedException e)</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">&#125;<span class="keyword">finally</span></span><br><span class="line">&#123;</span><br><span class="line">    executor.shutdown();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="关闭线程池"><a href="#关闭线程池" class="headerlink" title="关闭线程池"></a>关闭线程池</h4><p>可以通过调用线程池的shutdown或shutdownNow方法来关闭线程池。它们的原理是遍历线程池中的工作线程,然后逐个调用线程的interrupt方法来中断线程,所以无法响应中断的任务可能永远无法终止。但是它们存在一定的区别,shutdownNow首先将线程池的状态设置成STOP,然后尝试停止所有的正在执行或暂停任务的线程,并返回等待执行任务的列表,而shutdown只是将线程池的状态设置成SHUTDOWN状态,然后中断所有没有正在执行任务的线程。<br>只要调用了这两个关闭方法中的任意一个,isShutdown方法就会返回true。当所有的任务<br>都已关闭后,才表示线程池关闭成功,这时调用isTerminaed方法会返回true。至于应该调用哪一种方法来关闭线程池,应该由提交到线程池的任务特性决定,通常调用shutdown方法来关闭线程池,如果任务不一定要执行完,则可以调用shutdownNow方法。</p>
+<p>也就是或,shutdown 不会关闭还在运行的线程,shutdownnow会尝试中断还在运行的线程.</p>
+<h3 id="核心线程池的内部实现"><a href="#核心线程池的内部实现" class="headerlink" title="核心线程池的内部实现"></a>核心线程池的内部实现</h3><p>对于核心的几个线程池,无论是newFixedThreadPool()方法,newSingleThreadExecutor()还是newCachedThreadPool()方法,虽然看起来创建的线程有着完全不同的特点,但是内部实现均使用了ThreadPoolExecutor实现</p>
+<p>都是return了一个 new ThreadPoolExecutor().核心的线程池都是ThreadPoolExecutor类的封装.</p>
+<p>通过ThreadPoolExecutor来创建一个线程池(自定义线程池)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ThreadPoolExecutor(corePoolSize,maximumPoolSize,keepAliveTime,</span><br><span class="line">                       milliseconds,runnableTaskQueue,handler,unit);</span><br></pre></td></tr></table></figure>
+<p>1)corePoolSize(线程池的基本大小)</p>
+<p>2)runnableTaskQueue(任务队列):用于保存等待执行的任务的阻塞队列。可以选择以下几个阻塞队列。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ArrayBlockingQueue 是一个基于数组结构的有界阻塞队列，此队列按照FIFO原则对元素进行排序。</span><br><span class="line">--------</span><br><span class="line">LinkedBlockingQueue 是一个基于链表结构的阻塞队列，此队列按照FIFO排列元素，吞吐量通常高于ArrayBlockingQueue, 静态工厂方法Executors.newFixedThreadPool()使用了这个队列。</span><br><span class="line">---------</span><br><span class="line">SynchronousQueue 一个不存储元素的阻塞队列，每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于Linked-BlockingQueue, 静态工厂方法Executors.newCachedThreadPool 使用了这个队列。</span><br><span class="line">---------</span><br><span class="line">PriorityBlockingQueue一个具有优先级的无界阻塞队列。</span><br></pre></td></tr></table></figure>
+<p>3)maximumPoolSize(线程池最大数量):线程池允许创建的最大线程数。</p>
+<p>4)ThreadFactory:线程工厂,用于创建线程.一般用默认的即可.</p>
+<p>5)RejectedExecutionHandler(饱和策略):当队列和线程池都满了,说明线程池处于饱和状态,那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy,表示无法处理新任务时抛出异常。在JDK 1.5中Java线程池框架提供了以下4种策略。<br>·AbortPolicy:直接抛出异常。<br>·CallerRunsPolicy:只用调用者所在线程来运行任务。<br>·DiscardOldestPolicy:丢弃队列里最近的一个任务,并执行当前任务。<br>·DiscardPolicy:不处理,丢弃掉。</p>
+<p>6) keepAliveTime(线程活动保持时间):线程池的工作线程空闲后,保持存活的时间。</p>
+<p>7) unit  keepAlivetime的单位.其中,Queue 是指提交但是未执行的任务队列,是一个<strong>BlockingQueue</strong>接口的对象,仅用于存放Runnable对象.</p>
+<h4 id="几种阻塞队列"><a href="#几种阻塞队列" class="headerlink" title="几种阻塞队列:"></a>几种阻塞队列:</h4><ul>
+<li>直接提交的队列:由SynchronousQueue对象提供,是一个特殊的blockingqueue.它没有容量,每一个插入操作都要等待一个相应的删除操作,反之,每一个删除操作都要等待对应的插入操作.如果使用此队列,提交的任务不会被真实的保存,而总是将新任务提交给线程执行,若没有空闲线程,则尝试新的进程,如果进程数量已经达到最大值,则执行拒绝策略.</li>
+<li>有界的任务队列 : ArrayBlockingQueue 实现.它的构造函数中必须带有一个容量参数,表示该队列的最大容量.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayBlockingQueue</span><span class="params">(<span class="keyword">int</span> capacity)</span></span></span><br></pre></td></tr></table></figure>
+<p>若有新任务,且实际线程小于corePoolSize,优先创建新的线程,若大于corePoolSize,将新任务加入等待队列,若队列满,则无法加入,在总线程不大于maximumPoolsize的基础上,创建新的线程,若大于maximumPoolSize,执行拒绝策略.</p>
+<ul>
+<li>优先任务队列:带有执行优先级的队列,通过PriorityBlockingQueue实现,可控制任务的执行先后顺序,是一个特殊的无界队列,</li>
+</ul>
+<hr>
+<p><font color="00ffff">newFixedThreadPool 返回了一个corePoolSize和maximumPoolSize大小一样的,并且使用了LinkedBlockingQueue任务队列的线程池,</font></p>
+<p>newSingleThreadExecutor()返回了一个单线程的线程池.</p>
+<p>newCachedThreadPool()返回corePoolSize为0, maximumPoolSize无穷大的线程池, 并使用SynchronousQueue队列.<font color="00ffff"></font></p>
+<h4 id="几种拒绝策略"><a href="#几种拒绝策略" class="headerlink" title="几种拒绝策略"></a>几种拒绝策略</h4><p>拒绝策略是系统超负荷运行时的补充措施,同时,等待队列中也已经满了,塞不下新任务了.JDK提供四种拒绝策略</p>
+<ul>
+<li>AbortPolicy 直接抛出异常,阻止系统正常工作</li>
+<li>CallerRunsPolicy 只要线程池未关闭,该策略直接在调用者线程中,运行当前被丢弃的任务,所以这种策略不会真的丢弃任务,但是任务提交线程的性能极有可能急剧下降.</li>
+<li>DiscardOledestPolicy 丢弃最老的一个请求,也就是即将被执行的一个任务,并尝试再次提交当前任务.</li>
+<li>DiscardPolicy 默默丢弃无法处理的任务,不予以任何处理.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//自定义一个线程池</span></span><br><span class="line">ExecutorService es = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">5</span>,<span class="number">5</span>,<span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                <span class="keyword">new</span> LinkedBlockingDeque&lt;Runnable&gt;(<span class="number">10</span>),Executors.defaultThreadFactory(),</span><br><span class="line">                <span class="keyword">new</span> RejectedExecutionHandler() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> 						</span>&#123;</span><br><span class="line">                        System.out.println(r.toString()+<span class="string">"is discard"</span>);</span><br><span class="line">                      &#125;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="自定义线程创建-ThreadFactory"><a href="#自定义线程创建-ThreadFactory" class="headerlink" title="自定义线程创建 ThreadFactory"></a>自定义线程创建 ThreadFactory</h3><p>线程池中的线程从哪里来,答案就是ThreadFactory</p>
+<p>ThreadFactory是一个接口,它只有一个方法,用来创建线程,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Thread <span class="title">newThread</span><span class="params">(Runnable r)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>当线程池需要新建线程时,就会调用这个方法</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/01/19/Java并发/并发包之线程池/">https://corn1ng.github.io/2018/01/19/Java并发/并发包之线程池/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/01/19/Java并发/并发容器一/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">并发包之并发容器(一)</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/01/19/LockSupport/">
+        <span class="next-text nav-default">并发包之LockSupport</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Docker 入门"/>
+
+
+
+
+  <meta name="keywords" content="Docker, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/04/01/docker/Docker/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Docker 入门 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Docker 入门
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-04-01
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/中间件/">中间件</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker"><span class="toc-text">Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-的好处"><span class="toc-text">Docker 的好处</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Docker镜像"><span class="toc-text">使用Docker镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#搜索镜像"><span class="toc-text">搜索镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取镜像"><span class="toc-text">获取镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列出镜像"><span class="toc-text">列出镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#虚悬镜像"><span class="toc-text">虚悬镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除本地镜像"><span class="toc-text">删除本地镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#利用commit-理解镜像构成"><span class="toc-text">利用commit 理解镜像构成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用Dockerfile-定制镜像"><span class="toc-text">使用Dockerfile 定制镜像</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#操作Docker容器"><span class="toc-text">操作Docker容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#启动容器"><span class="toc-text">启动容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#新建并启动"><span class="toc-text">新建并启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进入容器内部"><span class="toc-text">进入容器内部</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-网络类型"><span class="toc-text">docker 网络类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列出容器"><span class="toc-text">列出容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#停止容器"><span class="toc-text">停止容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#强制停止容器"><span class="toc-text">强制停止容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动已终止容器"><span class="toc-text">启动已终止容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除容器"><span class="toc-text">删除容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#后台运行"><span class="toc-text">后台运行</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-Hub"><span class="toc-text">Docker Hub</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#拉取镜像"><span class="toc-text">拉取镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#推送镜像"><span class="toc-text">推送镜像</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>Docker使用Google公司推出的Go语言进行开发实现,基于Linux内核<code>cgroup,namespace,</code>以及<code>AUFS</code>类的<code>Union    FS</code>等技术,对进程进行封装隔离,属于操作系统层面的虚拟化技术。由于隔离的进程独立于宿主和其它的隔离的进程,因此也称其为容器。最初实现是基于<code>LXC</code>,从0.7版本以后开始去除<code>LXC</code>,转而使用自行开发的<code>libcontainer</code>,从    1.11    开始,则进一步演进为使用<code>runC</code>和<code>containerd</code>。</p>
+<p>Docker    在容器的基础上,进行了进一步的封装,从文件系统、网络互联到进程隔离等等,极大的简化了容器的创建和维护。使得Docker技术比虚拟机技术更为轻便、快捷。</p>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2015-47-41%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=nnf9xuxoNJdGq6uhUXkJ3my3chBhPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTAxNzAzJnQ9MTUyMjMwOTcwMyZyPTI3MjIxMDIzNyZmPS8yMDE4LTAzLTI5JTIwMTUtNDctNDElRTUlQjElOEYlRTUlQjklOTUlRTYlODglQUElRTUlOUIlQkUucG5nJmI9dHdv" alt=""></p>
+<p>下面的图片比较了Docker和传统虚拟化方式的不同之处。传统虚拟机技术是虚拟出一套硬件后,在其上运行一个完整操作系统,在该系统上再运行所需应用进程;而容器内的应用进程直接运行于宿主的内核,容器内没有自己的内核,而且也没有进行硬件虚拟。因此容器要比传统虚拟机更为轻便。</p>
+<p><img src="http://two-1252095801.cosgz.myqcloud.com/2018-03-29%2015-49-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png?sign=hKO5rZFL59/Lo4EuYXOhYJGxe89hPTEyNTIwOTU4MDEmaz1BS0lEZUVqQVZmZXF1bmN4SFdTS1hLN29ObHgwczlLSzRvTW0mZT0xNTI0OTAxNzU0JnQ9MTUyMjMwOTc1NCZyPTM0NzYxMzMwJmY9LzIwMTgtMDMtMjklMjAxNS00OS0wMSVFNSVCMSU4RiVFNSVCOSU5NSVFNiU4OCVBQSVFNSU5QiVCRS5wbmcmYj10d28=" alt=""></p>
+<h3 id="Docker-的好处"><a href="#Docker-的好处" class="headerlink" title="Docker 的好处"></a>Docker 的好处</h3><p>Docker可以更高效的利用系统资源，拥有更快的启动时间，有一致的运行环境，可以进行持续交付和部署。可以进行更轻松的迁移，更轻松的维护和扩展。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>Docker包括三个基本概念，分别是镜像（image），容器(Container)，仓库(Repository).</p>
+<ul>
+<li><p>镜像</p>
+<p>操作系统分内核和用户空间，对Linux而言，内核启动后，会挂载root文件系统为其提供用户空间支持。而Docker镜像(Image),就相当于是一个     root     文件系统。比如官方镜像ubuntu:16.04就包含了完整的一套    Ubuntu    16.04最小系统的root文件系统。<br>Docker镜像是一个特殊的文件系统,除了提供容器运行时所需的程序、库、资源、配置等文件外,还包含了一些为运行时准备的一些配置参数(如匿名卷、环境变量、用户等)。镜像不包含任何动态数据,其内容在构建之后也不会被改变。</p>
+</li>
+<li><p>Docker容器</p>
+<p>镜像(Image)和容器(Container)的关系,就像是面向对象程序设计中的      类和    实例    一样,镜像是静态的定义,容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。<br>容器的实质是进程,但与直接在宿主执行的进程不同,容器进程运行于属于自己的独立的命名空间。因此容器可以拥有自己的root文件系统、自己的网络配置、自己的进程空间,甚至自己的用户ID空间。容器内的进程是运行在一个隔离的环境里,使用起来,就好像是在一个独立于宿主的系统下操作一样。这种特性使得容器封装的应用比直接在宿主运行更加安全。</p>
+</li>
+</ul>
+<p>前面讲过镜像使用的是分层存储,容器也是如此。每一个容器运行时,是以镜像为基础层,在其上创建一个当前容器的存储层,我们可以称这个为容器运行时读写而准备的存储层为容器存储层。</p>
+<p>容器存储层的生存周期和容器一样,容器消亡时,容器存储层也随之消亡。因此,任何保存于容器存储层的信息都会随容器删除而丢失。</p>
+<p>按照    Docker最佳实践的要求,容器不应该向其存储层内写入任何数据,容器存储层要保持无状态化。所有的文件写入操作,都应该使用数据(Volume)、或者绑定宿主目录,在这些位置的读写会跳过容器存储层,直接对宿主(或网络存储)发生读写,其性能和稳定性更高。<br>数据卷的生存周期独立于容器,容器消亡,数据卷不会消亡。因此,使用数据卷后,容器删除或者重新运行之后,数据却不会丢失。</p>
+<ul>
+<li><p>Docker Registry</p>
+<p>镜像构建完成后,可以很容易的在当前宿主机上运行,但是,如果需要在其它服务器上使用这个镜像,我们就需要一个集中的存储、分发镜像的服务,DockerRegistry    就是这样的服务。<br>一个DockerRegistry中可以包含多个仓库(    Repository);每个仓库可以包含多个标签(Tag);每个标签对应一个镜像。</p>
+</li>
+</ul>
+<p>通常,一个仓库会包含同一个软件不同版本的镜像,而标签就常用于对应该软件的各个版本。我们可以通过<code>&lt;仓库名&gt;:&lt;标签&gt;</code> 的格式来指定具体是这个软件哪个版本的镜像。如果不给出标签,将以latest作为默认标签。</p>
+<p>最常使用的Registry公开服务是官方的DockerHub,这也是默认的Registry,并拥有大量的高质量的官方镜像。</p>
+<h3 id="使用Docker镜像"><a href="#使用Docker镜像" class="headerlink" title="使用Docker镜像"></a>使用Docker镜像</h3><p>Docker运行容器前需要本地存在对应的镜像,如果本地不存在该镜像,Docker    会从镜像仓库下载该镜像。</p>
+<h4 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search Java</span><br></pre></td></tr></table></figure>
+<h4 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h4><p>从Docker镜像仓库获取镜像的命令是<code>docker pull</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker	pull [选项] DockerRegistry地址:端口号/仓库名:标签</span><br></pre></td></tr></table></figure>
+<p>比如下载一个Ubuntu镜像就是<code>docker pull ubuntu:16.04</code>上面的命令中没有给出    Docker镜像仓库地址,因此将会从    DockerHub获取镜像。而镜像名<br>称是    ubuntu:16.04 ,因此将会获取官方镜像library/ubuntu仓库中标签为16.04的镜像。</p>
+<h4 id="列出镜像"><a href="#列出镜像" class="headerlink" title="列出镜像"></a>列出镜像</h4><p>要想列出已经下载下来的镜像,可以使用<code>docker image ls</code>命令。</p>
+<p><code>docker image ls</code>列表中的镜像体积总和并非是所有镜像实际硬盘消耗。由于    Docker镜像是多层存储结构,并且可以继承，复用,因此不同镜像可能会因为使用相同的基础镜像,从而拥有共同的层。由于Docker使用UnionFS,相同的层只需要保存一份即可,因此实际镜像硬盘占用空间很可能要比这个列表镜像大小的总和要小的多。</p>
+<h4 id="虚悬镜像"><a href="#虚悬镜像" class="headerlink" title="虚悬镜像"></a>虚悬镜像</h4><p>上面的镜像列表中,还可以看到一个特殊的镜像,这个镜像既没有仓库名,也没有标签,均为<code>&lt;none&gt;</code> 。:<br>这个镜像原本是有镜像名和标签的,原来为<code>mongo:3.2</code> ,随着官方镜像维护,发布了新版本后,重新<code>docker pull mongo:3.2</code>时, <code>mongo:3.2</code>这个镜像名被转移到了新下载的镜像身上,而旧的镜像上的这个名称则被取消,从而成为了<code>&lt;none&gt;</code> 。除了<code>docker    pull</code>可能导致这种情况, <code>docker build</code>也同样可以导致这种现象。由于新旧镜像同名,旧镜像名称被取消,从而出现仓库名、标签均为    <code>&lt;none&gt;</code>    的镜像。这类无标签镜像也被称为虚悬镜像<br><code>(danglingimage)</code>    ,可以用下面的命令专门显示这类镜像:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image ls -f dangling=true</span><br></pre></td></tr></table></figure>
+<h4 id="删除本地镜像"><a href="#删除本地镜像" class="headerlink" title="删除本地镜像"></a>删除本地镜像</h4><p>使用<code>docker image rm</code>命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">docker image rm [选项] &lt;镜像1&gt; [&lt;镜像2&gt;...]</span></span><br></pre></td></tr></table></figure>
+<h4 id="利用commit-理解镜像构成"><a href="#利用commit-理解镜像构成" class="headerlink" title="利用commit 理解镜像构成"></a>利用commit 理解镜像构成</h4><p>镜像是多层存储,每一层是在前一层的基础上进行的修改;而容器同样也是多层存储,是在以镜像为基础层,在其基础上加一层作为容器运行时的存储层。</p>
+<p>下面以定制一个web服务器为例子，讲解镜像如何构建。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name webserver -d -p 80:80 nginx</span><br></pre></td></tr></table></figure>
+<p>这条命令会用    nginx镜像启动一个容器,命名为webserver     ,并且映射了80    端口,这样我们可以用浏览器去访问这个nginx服务器。<br>如果是在    Linux本机运行的Docker,那么可以直接访问:<a href="http://localhost" target="_blank" rel="noopener">http://localhost</a>;<br>直接用浏览器访问的话,我们会看到默认的    Nginx    欢迎页面。</p>
+<p>我们在运行一个容器的时候(不适用卷的话)，我们做的任何修改都会被记录于容器存储层里。而Docker提供了<code>docker commit</code>可以将容器的存储层保存下载成为镜像。也就是，在原来镜像的基础上，再叠加上容器的存储层，并构成新的镜像。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker	commit	[选项]	&lt;容器ID或容器名&gt;	[&lt;仓库名&gt;[:&lt;标签&gt;]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker commit\</span></span><br><span class="line">		--author "Tao Wang&lt;twang2218@gmail.com&gt;" \</span><br><span class="line">		--message "修改了默认网页"	\</span><br><span class="line">		webserver \</span><br><span class="line">		nginx:v2</span><br><span class="line">sha256:07e33465974800ce65751acc279adc6ed2dc5ed4e0838f8b86f0c87aa1795214</span><br></pre></td></tr></table></figure>
+<h4 id="使用Dockerfile-定制镜像"><a href="#使用Dockerfile-定制镜像" class="headerlink" title="使用Dockerfile 定制镜像"></a>使用Dockerfile 定制镜像</h4><p>镜像的定制实际上就是定制每一层所添加的配置、文件。如果我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本,用这个脚本来构建定制镜像,那么之前提及的无法重复的问题、镜像构建透明性的问题、体积的问题就都会解决。这个脚本就是    Dockerfile</p>
+<p>Dockerfile是一个文本文件,其内包含了一条条的指令(Instruction),每一条指令构建一层,因此每一条指令的内容,就是描述该层应当如何构建。</p>
+<h3 id="操作Docker容器"><a href="#操作Docker容器" class="headerlink" title="操作Docker容器"></a>操作Docker容器</h3><p>容器是独立运行的一个或一组应用,以及它们的运行态环境。对应的,虚拟机可以理解为模拟运行的一整套操作系统(提供了运行态环境和其他系统环境)和跑在上面的应用。</p>
+<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>启动容器有两种方式,一种是基于镜像新建一个容器并启动,另外一个是将在终止状态(stopped)的容器重新启动。</p>
+<h4 id="新建并启动"><a href="#新建并启动" class="headerlink" title="新建并启动"></a>新建并启动</h4><p>所需要主要命令是<code>docker run</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">docker	run	ubuntu:14.04 /bin/<span class="built_in">echo</span> <span class="string">'Hello world'</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">docker	run	-t -i ubuntu:14.04	/bin/bash</span></span><br><span class="line">-t 选项让docker分配一个伪终端，并绑定到容器的标准输入上，-i则让容器的标准输入保持打开。</span><br></pre></td></tr></table></figure>
+<p>有许多选型，常见的选项有 <code>-d</code>表示后台运行，<code>-P</code>随机端口映射，<code>-p</code>指定端口映射</p>
+<p>当使用<code>docker run</code>来创建容器时，Docker在后台运行的标准操作包括</p>
+<p>检查本地是否存在指定的镜像,不存在就从公有仓库下载、利用镜像创建并启动一个容器、分配一个文件系统,并在只读的镜像层外面挂载一层可读写层、从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去、从地址池配置一个ip地址给容器、执行用户指定的应用程序、执行完毕后容器被终止。</p>
+<h4 id="进入容器内部"><a href="#进入容器内部" class="headerlink" title="进入容器内部"></a>进入容器内部</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker exec # 在一个运行的容器中运行命令</span><br><span class="line">docker exec -it 容器名 /bin/sh</span><br></pre></td></tr></table></figure>
+<h4 id="docker-网络类型"><a href="#docker-网络类型" class="headerlink" title="docker 网络类型"></a>docker 网络类型</h4><p>主要有bridge ,Host None</p>
+<p>bridge是桥接模式，使用虚拟的网卡，和主机隔离，容器有独立的IP和端口。</p>
+<p>Host 使用宿主机的网卡等。 </p>
+<p>当使用bridge模式时，就需要进行端口的映射技术，这样当访问主机的某个端口时，实际上就是访问容器上的某个端口。</p>
+<blockquote>
+<p>Docker 端口映射</p>
+<p>在启动容器时，如果不配置宿主机器与虚拟机的端口映射，外部程序是无法访问虚拟机的，因为没有端口。</p>
+<p>端口映射的Docker指令是</p>
+<p>Docker run -p ip:hostport:containerPort redis</p>
+<p>使用-p参数会分配宿主机的端口映射到虚拟机。<br>IP表示主机的IP地址。<br>hostPort表示宿主机的端口。(redis的启动端口）<br>containerPort表示虚拟机(容器)的端口。 </p>
+</blockquote>
+<h4 id="列出容器"><a href="#列出容器" class="headerlink" title="列出容器"></a>列出容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps # 列出运行中的容器</span><br></pre></td></tr></table></figure>
+<h4 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop  id#停止容器</span><br></pre></td></tr></table></figure>
+<h4 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker kill id</span><br></pre></td></tr></table></figure>
+<h4 id="启动已终止容器"><a href="#启动已终止容器" class="headerlink" title="启动已终止容器"></a>启动已终止容器</h4><p><code>docker  start</code> 命令，将一个已经终止的容器启动运行。</p>
+<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm id</span><br></pre></td></tr></table></figure>
+<h4 id="后台运行"><a href="#后台运行" class="headerlink" title="后台运行"></a>后台运行</h4><p>更多时候，需要让Docker在后台运行而不是直接把执行命令的结果输出在当前宿主机下。此时,可以通过添加<code>-d</code>参数来实现。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d ubuntu:17.10 /bin/sh -c "while true; do echo hello world; sleep 1; done"</span><br><span class="line">77b2dc01fe0f3f1265df143181e7b9af5e05279a884f4776ee75350ea9d8017a</span><br></pre></td></tr></table></figure>
+<p>要获取容器的输出信息,可以通过     <code>docker container logs</code>    命令。</p>
+<h3 id="Docker-Hub"><a href="#Docker-Hub" class="headerlink" title="Docker Hub"></a>Docker Hub</h3><p>Docker 官方维护了一个公共仓库Docker Hub.</p>
+<h4 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h4><p>可以通过<code>docker search</code> 命令来查找官方仓库中的镜像，并利用<code>docker pull</code>命令把它下载到本地。</p>
+<h4 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a>推送镜像</h4><p>用户也可以在登录后通过<code>docker push</code>命令来将自己的镜像推送到<code>Docker Hub</code>。<br>以下命令中的<code>username</code>替换为<code>Docker</code>账号用户名。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/04/01/docker/Docker/">https://corn1ng.github.io/2018/04/01/docker/Docker/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Docker/">Docker</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/04/01/HTTP 详解/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">HTTP 详解</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/03/29/客户端负载均衡Spring Cloud Ribbon/">
+        <span class="next-text nav-default">客户端负载均衡Spring Cloud Ribbon</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

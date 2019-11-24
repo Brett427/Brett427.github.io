@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="MySQL高级特性(二)"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2017/12/22/老板MYSQL/MySQL高级特性(二)/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> MySQL高级特性(二) - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          MySQL高级特性(二)
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-12-22
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符集和校对"><span class="toc-text">字符集和校对</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL如何使用字符集"><span class="toc-text">MySQL如何使用字符集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建对象时的默认设置"><span class="toc-text">创建对象时的默认设置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#服务器与客户端通信时的设置"><span class="toc-text">服务器与客户端通信时的设置</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全文索引"><span class="toc-text">全文索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式-XA-事务"><span class="toc-text">分布式(XA)事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询缓存"><span class="toc-text">查询缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#MySQL如何判断缓存命中"><span class="toc-text">MySQL如何判断缓存命中</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="字符集和校对"><a href="#字符集和校对" class="headerlink" title="字符集和校对"></a>字符集和校对</h3><p>字符集是指一种从二进制编码到某类字符符号的映射,校对是指一组用于某个字符集的排序规则.</p>
+<h4 id="MySQL如何使用字符集"><a href="#MySQL如何使用字符集" class="headerlink" title="MySQL如何使用字符集"></a>MySQL如何使用字符集</h4><p>每种字符集都可能有多种校对规则,并且都有一个默认的校对规则,每个校对规则都是针对某个特定的字符集的,和其他的字符集没有关系,校对规则和字符集总是一起使用的,所以也将这样的一个组合统称为一个字符集.</p>
+<h5 id="创建对象时的默认设置"><a href="#创建对象时的默认设置" class="headerlink" title="创建对象时的默认设置"></a>创建对象时的默认设置</h5><a id="more"></a>
+<p>MySQL服务器有默认字符集,每个数据库也有默认值,每个表也有默认值,这是一个逐层继承的默认设置,最终最靠底层的默认设置将影响创建的这个对象</p>
+<ul>
+<li>创建数据库的时候,将根据服务器上的character_set_server 设置来设定该数据库的默认字符集</li>
+<li>创建表的时候,将根据数据库的字符集来设置指定这个表的字符集设置</li>
+<li>创建列的时候,将根据表的设置指定列的字符集设置</li>
+</ul>
+<p>最终起作用的还是最靠近底层的设置.</p>
+<h5 id="服务器与客户端通信时的设置"><a href="#服务器与客户端通信时的设置" class="headerlink" title="服务器与客户端通信时的设置"></a>服务器与客户端通信时的设置</h5><p>当服务器和客户端通信的时候,它们可能使用不同的字符集,这时,服务器端将进行必要的翻译转换工作.</p>
+<ul>
+<li>服务器端总是假设客户端是按照character_set_client 设置的字符来传输数据和SQL语句的</li>
+<li>当服务器收到客户端的SQL语句时,先将其转换为字符集character_set_connection .它还使用这个设置来决定如何将数据转换成字符串</li>
+<li>当服务器端返回数据或者错误信息给客户端时,会将其转换为character_set_result.</li>
+</ul>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/71D1750C-741C-4C16-81BA-8286E25B1E09.png" alt=""></p>
+<h3 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h3><p>通过数值比较,范围过滤等就可以完成绝大多数查询,但是如果希望通过关键字的匹配来进行查询过滤,那么就需要基于相似度的查询,而不是原来的精确数值比较,全文索引就是为这种场景设计的.</p>
+<p>全文索引有自己独特的语法,没有索引也可以工作,如果有索引效率会更高,用于全文搜索的索引有着独特的结构,帮助这类查询找到匹配某些关键字的记录</p>
+<p>全文索引可以支持各种字符内容的搜索,也支持自然语言搜索和布尔搜索.</p>
+<h3 id="分布式-XA-事务"><a href="#分布式-XA-事务" class="headerlink" title="分布式(XA)事务"></a>分布式(XA)事务</h3><p>存储引擎的事务特性能够保证在存储引擎级别实现ACID,而分布式事务则让存储引擎级别的ACID 可以扩展到数据库层面,甚至可以扩展到多个数据库之间,</p>
+<p>分布式事务中需要有一个事务协调器来保证所有的事务参与者都完成了准备工作,如果协调器收到所有的参与者都准备好的消息,就会告诉所有的事务可以提交了,这是第二阶段,MySQL在这个分布式事务过程中扮演一个参与者的角色,而不是协调者.</p>
+<p>MySQL有两种XA 事务,一方面,MySQL可以参与到外部的分布式事务中,另一方面,还可以通过分布式事务来协调存储引擎和二进制日志.</p>
+<h3 id="查询缓存"><a href="#查询缓存" class="headerlink" title="查询缓存"></a>查询缓存</h3><p>很多数据库产品都可以缓存查询的执行计划, 对于相同类型的SQL就可以跳过SQL解析和执行计划生成阶段,MySQL在某些场景下页可以实现,但是MySQL还有另一种不同的缓存类型 缓存完整的SELECT 查询结果,也就是查询缓存.</p>
+<p>MySQL查询缓存 保存查询返回的完整结果,当查询命中该缓存,MySQL会立刻返回结果,跳过了解析,优化,和执行阶段.</p>
+<p>查询缓存系统会跟踪查询中涉及的每个表,如果这些表发生变化,那么和这个表相关的所有缓存数据都将失效,虽然看起来这样实现效率很低,但是这种实现代价小,</p>
+<p>查询缓存对应用程序是完全透明的,应用程序无需关心MySQL是通过查询缓存返回的结果还是实际执行返回的结果,</p>
+<p>随着现在通用服务器越来越强大,查询缓存被发现是一个影响服务器扩展性的因素,它可能成为整个服务器的资源竞争点,在多核服务器上还可能导致服务器僵死,所以很多时候应该默认关闭查询缓存</p>
+<h5 id="MySQL如何判断缓存命中"><a href="#MySQL如何判断缓存命中" class="headerlink" title="MySQL如何判断缓存命中"></a>MySQL如何判断缓存命中</h5><p>MySQL判断缓存命中的方法很简单,缓存存放在一个引用表中,通过一个哈希值引用,哈希值包括了查询本身,当前要查询的数据库,客户端协议的版本等一些其他可能会影响返回结果的信息.当判断缓存是否命中时,MySQL不会解析,正则化或者参数化查询语句,而是直接使用SQL语句和客户端发送过来的原始信息,任何字符的不同都会导致缓存不命中.</p>
+<p>如果希望有更高的缓存效率,可以选择memcached等.</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2017/12/22/老板MYSQL/MySQL高级特性(二)/">https://corn1ng.github.io/2017/12/22/老板MYSQL/MySQL高级特性(二)/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2017/12/24/算法/leetcode91/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">91. Decode Ways</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2017/12/21/老板MYSQL/MySQL高级特性(一)/">
+        <span class="next-text nav-default">MySQL高级特性(一)</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

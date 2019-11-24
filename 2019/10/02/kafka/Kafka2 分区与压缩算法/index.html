@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Kafka 分区与压缩算法"/>
+
+
+
+
+  <meta name="keywords" content="Kafka, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/02/kafka/Kafka2 分区与压缩算法/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Kafka 分区与压缩算法 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kafka 分区与压缩算法
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-02
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/中间件/">中间件</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kafka-分区与压缩算法（二）"><span class="toc-text">kafka 分区与压缩算法（二）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分区"><span class="toc-text">分区</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分区策略"><span class="toc-text">分区策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#轮询策略"><span class="toc-text">轮询策略</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#随机策略"><span class="toc-text">随机策略</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#按消息键保序策略"><span class="toc-text">按消息键保序策略</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生产者压缩算法"><span class="toc-text">生产者压缩算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#压缩时机"><span class="toc-text">压缩时机</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#压缩算法"><span class="toc-text">压缩算法</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="kafka-分区与压缩算法（二）"><a href="#kafka-分区与压缩算法（二）" class="headerlink" title="kafka 分区与压缩算法（二）"></a>kafka 分区与压缩算法（二）</h2><h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><p>使用kafka生产和消费消息的时候，肯定希望能够将数据均匀的分配到所有服务器上，如何将大数据量的数据分配到kafka的各个broker上，是一个重要的问题。</p>
+<p>kafka有主题的概念，在主题下还有若干个分区。也就是说 Kafka 的消息组织方式实际上是三级结构：主题 - 分区 - 消息。主题下的每条消息只会保存在某一个分区中，而不会在多个分区中被保存多份。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20190926194306.png" alt=""></p>
+<p>分区的作用就是提供负载均衡的能力，不同的分区能够被放置到不同节点的机器上。而数据的读写操作也都是针对分区这个粒度而进行的， 这样每个节点的机器都能独立地执行各自分区的读写请求处理。</p>
+<h4 id="分区策略"><a href="#分区策略" class="headerlink" title="分区策略"></a>分区策略</h4><p>所谓分区策略是决 定生产者将消息发送到哪个分区的算法。所谓分区策略是决 定生产者将消息发送到哪个分区的算法。Kafka 为我们提供 了默认的分区策略，同时它也支持自定义分区策略。</p>
+<p>如果要自定义分区策略，你需要显式地配置生产者端的参数 partitioner.class。</p>
+<h5 id="轮询策略"><a href="#轮询策略" class="headerlink" title="轮询策略"></a>轮询策略</h5><p>也称 Round-robin 策略，即顺序分配。比如一个主题下有 3 个分区，那么第一条消息被发送到分区 0，第二条被发送 到分区 1，第三条被发送到分区 2，以此类推。当生产第 4 条消息时又会重新开始，即将其分配到分区 0。<strong>轮询策略是 Kafka Java 生产者 API 默认提供的分区策略。</strong></p>
+<h5 id="随机策略"><a href="#随机策略" class="headerlink" title="随机策略"></a>随机策略</h5><p>也称 Randomness 策略。所谓随机就是我们随意地将消息 放置到任意一个分区上。</p>
+<h5 id="按消息键保序策略"><a href="#按消息键保序策略" class="headerlink" title="按消息键保序策略"></a>按消息键保序策略</h5><p>Kafka 允许为每条消息定义消息键，简称为 Key。这个 Key 的作用非常大，它可以是一个有着明确业务含义的字符串， 比如客户代码、部门编号或是业务ID 等；也可以用来表征 消息元数据。特别是在 Kafka 不支持时间戳的年代，在一些场景中，工程师们都是直接将消息创建时间封装进 Key 里面的。<strong>一旦消息被定义了 Key，那么你就可以保证同一个 Key 的所有消息都进入到相同的分区里面，由于每个分区下 的消息处理都是有顺序的，故这个策略被称为按消息键保序策略。</strong></p>
+<hr>
+<p>前面提到的 Kafka 默认分区策略实际上同时实现了两种策 略：如果指定了 Key，那么默认实现按消息键保序策略；如 果没有指定 Key，则使用轮询策略。</p>
+<hr>
+<h3 id="生产者压缩算法"><a href="#生产者压缩算法" class="headerlink" title="生产者压缩算法"></a>生产者压缩算法</h3><h5 id="压缩时机"><a href="#压缩时机" class="headerlink" title="压缩时机"></a>压缩时机</h5><p>kafka中的消息是可以压缩的，目前Kafka 共有两大类消息格式，社区分别称之为 V1 版本和 V2 版本。V2 版本是 Kafka 0.11.0.0 中正式引入的。</p>
+<p>不论是哪个版本，Kafka 的消息层次都分为两层：消息集合（message set）以及消息 （message）。一个消息集合中包含若干条日志项（record item），而日志项才是真正封装消息的地方。Kafka 底层的消息日志由一系列消息集合日志项组成。Kafka 通常不会直接操作具体的一条条消息，它总是在消息集合这个层面上进行写入操作。</p>
+<p>在 Kafka 中，压缩可能发生在两个地方：生产者端和 Broker 端。</p>
+<p>生产者程序中配置 compression.type 参数即表示启用指定类型的压缩算法。</p>
+<p>其实 大部分情况下 Broker 从 Producer 端接收到消息后仅仅是原封不动地保存而不会对其进行 任何修改，但这里的“大部分情况”也是要满足一定条件的。有两种例外情况就可能让 Broker 重新压缩消息。</p>
+<ul>
+<li>情况一：Broker 端指定了和 Producer 端不同的压缩算法。</li>
+<li>Broker 端发生了消息格式转换。（所谓的消息格式转换主要是为了兼容老版本的消费者程序。还记得之前说过的 V1、V2 版 本吧？在一个生产环境中，Kafka 集群中同时保存多种版本的消息格式非常常见。为了兼容 老版本的格式，Broker 端会对新版本消息执行向老版本格式的转换。这个过程中会涉及消 息的解压缩和重新压缩。）</li>
+</ul>
+<p>通常来说解压缩发生在消费者程序中，也就是Producer发送压缩消息到broker后，broker原样保存起来，当 Consumer 程序请求这部分消息 时，Broker 依然原样发送出去，当消息到达 Consumer 端后，由 Consumer 自行解压缩 还原成之前的消息。Kafka 会将启用了哪种压缩算法封装进消息集合中，这样当 Consumer 读取 到消息集合时，它自然就知道了这些消息使用的是哪种压缩算法。如果用一句话总结一下压 缩和解压缩，<strong>Producer 端压缩、Broker 端保持、Consumer 端解压缩。</strong></p>
+<h5 id="压缩算法"><a href="#压缩算法" class="headerlink" title="压缩算法"></a>压缩算法</h5><p>Kafka 支持 3 种压缩算法：GZIP、Snappy 和 LZ4。从 2.1.0 开 始，Kafka 正式支持 Zstandard 算法（简写为 zstd）。它是 Facebook 开源的一个压缩算法，能够提供超高的压缩比（compression ratio）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">看一个压缩算法的优劣，有两个重要的指标：一个指标是压缩比，原先占 100 份空 间的东西经压缩之后变成了占 20 份空间，那么压缩比就是 5，显然压缩比越高越好；另一 个指标就是压缩 / 解压缩吞吐量，比如每秒能压缩或解压缩多少 MB 的数据。同样地，吞 吐量也是越高越好。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/02/kafka/Kafka2 分区与压缩算法/">https://corn1ng.github.io/2019/10/02/kafka/Kafka2 分区与压缩算法/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Kafka/">Kafka</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/03/ElasticSearch官网入门总结/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">ElasticSearch 入门总结</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/01/kafka/kafka1术语与重要配置/">
+        <span class="next-text nav-default">Kafka 术语与重要配置</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
