@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql(10) 幻读"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/12/21/新版Mysql/Mysql(10) 幻读/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql(10) 幻读 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql(10) 幻读
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-12-21
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读"><span class="toc-text">幻读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读是什么"><span class="toc-text">幻读是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#幻读的问题"><span class="toc-text">幻读的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据一致性问题"><span class="toc-text">数据一致性问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何解决"><span class="toc-text">如何解决</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h3 id="幻读"><a href="#幻读" class="headerlink" title="幻读"></a>幻读</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `t` (</span><br><span class="line">    `id` int(11) NOT NULL,</span><br><span class="line">    `c` int(11) DEFAULT NULL,</span><br><span class="line">    `d` int(11) DEFAULT NULL,</span><br><span class="line">    PRIMARY KEY (`id`),</span><br><span class="line">    KEY `c` (`c`)</span><br><span class="line">    ) ENGINE=InnoDB;  </span><br><span class="line">    insert into t values(0,0,0),(5,5,5),</span><br><span class="line">    (10,10,10),(15,15,15),(20,20,20),(25,25,25);</span><br><span class="line">    下面的语句是如何加锁，锁何时释放？</span><br><span class="line">    select * from t where d=5 for update;</span><br></pre></td></tr></table></figure>
+<p>这个语句会命中 d=5 的这一行，对应的主键 id=5，因此在 select 语句 执行完成后，id=5 这一行会加一个写锁，而且由于两阶段锁协议，这个写锁会在执行 commit 语句的时候释放。</p>
+<p>由于字段 d 上没有索引，因此这条查询语句会做全表扫描。那么，其他被扫描到的，但是不满足条件的 5 行记录上，会不会被加锁呢？<strong>会</strong></p>
+<h3 id="幻读是什么"><a href="#幻读是什么" class="headerlink" title="幻读是什么"></a>幻读是什么</h3><p>如果只在 id=5 这一行加锁，而其他行的不加锁的话，会怎么 样。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191216202029.png" alt=""></p>
+<ol>
+<li><p>Q1 只返回 id=5 这一行；</p>
+</li>
+<li><p>在 T2 时刻，session B 把 id=0 这一行的 d 值改成了 5，因此 T3 时刻 Q2 查出来的是 id=0 和 id=5 这两行；</p>
+</li>
+<li><p>在 T4 时刻，session C 又插入一行（1,1,5），因此 T5 时刻 Q3 查出来的是 id=0、 id=1 和 id=5 的这三行。</p>
+</li>
+</ol>
+<p>其中，Q3 读到 id=1 这一行的现象，被称为“幻读”。也就是说，<strong>幻读指的是一个事务在 前后两次查询同一个范围的时候，后一次查询看到了前一次查询没有看到的行。</strong></p>
+<p><strong>在可重复读隔离级别下，普通的查询是快照读，是不会看到别的事务插入的数据的。因 此，幻读在“当前读”下才会出现。</strong></p>
+<p>上面 session B 的修改结果，被 session A 之后的 select 语句用“当前读”看到，不能 称为幻读。<strong>幻读仅专指“新插入的行</strong>”。 如果只从事务可见性规则来 分析的话，上面这三条 SQL 语句的返回结果都没有问题。</p>
+<p><strong>因为这三个查询都是加了 for update，都是当前读。而当前读的规则，就是要能读到所有 已经提交的记录的最新值。并且，session B 和 sessionC 的两条语句，执行后就会提交， 所以 Q2 和 Q3 就是应该看到这两个事务的操作效果，而且也看到了，这跟事务的可见性规 则并不矛盾。</strong></p>
+<h3 id="幻读的问题"><a href="#幻读的问题" class="headerlink" title="幻读的问题"></a>幻读的问题</h3><p>首先是语义上的。session A 在 T1 时刻就声明了，“我要把所有 d=5 的行锁住，不准别 的事务进行读写操作”。而实际上，这个语义被破坏了。</p>
+<p>再往 session B 和 session C 里面分别加一条 SQL 语句，再看看会出现什么现象。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20191216202300.png" alt=""></p>
+<p>session B 的第二条语句 update t set c=5 where id=0，语义是“我把 id=0、d=5 这一 行的 c 值，改成了 5”。由于在 T1 时刻，session A 还只是给 id=5 这一行加了行锁， 并没有给 id=0 这行加上 锁。因此，session B 在 T2 时刻，是可以执行这两条 update 语句的。这样，就破坏了 session A 里 Q1 语句要锁住所有 d=5 的行的加锁声明。session C 也是一样的道理，对 id=1 这一行的修改，也是破坏了 Q1 的加锁声明。</p>
+<h4 id="数据一致性问题"><a href="#数据一致性问题" class="headerlink" title="数据一致性问题"></a>数据一致性问题</h4><p>锁的设计是为了保证数据的一致性。而这个一致性，不止是数据库内部数据状态 在此刻的一致性，还包含了数据和日志在逻辑上的一致性。如果把binlog中的日志拿去恢复，会发现数据是不一致的。就算把所有记录都加上锁，还是会出现这个问题，原因就是在我们给所有行加锁的时候，id=1 这一行还不存在，不存在也就 加不上锁。也就是说，即使把所有的记录都加上锁，还是阻止不了新插入的记录，这也是为什么“幻读”会被单独拿出来解决的原因。</p>
+<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><p>产生幻读的原因是，行锁只能锁住行，但是新插入记录这个动作，要更新的 是记录之间的“间隙”。因此，为了解决幻读问题，InnoDB 只好引入新的锁，也就是间隙 锁 (Gap Lock)。顾名思义，间隙锁，锁的就是两个值之间的空隙。比如文章开头的表 t，初始化插入了 6 个 记录，这就产生了 7 个间隙。</p>
+<p>顾名思义，间隙锁，锁的就是两个值之间的空隙。比如文章开头的表 t，初始化插入了 6 个 记录，这就产生了 7 个间隙。 图 5 表 t 主键索引上的行锁和间隙锁</p>
+<p><strong>这样，当你执行 select * from t where d=5 for update 的时候，就不止是给数据库中已有的 6 个记录加上了行锁，还同时加了 7 个间隙锁。这样就确保了无法再插入新的记录。也就是说这时候，在一行行扫描的过程中，不仅将给行加上了行锁，还给行两边的空隙，也 加上了间隙锁。</strong></p>
+<p>数据行是可以加上锁的实体，数据行之间的间隙，也是可以加上锁的实体。 但是间隙锁跟我们之前碰到过的锁都不太一样。</p>
+<p>行锁分为了读锁和写锁，两种类型的冲突关系如下：读锁和读锁兼容，写锁和读锁冲突，写锁和写锁也冲突。也就是和行锁有冲突的是另一个行锁。</p>
+<p><strong>跟间隙锁存在冲突关系的，是往这个间隙中插入一个记录这个操作，间隙锁之间不存在冲突关系。</strong></p>
+<p><strong>间隙锁和行锁合称 next-key lock</strong>，每个 next-key lock 是前开后闭区间。也就是说，我们 的表 t 初始化以后，如果用 <code>select * from t for update</code> 要把整个表所有记录锁起来，就形 成了 7 个 <code>next-key lock</code>，分别是<code>(-∞,0]、(0,5]、(5,10]、(10,15]、(15,20]、(20, 25]、 (25, +supremum]</code>。</p>
+<p>间隙锁和next-key lock的引入，帮我们解决了幻读的问题，也带来了一些困扰。</p>
+<p><strong>间隙锁是在可重复读隔离级别下才会生效的。所以，你如果把隔离级别设置为读提交 的话，就没有间隙锁了。但同时，你要解决可能出现的数据和日志不一致问题，需要把 binlog 格式设置为 row。这，也是现在不少公司使用的配置组合。</strong></p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/12/21/新版Mysql/Mysql(10) 幻读/">https://corn1ng.github.io/2019/12/21/新版Mysql/Mysql(10) 幻读/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/10/24/新版Mysql/Mysql(9) 函数对索引的影响/">
+        <span class="next-text nav-default">Mysql(9) 函数对索引的影响</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2019
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
