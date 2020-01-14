@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="并发六:Java线程"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2020/01/10/新版并发/并发六：Java线程/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 并发六:Java线程 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          并发六:Java线程
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-10
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发六-Java线程"><span class="toc-text">并发六:Java线程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生命周期"><span class="toc-text">生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通用的线程生命周期"><span class="toc-text">通用的线程生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java中线程的生命周期"><span class="toc-text">Java中线程的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么使用多线程"><span class="toc-text">为什么使用多线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#多线程的应用场景"><span class="toc-text">多线程的应用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程个数的设定"><span class="toc-text">线程个数的设定</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建多少线程合适"><span class="toc-text">创建多少线程合适</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#局部变量的线程安全问题"><span class="toc-text">局部变量的线程安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方法如何被执行"><span class="toc-text">方法如何被执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调用栈与线程"><span class="toc-text">调用栈与线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程封闭"><span class="toc-text">线程封闭</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="并发六-Java线程"><a href="#并发六-Java线程" class="headerlink" title="并发六:Java线程"></a>并发六:Java线程</h2><p>在 Java 领域，实现并发程序的主要手段就是多线程。线程是操作系统里的一个概念，虽然 各种不同的开发语言如 Java、C# 等都对其进行了封装，但是万变不离操作系统。<strong>Java 语 言里的线程本质上就是操作系统的线程，它们是一一对应的。</strong></p>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><h4 id="通用的线程生命周期"><a href="#通用的线程生命周期" class="headerlink" title="通用的线程生命周期"></a>通用的线程生命周期</h4><p>通用的线程生命周期基本上可以用下图这个“五态模型”来描述。这五态分别是：<strong>初始状态、可运行状态、运行状态、休眠状态和终止状态。</strong></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111213706.png" width="40%"></p>
+<ol>
+<li><p>初始状态，指的是线程已经被创建，但是还不允许分配 CPU 执行。这个状态属于编程语 言特有的，不过这里所谓的被创建，仅仅是在编程语言层面被创建，而在操作系统层 面，真正的线程还没有创建。</p>
+</li>
+<li><p>可运行状态，指的是线程可以分配 CPU 执行。在这种状态下，真正的操作系统线程已经 被成功创建了，所以可以分配 CPU 执行。</p>
+</li>
+<li><p>当有空闲的 CPU 时，操作系统会将其分配给一个处于可运行状态的线程，被分配到 CPU 的线程的状态就转换成了运行状态。</p>
+</li>
+<li><p>运行状态的线程如果调用一个阻塞的 API（例如以阻塞方式读文件）或者等待某个事件 （例如条件变量），那么线程的状态就会转换到休眠状态，同时释放 CPU 使用权，休眠 状态的线程永远没有机会获得 CPU 使用权。当等待的事件出现了，线程就会从休眠状态 转换到可运行状态。</p>
+</li>
+<li><p>线程执行完或者出现异常就会进入终止状态，终止状态的线程不会切换到其他任何状 态，进入终止状态也就意味着线程的生命周期结束了。 这五种状态在不同编程语言里会有简化合并。例如，C 语言的 POSIX Threads 规范，就把 初始状态和可运行状态合并了；Java 语言里则把可运行状态和运行状态合并了，这两个状 态在操作系统调度层面有用，而 JVM 层面不关心这两个状态，因为 JVM 把线程调度交给 操作系统处理了。</p>
+</li>
+</ol>
+<h4 id="Java中线程的生命周期"><a href="#Java中线程的生命周期" class="headerlink" title="Java中线程的生命周期"></a>Java中线程的生命周期</h4><p>Java 语言中线程共有六种状态，分别是：</p>
+<ol>
+<li><p>NEW（初始化状态）</p>
+</li>
+<li><p>RUNNABLE（可运行 / 运行状态）</p>
+</li>
+<li><p>BLOCKED（阻塞状态）</p>
+</li>
+<li><p>WAITING（无时限等待）</p>
+</li>
+<li><p>TIMED_WAITING（有时限等待）</p>
+</li>
+<li><p>TERMINATED（终止状态）</p>
+</li>
+</ol>
+<p>这看上去挺复杂的，状态类型也比较多。但其实在操作系统层面，Java 线程中的 BLOCKED、WAITING、TIMED_WAITING 是一种状态，即前面我们提到的休眠状态。也 就是说只要 Java 线程处于这三种状态之一，那么这个线程就永远没有 CPU 的使用权。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111214014.png" width="50%"></p>
+<p>其中，BLOCKED、WAITING、TIMED_WAITING 可以理解为线程导致休眠状态的三种原 因。那具体是哪些情形会导致线程从 RUNNABLE 状态转换到这三种状态呢？而这三种状 态又是何时转换回 RUNNABLE 的呢？以及 NEW、TERMINATED 和 RUNNABLE 状态是 如何转换的？</p>
+<ul>
+<li>Runnable 和Blocked的状态切换</li>
+</ul>
+<p><strong>只有一种场景会触发这种转换，就是线程等待 synchronized 的隐式锁</strong>。synchronized 修饰的方法、代码块同一时刻只允许一个线程执行，其他线程只能等待，这种情况下，等待的线程就会从 RUNNABLE 转换到 BLOCKED 状态。而当等待的线程获得 synchronized 隐式锁时，就又会从 BLOCKED 转换到 RUNNABLE 状态。</p>
+<ul>
+<li>Runnable 与Waiting的状态转换</li>
+</ul>
+<p>第一种场景，获得 synchronized 隐式锁的线程，调用无参数的 Object.wait() 方法。其 中，wait() 方法我们在上一篇讲解管程的时候已经深入介绍过了，这里就不再赘述。</p>
+<p>第二种场景，调用无参数的 Thread.join() 方法。其中的 join() 是一种线程同步方法，例如 有一个线程对象 thread A，<strong>当调用 A.join() 的时候，执行这条语句的线程会等待 thread A 执行完，而等待中的这个线程</strong>，其状态会从 RUNNABLE 转换到 WAITING。当线程 thread A 执行完，原来等待它的线程又会从 WAITING 状态转换到 RUNNABLE。</p>
+<p>第三种场景，调用 LockSupport.park() 方法。其中的 LockSupport 对象，也许你有点陌 生，其实 Java 并发包中的锁，都是基于它实现的。调用 LockSupport.park() 方法，当前 线程会阻塞，线程的状态会从 RUNNABLE 转换到 WAITING。调用 LockSupport.unpark(Thread thread) 可唤醒目标线程，目标线程的状态又会从 WAITING 状态转换到 RUNNABLE。</p>
+<ul>
+<li>Runnable 与Time_waiting 的状态转换</li>
+</ul>
+<p>有五种场景会触发这种转换：</p>
+<ol>
+<li><p>调用带超时参数的 Thread.sleep(long millis) 方法；</p>
+</li>
+<li><p>获得 synchronized 隐式锁的线程，调用带超时参数的 Object.wait(long timeout) 方 法；</p>
+</li>
+<li><p>调用带超时参数的 Thread.join(long millis) 方法；</p>
+</li>
+<li><p>调用带超时参数的 LockSupport.parkNanos(Object blocker, long deadline) 方法；</p>
+</li>
+<li><p>调用带超时参数的 LockSupport.parkUntil(long deadline) 方法。</p>
+</li>
+</ol>
+<p>这里 TIMED_WAITING 和 WAITING 状态的区别，仅仅是触发条件多了超时参数。</p>
+<ul>
+<li>NEW 到 Runnable状态</li>
+</ul>
+<p>Java刚创建出来的Thread对象就是NEW状态，而创建Thread对象主要有两种方法，一种是继承Thread对象，重写run()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义线程对象</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mythread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 创建线程对象</span></span><br><span class="line">Mythread my =<span class="keyword">new</span>  MyThread();</span><br><span class="line">----------</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Runner</span> <span class="keyword">implements</span> <span class="title">Runable</span></span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">Thread thread =<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runner());</span><br></pre></td></tr></table></figure>
+<p>NEW 状态的线程，不会被操作系统调度，因此不会执行。Java 线程要执行，就必须转换到 RUNNABLE 状态。从 NEW 状态转换到 RUNNABLE 状态很简单，只要调用线程对象的 start() 方法就可以了，</p>
+<ul>
+<li>Runnable 和 Terminated</li>
+</ul>
+<p>线程执行完 run() 方法后，会自动转换到 TERMINATED 状态，当然如果执行 run() 方法的 时候异常抛出，也会导致线程终止。有时候我们需要强制中断 run() 方法的执行，例如 run() 方法访问一个很慢的网络，我们等不下去了，想终止怎么办呢？Java 的 Thread 类里 面倒是有个 stop() 方法，不过已经标记为 @Deprecated，所以不建议使用了。正确的姿 势其实是调用 interrupt() 方法。</p>
+<p>interrupt() 方法仅仅是通知线程，线程有机会执行一些后 续操作，同时也可以无视这个通知。被 interrupt 的线程，是怎么收到通知的呢？一种是异 常，另一种是主动检测。</p>
+<p>当线程 A 处于 WAITING、TIMED_WAITING 状态时，如果其他线程调用线程 A 的 interrupt() 方法，会使线程 A 返回到 RUNNABLE 状态，同时线程 A 的代码会触发 InterruptedException 异常。上面我们提到转换到 WAITING、TIMED_WAITING 状态的 触发条件，都是调用了类似 wait()、join()、sleep() 这样的方法，我们看这些方法的签名， 发现都会 throws InterruptedException 这个异常。这个异常的触发条件就是：其他线程 调用了该线程的 interrupt() 方法。</p>
+<p>当线程 A 处于 RUNNABLE 状态时，并且阻塞在 java.nio.channels.InterruptibleChannel 上时，如果其他线程调用线程 A 的 interrupt() 方法，线程 A 会触发 java.nio.channels.ClosedByInterruptException 这个异常；而阻塞在 java.nio.channels.Selector 上时，如果其他线程调用线程 A 的 interrupt() 方法，线程 A 的 java.nio.channels.Selector 会立即返回。</p>
+<p>上面这两种情况属于被中断的线程通过异常的方式获得了通知。还有一种是主动检测，如果 线程处于 RUNNABLE 状态，并且没有阻塞在某个 I/O 操作上，例如中断计算圆周率的线 程 A，这时就得依赖线程 A 主动检测中断状态了。如果其他线程调用线程 A 的 interrupt() 方法，那么线程 A 可以通过 isInterrupted() 方法，检测是不是自己被中断了。</p>
+<h4 id="为什么使用多线程"><a href="#为什么使用多线程" class="headerlink" title="为什么使用多线程"></a>为什么使用多线程</h4><p>使用多线程，本质上就是提升程序性能。在提升性能之前， 首要问题是：如何度量性能。</p>
+<p>度量性能的指标有很多，但是有两个指标是最核心的，它们就是<strong>延迟</strong>和<strong>吞吐量</strong>。延迟指的是 发出请求到收到响应这个过程的时间；延迟越短，意味着程序执行得越快，性能也就越好。 吞吐量指的是在单位时间内能处理请求的数量；吞吐量越大，意味着程序能处理的请求越多，性能也就越好。这两个指标内部有一定的联系（同等条件下，延迟越短，吞吐量越 大），但是由于它们隶属不同的维度（一个是时间维度，一个是空间维度），并不能互相转换。</p>
+<h4 id="多线程的应用场景"><a href="#多线程的应用场景" class="headerlink" title="多线程的应用场景"></a>多线程的应用场景</h4><p>“降低延迟，提高吞吐量”，对应的方法呢，基本上有两个方向，一个方向是优化算 法，另一个方向是将硬件的性能发挥到极致。前者属于算法范畴，后者则是和并发编程息息 相关了。那计算机主要有哪些硬件呢？主要是两类：一个是 I/O，一个是 CPU。简言之， <strong>在并发编程领域，提升性能本质上就是提升硬件的利用率，再具体点来说，就是提升 I/O 的利用率和 CPU 的利用率。</strong></p>
+<h3 id="线程个数的设定"><a href="#线程个数的设定" class="headerlink" title="线程个数的设定"></a>线程个数的设定</h3><h4 id="创建多少线程合适"><a href="#创建多少线程合适" class="headerlink" title="创建多少线程合适"></a>创建多少线程合适</h4><p>创建多少线程合适，要看多线程具体的应用场景。<strong>我们的程序一般都是 CPU 计算和 I/O 操 作交叉执行的</strong>，由于 I/O 设备的速度相对于 CPU 来说都很慢，所以大部分情况下，I/O 操 作执行的时间相对于 CPU 计算来说都非常长，这种场景我们一般都称为 I/O 密集型计算； 和 I/O 密集型计算相对的就是 CPU 密集型计算了，CPU 密集型计算大部分场景下都是纯 CPU 计算。I/O 密集型程序和 CPU 密集型程序，计算最佳线程数的方法是不同的。下面分别说明：</p>
+<p><strong>对于 CPU 密集型计算，多线程本质上是提升多核 CPU 的利用率，所以对于一个 4 核的 CPU，每个核一个线程，理论上创建 4 个线程就可以了，再多创建线程也只是增加线程切 换的成本。所以，对于 CPU 密集型的计算场景，理论上“线程的数量 =CPU 核数”就是 最合适的。不过在工程上，线程的数量一般会设置为“CPU 核数 +1”，这样的话，当线 程因为偶尔的内存页失效或其他原因导致阻塞时，这个额外的线程可以顶上，从而保证 CPU 的利用率。</strong></p>
+<p><strong>对于 I/O 密集型的计算场景，比如前面我们的例子中，如果 CPU 计算和 I/O 操作的耗时是 1:1，那么 2 个线程是最合适的。如果 CPU 计算和 I/O 操作的耗时是 1:2，那多少个线程 合适呢？是 3 个线程，如下图所示：CPU 在 A、B、C 三个线程之间切换，对于线程 A， 当 CPU 从 B、C 切换回来时，线程 A 正好执行完 I/O 操作。这样 CPU 和 I/O 设备的利用 率都达到了 100%。</strong></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200112123006.png" width="50%"></p>
+<p>我们会发现，对于 I/O 密集型计算场景，最佳的线程数是与程序中 CPU 计算和 I/O 操作的耗时比相关的，我们可以总结出这样一个公式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">最佳线程数 =<span class="number">1</span> +（I/O 耗时 / CPU 耗时）</span><br></pre></td></tr></table></figure>
+<p>我们令 R=I/O 耗时 / CPU 耗时，综合上图，可以这样理解：当线程 A 执行 IO 操作时，另 外 R 个线程正好执行完各自的 CPU 计算。这样 CPU 的利用率就达到了 100%。</p>
+<p>不过上面这个公式是针对单核 CPU 的，至于多核 CPU，也很简单，只需要等比扩大就可以 了，计算公式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">最佳线程数 =CPU 核数 * [ <span class="number">1</span> +（I/O 耗时 / CPU 耗时）]</span><br></pre></td></tr></table></figure>
+<h3 id="局部变量的线程安全问题"><a href="#局部变量的线程安全问题" class="headerlink" title="局部变量的线程安全问题"></a>局部变量的线程安全问题</h3><p>在CPU层面，是没有方法概念的，在CPU的眼里，只有一条条的指令，编译程序，负责把高级语言里的方法转换成一条条的指令。</p>
+<h4 id="方法如何被执行"><a href="#方法如何被执行" class="headerlink" title="方法如何被执行"></a>方法如何被执行</h4><p>每个方法在调用栈中都有自己的独立空间，称为栈帧，通过CPU的堆栈寄存器就可以支持方法的嵌套调用。栈帧和方法是同生共死的。</p>
+<p>方法内的局部变量存在了调用栈里，就像下面这个一样。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200112150116.png" width="50%"></p>
+<p>所以，可以知道，局部变量和方法是同生共死的，一个变量如果想跨越方法的边界，就必须创建在堆里。</p>
+<h4 id="调用栈与线程"><a href="#调用栈与线程" class="headerlink" title="调用栈与线程"></a>调用栈与线程</h4><p>两个线程可以同时用不同的参数调用相同的方法，那调用栈和线程之间是什么关系呢？答案 是：每个线程都有自己独立的调用栈。因为如果不是这样，那两个线程就互相干扰了。如下 面这幅图所示，线程 A、B、C 每个线程都有自己独立的调用栈。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200112150716.png" width="50%"></p>
+<p>现在，让我们回过头来再看篇首的问题：Java 方法里面的局部变量是否存在并发问题？现 在你应该很清楚了，<strong>一点问题都没有。因为每个线程都有自己的调用栈，局部变量保存在线 程各自的调用栈里面，不会共享，所以自然也就没有并发问题。</strong>再次重申一遍：没有共享， 就没有伤害。</p>
+<h4 id="线程封闭"><a href="#线程封闭" class="headerlink" title="线程封闭"></a>线程封闭</h4><p>方法里的局部变量，因为不会和其他线程共享，所以没有并发问题，这个思路很好，已经成为解决并发问题的一个重要技术，同时还有个响当当的名字叫做<strong>线程封闭</strong>，比较官方的解释 是：仅在单线程内访问数据。由于不存在共享，所以即便不同步也不会有并发问题，性能杠杠的。</p>
+<p>采用线程封闭技术的案例非常多，例如从数据库连接池里获取的连接 Connection，在 JDBC 规范里并没有要求这个 Connection 必须是线程安全的。数据库连接池通过线程封闭 技术，保证一个 Connection 一旦被一个线程获取之后，在这个线程关闭 Connection 之 前的这段时间里，不会再分配给其他线程，从而保证了 Connection 不会有并发问题。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2020/01/10/新版并发/并发六：Java线程/">https://corn1ng.github.io/2020/01/10/新版并发/并发六：Java线程/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/01/10/新版并发/并发五：管程/">
+        <span class="next-text nav-default">并发五：管程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

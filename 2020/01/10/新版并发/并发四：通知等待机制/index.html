@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="并发四：通知等待机制"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2020/01/10/新版并发/并发四：通知等待机制/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 并发四：通知等待机制 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          并发四：通知等待机制
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-10
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发四：通知等待机制"><span class="toc-text">并发四：通知等待机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#synchronized-实现-等待-通知机制"><span class="toc-text">synchronized 实现 等待-通知机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#尽量使用notifyAll"><span class="toc-text">尽量使用notifyAll()</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="并发四：通知等待机制"><a href="#并发四：通知等待机制" class="headerlink" title="并发四：通知等待机制"></a>并发四：通知等待机制</h2><p>在介绍 Java 语言如何支持等待 - 通知机制之前，我们先看一个现实世界里面的就医流程， 因为它有着完善的等待 - 通知机制，所以对比就医流程，我们就能更好地理解和应用并发 编程中的等待 - 通知机制。</p>
+<p>就医流程基本上是这样：</p>
+<ol>
+<li><p>患者先去挂号，然后到就诊门口分诊，等待叫号；</p>
+</li>
+<li><p>当叫到自己的号时，患者就可以找大夫就诊了；</p>
+</li>
+<li><p>就诊过程中，大夫可能会让患者去做检查，同时叫下一位患者；</p>
+</li>
+<li><p>当患者做完检查后，拿检测报告重新分诊，等待叫号；</p>
+</li>
+<li><p>当大夫再次叫到自己的号时，患者再去找大夫就诊。</p>
+</li>
+<li><p>患者到就诊门口分诊，类似于线程要去获取互斥锁；当患者被叫到时，类似线程已经获 取到锁了。</p>
+</li>
+<li>大夫让患者去做检查（缺乏检测报告不能诊断病因），类似于线程要求的条件没有满 足。</li>
+<li>患者去做检查，类似于线程进入等待状态；然后大夫叫下一个患者，这个步骤对应到程序里，本质是线程释放持有的互斥 锁。</li>
+<li>患者做完检查，类似于线程要求的条件已经满足；患者拿检测报告重新分诊，类似于线 程需要重新获取互斥锁。</li>
+</ol>
+<p>综合一下，就可以得出一个完整的等待 - 通知机制：线程 首先获取互斥锁，当线程要求的条件不满足时，释放互斥锁，进入等待状态；当要求的条件 满足时，通知等待的线程，重新获取互斥锁。</p>
+<h4 id="synchronized-实现-等待-通知机制"><a href="#synchronized-实现-等待-通知机制" class="headerlink" title="synchronized 实现 等待-通知机制"></a>synchronized 实现 等待-通知机制</h4><p>Java中，等待-通知机制可以有多种实现方式，比如Java语言内置的synchronized配合wait(),notify(),notifyAll()这三个方法就能轻松实现。</p>
+<p>用synchronized实现互斥锁，像下面图一样，左边有一个等 待队列，同一时刻，只允许一个线程进入 synchronized 保护的临界区（这个临界区可以看 作大夫的诊室），当有一个线程进入临界区后，其他线程就只能进入图中左边的等待队列里 等待（相当于患者分诊等待）。这个等待队列和互斥锁是一对一的关系，<strong>每个互斥锁都有自 己独立的等待队列。</strong></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111204152.png" width="50%"></p>
+<p>在并发程序中，<strong>当一个线程进入临界区后，由于某些条件不满足，需要进入等待状态， Java 对象的 wait() 方法就能够满足这种需求</strong>。如上图所示，当调用 wait() 方法后，当前线 程就会被阻塞，并且进入到右边的等待队列中，<strong>这个等待队列也是互斥锁的等待队列。</strong> 线 程在进入等待队列的同时，<strong>会释放持有的互斥锁</strong>，线程释放锁后，其他线程就有机会获得 锁，并进入临界区了。</p>
+<p>那线程要求的条件满足时，该怎么通知这个等待的线程呢？很简单，就是 Java 对象的 notify() 和 notifyAll() 方法。下面这个图里为你大致描述了这个过程，当条件满足时调 用 notify()，会通知等待队列（<strong>互斥锁的等待队列</strong>）中的线程，告诉它<strong>条件曾经满足过。</strong></p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111205234.png" width="50%"></p>
+<p>为什么说是曾经满足过呢？因为notify() 只能保证在通知时间点，条件是满足的。而被通知线程的执行时间点和通知的时间点基本上不会重合，所以当线程执行的时候，很可能条件 已经不满足了（保不齐有其他线程插队）。</p>
+<p><strong>除此之外，还有一个需要注意的点，被通知的线程要想重新执行，仍然需要获取到互斥锁 （因为曾经获取的锁在调用 wait() 时已经释放了）。</strong></p>
+<p>上面我们一直强调 wait()、notify()、notifyAll() 方法操作的等待队列是互斥锁的等待队 列，所以如果 synchronized 锁定的是 this，那么对应的一定是 this.wait()、 this.notify()、this.notifyAll()；如果 synchronized 锁定的是 target，那么对应的一定是 target.wait()、target.notify()、target.notifyAll() 。而且 wait()、notify()、notifyAll() 这 三个方法能够被调用的前提是已经获取了相应的互斥锁，<strong>所以我们会发现 wait()、 notify()、notifyAll() 都是在 synchronized{}内部被调用的。</strong>如果在 synchronized{}外部调 用，或者锁定的 this，而用 target.wait() 调用的话，JVM 会抛出一个运行时异常： java.lang.IllegalMonitorStateException。</p>
+<h4 id="尽量使用notifyAll"><a href="#尽量使用notifyAll" class="headerlink" title="尽量使用notifyAll()"></a>尽量使用notifyAll()</h4><p>，notify() 是会随机地通知等待队列中的一个线程，而 notifyAll() 会通知等 待队列中的所有线程。从感觉上来讲，应该是 notify() 更好一些，因为即便通知所有线 程，也只有一个线程能够进入临界区。但那所谓的感觉往往都蕴藏着风险，实际上使用 notify() 也很有风险，它的风险在于可能导致某些线程永远不会被通知到。</p>
+<p>假设我们有资源 A、B、C、D，线程 1 申请到了 AB，线程 2 申请到了 CD，此时线程 3 申 请 AB，会进入等待队列（AB 分配给线程 1，线程 3 要求的条件不满足），线程 4 申请 CD 也会进入等待队列。我们再假设之后线程 1 归还了资源 AB，如果使用 notify() 来通知 等待队列中的线程，有可能被通知的是线程 4，但线程 4 申请的是 CD，所以此时线程 4 还 是会继续等待，而真正该唤醒的线程 3 就再也没有机会被唤醒了。</p>
+<p>所以除非经过深思熟虑，否则尽量使用 notifyAll()。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2020/01/10/新版并发/并发四：通知等待机制/">https://corn1ng.github.io/2020/01/10/新版并发/并发四：通知等待机制/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/01/10/新版并发/并发五：管程/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">并发五：管程</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/10/新版并发/并发三：互斥锁/">
+        <span class="next-text nav-default">并发三：互斥锁</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
