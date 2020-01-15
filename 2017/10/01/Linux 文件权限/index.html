@@ -271,8 +271,8 @@
 <p>/etc/passwd文件保存了登录用户名，密码，用户UID，组ID,账户文本描述等</p>
 <p>现在密码都单独保存在/etc/shadow中。</p>
 <a id="more"></a>
-<h4 id="添加新用户"><a href="#添加新用户" class="headerlink" title="添加新用户"></a>添加新用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> useradd -m wkn  //创建账户wkn。m是根据模板创建新用户的home目录。</span><br></pre></td></tr></table></figure>
-<h4 id="删除新用户"><a href="#删除新用户" class="headerlink" title="删除新用户"></a>删除新用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> userdel -r wkn //删除账户wkn.home目录也一并删除。</span><br></pre></td></tr></table></figure>
+<h4 id="添加新用户"><a href="#添加新用户" class="headerlink" title="添加新用户"></a>添加新用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> useradd -m wkn  //创建账户wkn。m是根据模板创建新用户的home目录。</span></span><br></pre></td></tr></table></figure>
+<h4 id="删除新用户"><a href="#删除新用户" class="headerlink" title="删除新用户"></a>删除新用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> userdel -r wkn //删除账户wkn.home目录也一并删除。</span></span><br></pre></td></tr></table></figure>
 <p>####　修改账户</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod  passwd  chpasswd chage chfn chsh</span><br></pre></td></tr></table></figure>
 <h3 id="使用用户组"><a href="#使用用户组" class="headerlink" title="使用用户组"></a>使用用户组</h3><p>每个组都有唯一的GID——跟UID类似,在系统上这是个唯一的数值。除了GID,每个组还有唯一的组名。Linux系统上有一些组工具可以创建和管理你自己的组。本节将细述组信息是如何保存的,以及如何用组工具创建新组和修改已有的组。</p>
@@ -321,9 +321,9 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2017/10/01/Linux 环境变量/">
+      <a class="prev" href="/2017/10/01/安装程序/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Linux环境变量</span>
+        <span class="prev-text nav-default">Linux程序安装</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
