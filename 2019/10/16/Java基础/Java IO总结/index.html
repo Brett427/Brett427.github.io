@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java IO 总结"/>
+
+
+
+
+  <meta name="keywords" content="Java基础, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/16/Java基础/Java IO总结/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java IO 总结 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java IO 总结
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-16
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#输入和输出"><span class="toc-text">输入和输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流"><span class="toc-text">流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#InputStream"><span class="toc-text">InputStream</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OutputStream"><span class="toc-text">OutputStream</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#write-byte"><span class="toc-text">write(byte)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#write-byte-1"><span class="toc-text">write([byte[])</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#flush"><span class="toc-text">flush()</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组合流"><span class="toc-text">组合流</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件"><span class="toc-text">文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#通过IO读文件"><span class="toc-text">通过IO读文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#通过IO写文件"><span class="toc-text">通过IO写文件</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字节和字符数组"><span class="toc-text">字节和字符数组</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#通过OutputStream-或者Writer写数据"><span class="toc-text">通过OutputStream 或者Writer写数据</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#System-in-System-out-System-err"><span class="toc-text">System.in System.out,System.err</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Reader-和Writer"><span class="toc-text">Reader 和Writer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#整合Reader-和InputStream-Writer-和OutputStream"><span class="toc-text">整合Reader 和InputStream Writer 和OutputStream</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h4 id="输入和输出"><a href="#输入和输出" class="headerlink" title="输入和输出"></a>输入和输出</h4><p>Java的IO包主要关注的是从原始数据源的读取以及输出原始数据到目标媒介。以下是最典型的数据源和目标媒介：</p>
+<ul>
+<li>文件</li>
+<li>管道</li>
+<li>网络连接</li>
+<li>内存缓存</li>
+<li>System.in, System.out, System.error(注：Java标准输入、输出、错误输出)</li>
+</ul>
+<p>下面这张图描绘了一个程序从数据源读取数据，然后将数据输出到其他媒介的原理：</p>
+<p>Source -&gt; program -&gt; Destination</p>
+<p>流是一个核心的概念。<strong>流从概念上来说是一个连续的数据流</strong>。既可以从流中读取数据，也可以往流中写数据。流与数据源或者数据流向的媒介相关联。在Java IO中流既可以是字节流(以字节为单位进行读写)，也可以是字符流(以字符为单位进行读写)。</p>
+<p>一个程序需要InputStream或者Reader从数据源读取数据，需要OutputStream或者Writer将数据写入到目标媒介中。以下的图说明了这一点：</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200317105617.png"></p>
+<h4 id="流"><a href="#流" class="headerlink" title="流"></a>流</h4><p>流通常会与数据源、数据流向目的地相关联，比如文件、网络等等。</p>
+<p><strong>流和数组不一样，不能通过索引读写数据。在流中，你也不能像数组那样前后移动读取数据，除非使用<a href="http://tutorials.jenkov.com/java-io/randomaccessfile.html" target="_blank" rel="noopener">RandomAccessFile</a> 处理文件。流仅仅只是一个连续的数据流</strong>。某些类似<a href="http://tutorials.jenkov.com/java-io/pushbackinputstream.html" target="_blank" rel="noopener">PushbackInputStream</a> 流的实现允许你将数据重新推回到流中，以便重新读取。然而你只能把有限的数据推回流中，并且你不能像操作数组那样随意读取数据。流中的数据只能够顺序访问。Java IO流通常是基于字节或者基于字符的。字节流通常以“stream”命名，比如InputStream和OutputStream。字符流通常以“Reader”或者“Writer”命名。字符流能够读写字符(比如Latin1或者Unicode字符)。</p>
+<h4 id="InputStream"><a href="#InputStream" class="headerlink" title="InputStream"></a>InputStream</h4><p>java.io.InputStream类是所有Java IO输入流的基类。如果你正在开发一个从流中读取数据的组件，请尝试用InputStream替代任何它的子类(比如FileInputStream)进行开发。这么做能够让你的代码兼容任何类型而非某种确定类型的输入流。通常使用输入流中的read()方法读取数据。read()方法返回一个整数，代表了读取到的字节的内容(译者注：0 ~ 255)。当达到流末尾没有更多数据可以读取的时候，read()方法返回-1。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">InputStream inputstream = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-text.txt"</span>);</span><br><span class="line"><span class="keyword">byte</span>[] data      = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span>    bytesRead = inputstream.read(data);</span><br><span class="line"><span class="keyword">while</span>(bytesRead != -<span class="number">1</span>) &#123;</span><br><span class="line">  doSomethingWithData(data, bytesRead);</span><br><span class="line">  bytesRead = inputstream.read(data);</span><br><span class="line">&#125;</span><br><span class="line">inputstream.close();</span><br></pre></td></tr></table></figure>
+<p>read()方法返回从InputStream流内读取到的一个字节内容(译者注：0~255)。<strong>如果read()方法返回-1，意味着程序已经读到了流的末尾，此时流内已经没有多余的数据可供读取了。-1是一个int类型，不是byte或者char类型，这是不一样的。</strong></p>
+<p>InputStream包含了2个从InputStream中读取数据并将数据存储到缓冲数组中的read()方法，他们分别是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[])</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> offset, <span class="keyword">int</span> length)</span></span></span><br></pre></td></tr></table></figure>
+<p>一次性读取一个字节数组的方式，比一次性读取一个字节的方式快的多，所以，尽可能使用这两个方法代替read()方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">read(byte[])方法会尝试读取与给定字节数组容量一样大的字节数，返回值说明了已经读取过的字节数。如果InputStream内可读的数据不足以填满字节数组，则数组剩余部分将保留参数传入时的原始数据，记得检查有多少数据实际被写入到了字节数组中，以防读取无效数据。</span><br><span class="line">read(byte, int offset, int length)方法同样将数据读取到字节数组中，不同的是，该方法从数组的offset位置开始，并且最多将length个字节写入到数组中。同样地，read(byte, int offset, int length)方法返回一个int变量，告诉你已经有多少字节已经被写入到字节数组中，所以请记得在读取数据前检查上一次调用read(byte, int offset, int length)的返回值。</span><br><span class="line">这两个方法都会在读取到达到流末尾时返回-1。</span><br></pre></td></tr></table></figure>
+<h4 id="OutputStream"><a href="#OutputStream" class="headerlink" title="OutputStream"></a>OutputStream</h4><p>java.io.OutputStream是Java IO中所有输出流的基类。如果你正在开发一个能够将数据写入流中的组件，请尝试使用OutputStream替代它的所有子类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-file.txt"</span>);</span><br><span class="line">output.write(<span class="string">"Hello World"</span>.getBytes());</span><br><span class="line">output.close();</span><br></pre></td></tr></table></figure>
+<h5 id="write-byte"><a href="#write-byte" class="headerlink" title="write(byte)"></a>write(byte)</h5><p>write(byte)方法用于把单个字节写入到输出流中。OutputStream的write(byte)方法将一个包含了待写入数据的int变量作为参数进行写入。只有int类型的第一个字节会被写入，其余位会被忽略。(译者注：写入低8位，忽略高24位)。</p>
+<p>OutputStream的子类可能会包含write()方法的替代方法。比如，DataOutputStream允许你利用writeBoolean()，writeDouble()等方法将基本类型int，long，float，double，boolean等变量写入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-text.txt"</span>);</span><br><span class="line"><span class="keyword">while</span>(hasMoreData()) &#123;</span><br><span class="line">    <span class="keyword">int</span> data = getMoreData();</span><br><span class="line">    output.write(data);</span><br><span class="line">&#125;</span><br><span class="line">output.close();</span><br></pre></td></tr></table></figure>
+<h5 id="write-byte-1"><a href="#write-byte-1" class="headerlink" title="write([byte[])"></a>write([byte[])</h5><p>OutputStream同样包含了将字节数据中全部或者部分数据写入到输出流中的方法，分别是write(byte[])和write(byte[], int offset, int length)。write(byte[])把字节数组中所有数据写入到输出流中。write(byte[], int offset, int length)把字节数据中从offset位置开始，length个字节的数据写入到输出流。</p>
+<h5 id="flush"><a href="#flush" class="headerlink" title="flush()"></a>flush()</h5><p>OutputStream的flush()方法将所有写入到OutputStream的数据冲刷到相应的目标媒介中。比如，如果输出流是FileOutputStream，那么写入到其中的数据可能并没有真正写入到磁盘中。即使所有数据都写入到了FileOutputStream，这些数据还是有可能保留在内存的缓冲区中。通过调用flush()方法，可以把缓冲区内的数据刷新到磁盘(或者网络，以及其他任何形式的目标媒介)中。</p>
+<h4 id="组合流"><a href="#组合流" class="headerlink" title="组合流"></a>组合流</h4><p>你可以将流整合起来以便实现更高级的输入和输出操作。比如，一次读取一个字节是很慢的，所以可以从磁盘中一次读取一大块数据，然后从读到的数据块中获取字节。为了实现缓冲，可以把InputStream包装到BufferedInputStream中。代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-file.txt"</span>));</span><br></pre></td></tr></table></figure>
+<p>缓冲同样可以应用到OutputStream中。你可以实现将大块数据批量地写入到磁盘(或者相应的流)中，这个功能由BufferedOutputStream实现。</p>
+<p>缓冲只是通过流整合实现的其中一个效果。你可以把InputStream包装到PushbackInputStream中，之后可以将读取过的数据推回到流中重新读取，在解析过程中有时候这样做很方便。或者，你可以将两个InputStream整合成一个<a href="http://tutorials.jenkov.com/java-io/sequenceinputstream.html" target="_blank" rel="noopener">SequenceInputStream</a>。</p>
+<p>将不同的流整合到一个链中，可以实现更多种高级操作。通过编写包装了标准流的类，可以实现你想要的效果和过滤器。</p>
+<h4 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h4><h5 id="通过IO读文件"><a href="#通过IO读文件" class="headerlink" title="通过IO读文件"></a>通过IO读文件</h5><p>如果需要在不同端之间读取文件，可以根据该文件是二进制文件还是文本文件来选择使用FileInputStream或者FileReader。这两个类允许你从文件开始到文件末尾一次读取一个字节或者字符，或者将读取到的字节写入到字节数组或者字符数组。你不必一次性读取整个文件，相反你可以按顺序地读取文件中的字节和字符。如果需要跳跃式地读取文件其中的某些部分，可以使用RandomAccessFile。</p>
+<h5 id="通过IO写文件"><a href="#通过IO写文件" class="headerlink" title="通过IO写文件"></a>通过IO写文件</h5><p>如果需要在不同端之间进行文件的写入，你可以根据你要写入的数据是二进制型数据还是字符型数据选用FileOutputStream或者FileWriter。你可以一次写入一个字节或者字符到文件中，也可以直接写入一个字节数组或者字符数据。数据按照写入的顺序存储在文件当中。</p>
+<h4 id="字节和字符数组"><a href="#字节和字符数组" class="headerlink" title="字节和字符数组"></a>字节和字符数组</h4><p>在java中常用字节和字符数组在应用中临时存储数据。而这些数组又是通常的数据读取来源或者写入目的地。如果需要在程序运行时需要大量读取文件里的内容，那么你也可以把一个文件加载到数组中。当然你可以通过直接指定索引来读取这些数组。但如果设计成为从InputStream或者Reader，而不是从数组中读取某些数据的话，会用什么组件呢？</p>
+<p><strong>从</strong> <strong>InputStream</strong> <strong>或</strong> <strong>Reader</strong>中读取数组</p>
+<p>用ByteArrayInputStream或者CharArrayReader封装字节或者字符数组从数组中读取数据。通过这种方式字节和字符就可以以数组的形式读出了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="comment">//把数据写入字节数组...</span></span><br><span class="line">InputStream input = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line"><span class="comment">//读取第一个字节</span></span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>) &#123;</span><br><span class="line"><span class="comment">//操作数据</span></span><br><span class="line"><span class="comment">//读下一个字节</span></span><br><span class="line">data = input.read();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以同样的方式也可以用于读取字符数组，只要把字符数组封装在CharArrayReader上就行了。</p>
+<h5 id="通过OutputStream-或者Writer写数据"><a href="#通过OutputStream-或者Writer写数据" class="headerlink" title="通过OutputStream 或者Writer写数据"></a>通过OutputStream 或者Writer写数据</h5><p>同样，也可以把数据写到ByteArrayOutputStream或者CharArrayWriter中。你只需要创建ByteArrayOutputStream或者CharArrayWriter，把数据写入，就像写其它的流一样。当所有的数据都写进去了以后，只要调用toByteArray()或者toCharArray，所有写入的数据就会以数组的形式返回。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">output.write(<span class="string">"This text is converted to bytes"</span>.toBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line"><span class="keyword">byte</span>[] bytes = output.toByteArray();</span><br></pre></td></tr></table></figure>
+<h4 id="System-in-System-out-System-err"><a href="#System-in-System-out-System-err" class="headerlink" title="System.in System.out,System.err"></a>System.in System.out,System.err</h4><p>System.in, System.out, System.err这3个流同样是常见的数据来源和数据流目的地。使用最多的可能是在控制台程序里利用System.out将输出打印到控制台上。</p>
+<p><strong>System.in</strong></p>
+<p>System.in是一个典型的连接控制台程序和键盘输入的InputStream流。通常当数据通过命令行参数或者配置文件传递给命令行Java程序的时候，System.in并不是很常用。图形界面程序通过界面传递参数给程序，这是一块单独的Java IO输入机制。</p>
+<p><strong>System.out</strong></p>
+<p>System.out是一个PrintStream流。System.out一般会把你写到其中的数据输出到控制台上。System.out通常仅用在类似命令行工具的控制台程序上。System.out也经常用于打印程序的调试信息(尽管它可能并不是获取程序调试信息的最佳方式)。</p>
+<p><strong>System.err</strong></p>
+<p>System.err是一个PrintStream流。System.err与System.out的运行方式类似，但它更多的是用于打印错误文本。一些类似Eclipse的程序，为了让错误信息更加显眼，会将错误信息以红色文本的形式通过System.err输出到控制台上。</p>
+<p><strong>尽管System.in, System.out, System.err这3个流是java.lang.System类中的静态成员(译者注：这3个变量均为final static常量)，并且已经预先在JVM启动的时候初始化完成，依然可以更改它们。只需要把一个新的InputStream设置给System.in或者一个新的OutputStream设置给System.out或者System.err，之后的数据都将会在新的流中进行读取、写入。可以使用System.setIn(), System.setOut(), System.setErr()方法设置新的系统流</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\system.out.txt"</span>);</span><br><span class="line">PrintStream printOut = <span class="keyword">new</span> PrintStream(output);</span><br><span class="line">System.setOut(printOut);</span><br></pre></td></tr></table></figure>
+<p>现在所有的System.out都将重定向到”c:\data\system.out.txt”文件中。请记住，务必在JVM关闭之前冲刷System.out(译者注：调用flush())，确保System.out把数据输出到了文件中。</p>
+<h4 id="Reader-和Writer"><a href="#Reader-和Writer" class="headerlink" title="Reader 和Writer"></a>Reader 和Writer</h4><p>Reader类是Java IO中所有Reader的基类。子类包括BufferedReader，PushbackReader，InputStreamReader，StringReader和其他Reader。</p>
+<p>Writer类是Java IO中所有Writer的基类。子类包括BufferedWriter和PrintWriter等等。</p>
+<p>请注意，InputStream的read()方法返回一个字节，意味着这个返回值的范围在0到255之间(当达到流末尾时，返回-1)，Reader的read()方法返回一个字符，意味着这个返回值的范围在0到65535之间(当达到流末尾时，同样返回-1)。这并不意味着Reade只会从数据源中一次读取2个字节，Reader会根据文本的编码，一次读取一个或者多个字节。</p>
+<h4 id="整合Reader-和InputStream-Writer-和OutputStream"><a href="#整合Reader-和InputStream-Writer-和OutputStream" class="headerlink" title="整合Reader 和InputStream Writer 和OutputStream"></a>整合Reader 和InputStream Writer 和OutputStream</h4><p>一个Reader可以和一个InputStream相结合。如果你有一个InputStream输入流，并且想从其中读取字符，可以把这个InputStream包装到InputStreamReader中。把InputStream传递到InputStreamReader的构造函数中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reader reader =<span class="keyword">new</span> InputStreamReader(inputStream);</span><br></pre></td></tr></table></figure>
+<p>与Reader和InputStream类似，一个Writer可以和一个OutputStream相结合。把OutputStream包装到OutputStreamWriter中，所有写入到OutputStreamWriter的字符都将会传递给OutputStream。这是一个OutputStreamWriter的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Writer writer = <span class="keyword">new</span> OutputStreamWriter(outputStream);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/16/Java基础/Java IO总结/">https://corn1ng.github.io/2019/10/16/Java基础/Java IO总结/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java基础/">Java基础</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/23/kafka/Kafka 3无消息丢失配置/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kafka 无消息丢失配置</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/05/新版Mysql/Mysql(8)orderby/">
+        <span class="next-text nav-default">Mysql(8)orderby</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
