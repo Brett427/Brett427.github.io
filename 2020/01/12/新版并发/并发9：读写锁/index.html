@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="并发9:读写锁"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2020/01/12/新版并发/并发9：读写锁/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 并发9:读写锁 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          并发9:读写锁
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-12
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ReadWriteLock"><span class="toc-text">ReadWriteLock</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#快速实现一个缓存"><span class="toc-text">快速实现一个缓存</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="ReadWriteLock"><a href="#ReadWriteLock" class="headerlink" title="ReadWriteLock"></a>ReadWriteLock</h2><p>读写锁，并不是 Java 语言特有的，而是一个广为使用的通用技术，所有的读写锁都遵守以 下三条基本原则：</p>
+<ol>
+<li><p>允许多个线程同时读共享变量；</p>
+</li>
+<li><p>只允许一个线程写共享变量；</p>
+</li>
+<li><p>如果一个写线程正在执行写操作，此时禁止读线程读共享变量。</p>
+</li>
+</ol>
+<p>读写锁与互斥锁的一个重要区别就是读写锁允许多个线程同时读共享变量，而互斥锁是不允许的，这是读写锁在读多写少场景下性能优于互斥锁的关键。但读写锁的写操作是互斥的， 当一个线程在写共享变量的时候，是不允许其他线程执行写操作和读操作。</p>
+<h4 id="快速实现一个缓存"><a href="#快速实现一个缓存" class="headerlink" title="快速实现一个缓存"></a>快速实现一个缓存</h4><p>用 ReadWriteLock 快速实现一个通用的缓存工具类。声明了一个 Cache&lt;K, V&gt; 类，其中类型参数 K 代表缓存里 key 的 类型，V 代表缓存里 value 的类型。缓存的数据保存在 Cache 类内部的 HashMap 里面， HashMap 不是线程安全的，这里我们使用读写锁 ReadWriteLock 来保证其线程安全。 ReadWriteLock 是一个接口，它的实现类是 ReentrantReadWriteLock，通过名字你应该 就能判断出来，它是支持可重入的。下面我们通过 rwl 创建了一把读锁和一把写锁。</p>
+<p>Cache 这个工具类，我们提供了两个方法，一个是读缓存方法 get()，另一个是写缓存方法 put()。读缓存需要用到读锁，读锁的使用和前面我们介绍的 Lock 的使用是相同的，都是 try{}finally{}这个编程范式。写缓存则需要用到写锁，写锁的使用和读锁是类似的。这样看 来，读写锁的使用还是非常简单的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cache</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Map&lt;K,V&gt; m = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">final</span> ReadWriteLock rwl =<span class="keyword">new</span> ReentrantReadWtireLock();</span><br><span class="line">    <span class="keyword">final</span> Lock r = rwl.readLock();</span><br><span class="line">    <span class="keyword">final</span> Lock w =rwl.writeLock();</span><br><span class="line">    <span class="function">V <span class="title">get</span><span class="params">(K key)</span></span>&#123;</span><br><span class="line">        r.lock();</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> m.get(key);</span><br><span class="line">        &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">            r.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">V <span class="title">put</span><span class="params">(String key,Data v)</span></span>&#123;</span><br><span class="line">        w.write();</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> m.put(key,v);</span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            w.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>读写锁类似于 ReentrantLock，也支持公平模式和非公平模式。读锁和写锁都实现了 java.util.concurrent.locks.Lock 接口，所以除了支持 lock() 方法外，tryLock()、 lockInterruptibly() 等方法也都是支持的。但是有一点需要注意，那就是只有写锁支持条件 变量，读锁是不支持条件变量的，读锁调用 newCondition() 会抛出 UnsupportedOperationException 异常。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2020/01/12/新版并发/并发9：读写锁/">https://corn1ng.github.io/2020/01/12/新版并发/并发9：读写锁/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/01/13/新版并发/并发11：Executor 与线程池/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">并发11:Executor 与线程池</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/12/新版并发/并发10：CountDownLatch and CyclicBarrier/">
+        <span class="next-text nav-default">并发10:并发容器</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

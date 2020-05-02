@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="并发12:CompletableFuture"/>
+
+
+
+
+  <meta name="keywords" content="Java多线程, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2020/01/14/新版并发/并发12：CompletableFuture/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> 并发12:CompletableFuture - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          并发12:CompletableFuture
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-01-14
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CompletableFuture-异步编程"><span class="toc-text">CompletableFuture 异步编程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#创建CompletableFuture对象"><span class="toc-text">创建CompletableFuture对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#如何理解CompletionStage接口"><span class="toc-text">如何理解CompletionStage接口</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="CompletableFuture-异步编程"><a href="#CompletableFuture-异步编程" class="headerlink" title="CompletableFuture 异步编程"></a>CompletableFuture 异步编程</h2><h4 id="创建CompletableFuture对象"><a href="#创建CompletableFuture对象" class="headerlink" title="创建CompletableFuture对象"></a>创建CompletableFuture对象</h4><p>创建 CompletableFuture 对象主要靠下面代码中展示的这 4 个静态方法，我们先看前两 个。<code>runAsync(Runnable runnable)</code>和<code>supplyAsync(Supplier&lt;U&gt; supplier)</code>，它们之间的区别是：Runnable 接口的 run() 方法没有返回值，而 Supplier 接口的 get() 方法是有返回值的。</p>
+<p>前两个方法和后两个方法的区别在于，后两个方法可以指定线程池参数。</p>
+<p>默认情况下 CompletableFuture 会使用公共的 ForkJoinPool 线程池，这个线程池默认创 建的线程数是 CPU 的核数。如果所有 CompletableFuture 共享一个线程池，那么一旦有任务执行一些很慢的 I/O 操作，就会导致线程池中所有线程都阻塞在 I/O 操作上，从而造成线程饥饿，进 而影响整个系统的性能。所以，强烈建议你要根据不同的业务类型创建不同的线程池，以避免互相干扰。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用默认线程池</span></span><br><span class="line"><span class="keyword">static</span> CompletableFuture&lt;Void&gt; </span><br><span class="line">  runAsync(Runnable runnable)</span><br><span class="line"><span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; </span><br><span class="line">  supplyAsync(Supplier&lt;U&gt; supplier)</span><br><span class="line"><span class="comment">// 可以指定线程池  </span></span><br><span class="line"><span class="keyword">static</span> CompletableFuture&lt;Void&gt; </span><br><span class="line">  runAsync(Runnable runnable, Executor executor)</span><br><span class="line"><span class="keyword">static</span> &lt;U&gt; CompletableFuture&lt;U&gt; </span><br><span class="line">  supplyAsync(Supplier&lt;U&gt; supplier, Executor executor)</span><br></pre></td></tr></table></figure>
+<p>创建完 CompletableFuture 对象之后，会自动地异步执行 runnable.run() 方法或者 supplier.get() 方法，对于一个异步操作，需要关注两个问题：一个是异步操作什么时候 结束，另一个是如何获取异步操作的执行结果。因为 CompletableFuture 类实现了 Future 接口，所以这两个问题你都可以通过 Future 接口来解决。另外， CompletableFuture 类还实现了 CompletionStage 接口，这个接口内容实在是太丰富 了，在 1.8 版本里有 40 个方法，这些方法该如何理解？</p>
+<h4 id="如何理解CompletionStage接口"><a href="#如何理解CompletionStage接口" class="headerlink" title="如何理解CompletionStage接口"></a>如何理解CompletionStage接口</h4><p>可以站在分工的角度类比一下工作流。任务是有时序关系的，比如有串行关系、 并行关系、汇聚关系等。这样说可能有点抽象，这里还举前面烧水泡茶的例子，其中洗水壶 和烧开水就是串行关系，洗水壶、烧开水和洗茶壶、洗茶杯这两组任务之间就是并行关系， 而烧开水、拿茶叶和泡茶就是汇聚关系。</p>
+<p>CompletionStage 接口可以清晰地描述任务之间的这种时序关系，例如前面提到的<code>f3 = f1.thenCombine(f2, ()-&gt;{})</code>描述的就是一种汇聚关系。烧水泡茶程序中的汇聚关系 是一种 AND 聚合关系，这里的 AND 指的是所有依赖的任务（烧开水和拿茶叶）都完成后 才开始执行当前任务（泡茶）。既然有 AND 聚合关系，那就一定还有 OR 聚合关系，所谓 OR 指的是依赖的任务只要有一个完成就可以执行当前任务。</p>
+<p>下面来一个一个介绍completionStage接口如何描述串行关系，AND聚合关系，OR聚合关系以及异常处理。</p>
+<ul>
+<li>描述串行关系</li>
+</ul>
+<p>CompletionStage 接口里描述串行关系，主要是thenApply,thenAccept,thenRun和thenCompose这四个系列的接口。</p>
+<p>thenApply 系列函数里参数 fn 的类型是接口 <code>Function&lt;T, R&gt;</code>，这个接口里与 CompletionStage 相关的方法是 <code>R apply(T t)</code>，这个方法既能接收参数也支持返回 值，所以 thenApply 系列方法返回的是<code>CompletionStage&lt;R&gt;</code>。</p>
+<p>而 thenAccept 系列方法里参数 consumer 的类型是接口<code>Consumer&lt;T&gt;</code>，这个接口里与 CompletionStage 相关的方法是 <code>void accept(T t)</code>，这个方法虽然支持参数，但却不 支持回值，所以 thenAccept 系列方法返回的是<code>CompletionStage&lt;Void&gt;</code>。</p>
+<p>thenRun 系列方法里 action 的参数是 Runnable，所以 action 既不能接收参数也不支持 返回值，所以 thenRun 系列方法返回的也是<code>CompletionStage&lt;Void&gt;</code>。 这些方法里面 Async 代表的是异步执行 fn、consumer 或者 action。其中，需要你注意的 是 thenCompose 系列方法，这个系列的方法会新创建出一个子流程，最终结果和 thenApply 系列是相同的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CompletionStage&lt;R&gt; <span class="title">thenApply</span><span class="params">(fn)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;R&gt; <span class="title">thenApplyAsync</span><span class="params">(fn)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;Void&gt; <span class="title">thenAccept</span><span class="params">(consumer)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;Void&gt; <span class="title">thenAcceptAsync</span><span class="params">(consumer)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;Void&gt; <span class="title">thenRun</span><span class="params">(action)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;Void&gt; <span class="title">thenRunAsync</span><span class="params">(action)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;R&gt; <span class="title">thenCompose</span><span class="params">(fn)</span></span>; </span><br><span class="line"><span class="function">CompletionStage&lt;R&gt; <span class="title">thenComposeAsync</span><span class="params">(fn)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>下面是thenApply()方法的使用。首先通过 supplyAsync() 启动一个异步流程，之后是两个串行操作，整体看起来还是挺简单的。不 过，虽然这是一个异步流程，但任务①②③却是串行执行的，②依赖①的执行结果，③依赖 ②的执行结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; f0 = </span><br><span class="line">  CompletableFuture.supplyAsync(</span><br><span class="line">    () -&gt; <span class="string">"Hello World"</span>)      <span class="comment">//①</span></span><br><span class="line">  .thenApply(s -&gt; s + <span class="string">" QQ"</span>)  <span class="comment">//②</span></span><br><span class="line">  .thenApply(String::toUpperCase);<span class="comment">//③</span></span><br><span class="line"> </span><br><span class="line">System.out.println(f0.join());</span><br><span class="line"><span class="comment">// 输出结果</span></span><br><span class="line">HELLO WORLD QQ</span><br></pre></td></tr></table></figure>
+<ul>
+<li>描述AND汇聚关系</li>
+</ul>
+<p>CompletionStage 接口里面描述 AND 汇聚关系，主要是 thenCombine、 thenAcceptBoth 和 runAfterBoth 系列的接口，这些接口的区别也是源自 fn、 consumer、action 这三个核心参数不同。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CompletionStage&lt;R&gt; thenCombine(other, fn);</span><br><span class="line">CompletionStage&lt;R&gt; thenCombineAsync(other, fn);</span><br><span class="line">CompletionStage&lt;Void&gt; thenAcceptBoth(other, consumer);</span><br><span class="line">CompletionStage&lt;Void&gt; thenAcceptBothAsync(other, consumer);</span><br><span class="line">CompletionStage&lt;Void&gt; runAfterBoth(other, action);</span><br><span class="line">CompletionStage&lt;Void&gt; runAfterBothAsync(other, action);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>描述OR汇聚关系</li>
+</ul>
+<p>CompletionStage 接口里面描述 OR 汇聚关系，主要是 applyToEither、acceptEither 和 runAfterEither 系列的接口，这些接口的区别也是源自 fn、consumer、action 这三个核 心参数不同。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CompletionStage <span class="title">applyToEither</span><span class="params">(other, fn)</span></span>;</span><br><span class="line"><span class="function">CompletionStage <span class="title">applyToEitherAsync</span><span class="params">(other, fn)</span></span>;</span><br><span class="line"><span class="function">CompletionStage <span class="title">acceptEither</span><span class="params">(other, consumer)</span></span>;</span><br><span class="line"><span class="function">CompletionStage <span class="title">acceptEitherAsync</span><span class="params">(other, consumer)</span></span>;</span><br><span class="line"><span class="function">CompletionStage <span class="title">runAfterEither</span><span class="params">(other, action)</span></span>;</span><br><span class="line"><span class="function">CompletionStage <span class="title">runAfterEitherAsync</span><span class="params">(other, action)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>下面的示例代码展示了如何使用 applyToEither() 方法来描述一个 OR 汇聚关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; f1 = </span><br><span class="line">  CompletableFuture.supplyAsync(()-&gt;&#123;</span><br><span class="line">    <span class="keyword">int</span> t = getRandom(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">    sleep(t, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> String.valueOf(t);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">CompletableFuture&lt;String&gt; f2 = </span><br><span class="line">  CompletableFuture.supplyAsync(()-&gt;&#123;</span><br><span class="line">    <span class="keyword">int</span> t = getRandom(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">    sleep(t, TimeUnit.SECONDS);</span><br><span class="line">    <span class="keyword">return</span> String.valueOf(t);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">CompletableFuture&lt;String&gt; f3 = </span><br><span class="line">  f1.applyToEither(f2,s -&gt; s);</span><br><span class="line"> </span><br><span class="line">System.out.println(f3.join());</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2020/01/14/新版并发/并发12：CompletableFuture/">https://corn1ng.github.io/2020/01/14/新版并发/并发12：CompletableFuture/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java多线程/">Java多线程</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/01/13/新版并发/并发11：Executor 与线程池/">
+        <span class="next-text nav-default">并发11:Executor 与线程池</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Kafka 幂等生产者和事务生产者"/>
+
+
+
+
+  <meta name="keywords" content="Kafka, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/25/kafka/5幂等生产者和事务生产者/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Kafka 幂等生产者和事务生产者 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kafka 幂等生产者和事务生产者
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-25
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/中间件/">中间件</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#幂等生产者和事务生产者"><span class="toc-text">幂等生产者和事务生产者</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#幂等性Producer"><span class="toc-text">幂等性Producer</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#幂等性Producer的作用范围"><span class="toc-text">幂等性Producer的作用范围</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#事务性Producer"><span class="toc-text">事务性Producer</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="幂等生产者和事务生产者"><a href="#幂等生产者和事务生产者" class="headerlink" title="幂等生产者和事务生产者"></a>幂等生产者和事务生产者</h2><p>消息交付可靠性保障，是指 Kafka 对 Producer 和 Consumer 要处理的消息提供什么样的承诺。常见的承诺有以下三种：</p>
+<p>最多一次（at most once）：消息可能会丢失，但绝不会被重复发送。</p>
+<p>至少一次（at least once）：消息不会丢失，但有可能被重复发送。</p>
+<p>精确一次（exactly once）：消息不会丢失，也不会被重复发送。</p>
+<p>kafka提供的交付可靠性保障是第二种，即至少一次。</p>
+<p>“已提交”的含 义，即只有 Broker 成功“提交”消息且 Producer 接到 Broker 的应答才会认为该消息成功发送。不过倘若消息成 功“提交”，但 Broker 的应答没有成功发送回 Producer 端（比如网络出现瞬时抖动），那么 Producer 就无法确定 消息是否真的提交成功了。因此，它只能选择重试，也就是再次发送相同的消息。<strong>这就是 Kafka 默认提供至少一次可靠性保障的原因，不过这会导致消息重复发送。</strong></p>
+<p>kafka也可以提供最多一次交付保障，只要让producer禁止重试就好。这样一来，消息要么写入成功，要么写入失败，但绝不会重复发送。。我们通常不会希望出现消息丢失的 情况，但一些场景里偶发的消息丢失其实是被允许的，相 反，消息重复是绝对要避免的。此时，使用最多一次交付保 障就是最恰当的。</p>
+<p>kafka同样可以做到第三种，即精确一次，通过两种机制，幂等性和事务性。</p>
+<h4 id="幂等性Producer"><a href="#幂等性Producer" class="headerlink" title="幂等性Producer"></a>幂等性Producer</h4><p>其最大的优势在于我们可以安全地重试 任何幂等性操作，反正它们也不会破坏我们的系统状态。</p>
+<p>在 Kafka 中，Producer 默认不是幂等性的，但我们可以创 建幂等性 Producer。它其实是 0.11.0.0 版本引入的新功 能。在此之前，Kafka 向分区发送数据时，可能会出现同一 条消息被发送了多次，导致消息重复的情况。在 0.11 之 后，指定 Producer 幂等性的方法很简单，仅需要设置一个 参数即可，即 props.put(“enable.idempotence”, ture)，或props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CO NFIG， true)。enable.idempotence 被设置成 true 后，Producer 自动升 级成幂等性 Producer，其他所有的代码逻辑都不需要改变。Kafka 自动帮你做消息的重复去重。</p>
+<h5 id="幂等性Producer的作用范围"><a href="#幂等性Producer的作用范围" class="headerlink" title="幂等性Producer的作用范围"></a>幂等性Producer的作用范围</h5><p>首先，它只能保证单分区上的幂等性，即一个幂等性 Producer <strong>能够保证某个主题的一个分区上不出现重复消 息，它无法实现多个分区的幂等性</strong>。其次，<strong>它只能实现单会话上的幂等性，不能实现跨会话的幂等性</strong>。这里的会话，你 可以理解为 Producer 进程的一次运行。当你重启了 Producer 进程之后，这种幂等性保证就丧失了。</p>
+<p>如果想实现多分区以及多会话上的消息无重复，应该怎么做呢？答案就是事务（transaction）或 者依赖事务型 Producer。这也是幂等性 Producer 和事务 型 Producer 的最大区别！</p>
+<h4 id="事务性Producer"><a href="#事务性Producer" class="headerlink" title="事务性Producer"></a>事务性Producer</h4><p>事务型 Producer 能够保证将消息原子性地写入到多个分区 中。这批消息要么全部写入成功，要么全部失败。另外，事 务型 Producer 也不惧进程的重启。Producer 重启回来 后，Kafka 依然保证它们发送消息的精确一次处理。</p>
+<p>设置事务型 Producer 的方法也很简单，满足两个要求即 可：</p>
+<ul>
+<li>和幂等性 Producer 一样，开启 enable.idempotence = true。</li>
+<li>设置 Producer 端参数 transctional. id。最好为其设置一 个有意义的名字。</li>
+<li>修改代码内容，调用了一些事务 API，如 initTransaction、 beginTransaction、commitTransaction 和 abortTransaction，它们分别对应事务的初始化、事务开 始、事务提交以及事务终止。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">producer.initTransactions();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">            producer.beginTransaction();</span><br><span class="line">            producer.send(record1);</span><br><span class="line">            producer.send(record2);</span><br><span class="line">            producer.commitTransaction();</span><br><span class="line">&#125; <span class="keyword">catch</span> (KafkaException e) &#123;</span><br><span class="line">            producer.abortTransaction();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和普通 Producer 代码相比，事务型 Producer 的显著特点是调用了一些事务 API，如 initTransaction、beginTransaction、commitTransaction 和 abortTransaction，它们分别对应事务的初始化、事务开始、事务提交以及事务终止。</p>
+<p>这段代码能够保证 Record1 和 Record2 被当作一个事务统一提交到 Kafka，要么它们全部提交成功，要么全部写入失败。实际上即使写入失败，Kafka 也会把它们写入到底层的日志中，也就是说 Consumer 还是会看到这些消息。因此在 Consumer 端，读取事务型 Producer 发送的消息也是需要一些变更的。修改起来也很简单，设置 isolation.level 参数的值即可。当前这个参数有两个取值：</p>
+<ol>
+<li>read_uncommitted：这是默认值，表明 Consumer 能够读取到 Kafka 写入的任何消息，不论事务型 Producer 提交事务还是终止事务，其写入的消息都可以读取。很显然，如果你用了事务型 Producer，那么对应的 Consumer 就不要使用这个值。</li>
+<li>read_committed：表明 Consumer 只会读取事务型 Producer 成功提交事务写入的消息。当然了，它也能看到非事务型 Producer 写入的所有消息。</li>
+</ol>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/25/kafka/5幂等生产者和事务生产者/">https://corn1ng.github.io/2019/10/25/kafka/5幂等生产者和事务生产者/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Kafka/">Kafka</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/26/kafka/7位移主题 _consumer_offsets/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kafka 位移主题 _consumer_offsets</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/24/kafka/4Java生产者如何管理TCP连接/">
+        <span class="next-text nav-default">Kafka Java生产者如何管理TCP连接</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

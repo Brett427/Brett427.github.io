@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Kafka 位移提交"/>
+
+
+
+
+  <meta name="keywords" content="Kafka, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/28/kafka/9 位移提交/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Kafka 位移提交 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kafka 位移提交
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-28
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/中间件/">中间件</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+
+    <div class="post-content">
+      
+        <p>Consumer 端有个位移的概念，它和消息在分区中的位移不是一回事儿， 虽然它们的英文都是 Offset。今天的位移是 Consumer 的消费位移，它记录了 Consumer 要消费的下一条消息的位移。<strong>切记是下 一条消息的位移</strong>，而不是目前最新消费消息的位移。</p>
+<p>假设一个分区中有 10 条消息，位移分别是 0 到 9。某个 Consumer 应用已消费了 5 条消息，这就说明该 Consumer 消费了位移为 0 到 4 的 5 条 消息，此时 Consumer 的位移是 5，指向了下一条消息的位移。</p>
+<p>Consumer 需要向 Kafka 汇报自己的位移数据，这个汇报过程被称为提交位移（Committing Offsets）。因为 Consumer 能够同时消费多个分区的数据，所以位移的提 交实际上是在分区粒度上进行的，即Consumer 需要为分配给它的每个分区提交各自的位 移数据。</p>
+<p>提交位移主要是为了表征 Consumer 的消费进度，这样当 Consumer 发生故障重启之后， 就能够从 Kafka 中读取之前提交的位移值，然后从相应的位移处继续消费，从而避免整个 消费过程重来一遍。换句话说，位移提交是 Kafka 提供给你的一个工具或语义保障，你负 责维持这个语义保障，即如果你提交了位移 X，那么 Kafka 会认为所有位移值小于 X 的消 息你都已经成功消费了。</p>
+<p>这一点特别关键。因为位移提交非常灵活，你完全可以提交任何位移值，但由此产生的后果 你也要一并承担。假设你的 Consumer 消费了 10 条消息，你提交的位移值却是 20，那么 从理论上讲，位移介于 11～19 之间的消息是有可能丢失的；相反地，如果你提交的位移值 是 5，那么位移介于 5～9 之间的消息就有可能被重复消费。所以，位移 提交的语义保障是由你来负责的，Kafka 只会“无脑”地接受你提交的位移。你对位移提 交的管理直接影响了你的 Consumer 所能提供的消息语义保障。</p>
+<p>鉴于位移提交甚至是位移管理对 Consumer 端的巨大影响，Kafka，特别是 KafkaConsumer API，提供了多种提交位移的方法。从用户的角度来说，位移提交分为自 动提交和手动提交；从 Consumer 端的角度来说，位移提交分为同步提交和异步提交。</p>
+<p>所谓自动提交，就是指 Kafka Consumer 在后台默默 地为你提交位移，作为用户的你完全不必操心这些事；而手动提交，则是指你要自己提交位 移，Kafka Consumer 压根不管。</p>
+<p>开启自动提交位移的方法很简单。Consumer 端有个参数 enable.auto.commit，把它设置 为 true 或者压根不设置它就可以了。因为它的默认值就是 true，即 Java Consumer 默认 就是自动提交位移的。如果启用了自动提交，Consumer 端还有个参数就派上用场了： auto.commit.interval.ms。它的默认值是 5 秒，表明 Kafka 每 5 秒会为你自动提交一次 位移。</p>
+<p>下面这段代码时设置自动提交位移的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">     props.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"localhost:9092"</span>);</span><br><span class="line">     props.put(<span class="string">"group.id"</span>, <span class="string">"test"</span>);</span><br><span class="line">     props.put(<span class="string">"enable.auto.commit"</span>, <span class="string">"true"</span>);</span><br><span class="line">     props.put(<span class="string">"auto.commit.interval.ms"</span>, <span class="string">"2000"</span>);</span><br><span class="line">     props.put(<span class="string">"key.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line">     props.put(<span class="string">"value.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line">     KafkaConsumer&lt;String, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">     consumer.subscribe(Arrays.asList(<span class="string">"foo"</span>, <span class="string">"bar"</span>));</span><br><span class="line">     <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">         ConsumerRecords&lt;String, String&gt; records = consumer.poll(<span class="number">100</span>);</span><br><span class="line">         <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record : records)</span><br><span class="line">             System.out.printf(<span class="string">"offset = %d, key = %s, value = %s%n"</span>, record.offset(), record.key(), record.value());</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+<p>开启手动提交位移的方法就是设置 enable.auto.commit 为 false。但是，仅仅设置它为 false 还不够，因为你只是告诉 Kafka Consumer 不要自动提交位移而已，你还需要调用相应的 API 手动提交位移。最简单的 API 就是KafkaConsumer#commitSync()。该方法会提交 KafkaConsumer#poll() 返回的最新位移。从名字上来看，它是一个同步操作，即该方法会 一直等待，直到位移被成功提交才会返回。如果提交过程中出现异常，该方法会将异常信息 抛出。下面这段代码展示了 commitSync() 的使用方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; records =</span><br><span class="line">                        consumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">            process(records); <span class="comment">// 处理消息</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                        consumer.commitSync();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CommitFailedException e) &#123;</span><br><span class="line">                        handle(e); <span class="comment">// 处理提交失败异常</span></span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用 consumer.commitSync() 方法的时机，是在你处理完了 poll() 方法返回的所 有消息之后。如果你莽撞地过早提交了位移，就可能会出现消费数据丢失的情况。</p>
+<p><strong>一旦设置了 enable.auto.commit 为 true，Kafka 会保证在开始调用 poll 方法时，提交上次poll返回的所有消息。从顺序上来说，poll方法的逻辑是先提交上一批消息的位移，再 处理下一批消息，因此它能保证不出现消费丢失的情况。但自动提交位移的一个问题在于， 它可能会出现重复消费。</strong></p>
+<p>在默认情况下，Consumer 每 5 秒自动提交一次位移。现在，我们假设提交位移之后的 3 秒发生了 Rebalance 操作。在 Rebalance 之后，所有 Consumer 从上一次提交的位移处 继续消费，但该位移已经是 3 秒前的位移数据了，故在 Rebalance 发生前 3 秒消费的所有 数据都要重新再消费一次。虽然你能够通过减少 auto.commit.interval.ms 的值来提高提 交频率，但这么做只能缩小重复消费的时间窗口，不可能完全消除它。这是自动提交机制的 一个缺陷。 </p>
+<p>反观手动提交位移，它的好处就在于更加灵活，你完全能够把控位移提交的时机和频率。但 是，它也有一个缺陷，<strong>就是在调用 commitSync() 时，Consumer 程序会处于阻塞状态， 直到远端的 Broker 返回提交结果，这个状态才会结束。</strong>在任何系统中，因为程序而非资源 限制而导致的阻塞都可能是系统的瓶颈，会影响整个应用程序的 TPS。当然，你可以选择 拉长提交间隔，但这样做的后果是 Consumer 的提交频率下降，在下次 Consumer 重启回 来后，会有更多的消息被重新消费。</p>
+<p>鉴于这个问题，Kafka 社区为手动提交位移提供了另一个 API 方法： KafkaConsumer#commitAsync()。从名字上来看它就不是同步的，而是一个异步操 作。调用 commitAsync() 之后，它会立即返回，不会阻塞，因此不会影响 Consumer 应 用的 TPS。由于它是异步的，Kafka 提供了回调函数（callback），供你实现提交之后的逻 辑，比如记录日志或处理异常等。下面这段代码展示了调用 commitAsync() 的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; records = </span><br><span class="line">	consumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">            process(records); <span class="comment">// 处理消息</span></span><br><span class="line">            consumer.commitAsync((offsets, exception) -&gt; &#123;</span><br><span class="line">	<span class="keyword">if</span> (exception != <span class="keyword">null</span>)</span><br><span class="line">	handle(exception);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>commitAsync 是否能够替代 commitSync 呢？答案是不能。commitAsync 的问题在于， 出现问题时它不会自动重试。因为它是异步操作，倘若提交失败后自动重试，那么它重试时 提交的位移值可能早已经“过期”或不是最新值了。因此，异步提交的重试其实没有意义， 所以 commitAsync 是不会重试的。</p>
+<p>显然，如果是手动提交，我们需要将 commitSync 和 commitAsync 组合使用才能到达最 理想的效果，原因有两个：</p>
+<ol>
+<li>我们可以利用 commitSync 的自动重试来规避那些瞬时错误，比如网络的瞬时抖动， Broker 端 GC 等。因为这些问题都是短暂的，自动重试通常都会成功，因此，我们不想 自己重试，而是希望 Kafka Consumer 帮我们做这件事。</li>
+<li>我们不希望程序总处于阻塞状态，影响 TPS。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">     <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">         ConsumerRecords&lt;String, String&gt; records =consumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">         process(records); <span class="comment">// 处理消息</span></span><br><span class="line">         commitAysnc(); <span class="comment">// 使用异步提交规避阻塞</span></span><br><span class="line">            &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            handle(e); <span class="comment">// 处理异常</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                 consumer.commitSync(); <span class="comment">// 最后一次提交使用同步阻塞式提交</span></span><br><span class="line">	&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">	     consumer.close();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码同时使用了 commitSync() 和 commitAsync()。对于常规性、阶段性的手动提 交，我们调用 commitAsync() 避免程序阻塞，而在 Consumer 要关闭前，我们调用 commitSync() 方法执行同步阻塞式的位移提交，以确保 Consumer 关闭前能够保存正确 的位移数据。将两者结合后，我们既实现了异步无阻塞式的位移管理，也确保了 Consumer 位移的正确性，所以，如果你需要自行编写代码开发一套 Kafka Consumer 应 用，那么我推荐你使用上面的代码范例来实现手动的位移提交。</p>
+<p>实际上，<strong>Kafka Consumer API 还提供了一组更为方便的方法，可以帮助你实现更精细化 的位移管理功能</strong>。刚刚我们聊到的所有位移提交，都是提交 poll 方法返回的所有消息的位 移，比如 poll 方法一次返回了 500 条消息，当你处理完这 500 条消息之后，前面我们提 到的各种方法会一次性地将这 500 条消息的位移一并处理。简单来说，就是直接提交最新 一条消息的位移。但如果我想更加细粒度化地提交位移，该怎么办呢？</p>
+<p>设想这样一个场景：你的 poll 方法返回的不是 500 条消息，而是 5000 条。那么，你肯定 不想把这 5000 条消息都处理完之后再提交位移，因为一旦中间出现差错，之前处理的全部 都要重来一遍。这类似于我们数据库中的事务处理。很多时候，我们希望将一个大事务分割 成若干个小事务分别提交，这能够有效减少错误恢复的时间。</p>
+<p>在 Kafka 中也是相同的道理。对于一次要处理很多消息的 Consumer 而言，它会关心社区 有没有方法允许它在消费的中间进行位移提交。比如前面这个 5000 条消息的例子，你可能 希望每处理完 100 条消息就提交一次位移，这样能够避免大批量的消息重新消费。</p>
+<p>庆幸的是，Kafka Consumer API 为手动提交提供了这样的方法： <strong>commitSync(Map&lt;TopicPartition, OffsetAndMetadata&gt;)</strong> 和 <strong>commitAsync(Map&lt;TopicPartition, OffsetAndMetadata&gt;)</strong>。它们的参数是一个 Map 对象，键就是 TopicPartition，即消费的分区，而值是一个 OffsetAndMetadata 对象， 保存的主要是位移数据。</p>
+<p>就拿刚刚提过的那个例子来说，如何每处理 100 条消息就提交一次位移呢？在这里，我以 commitAsync 为例，展示一段代码，实际上，commitSync 的调用方法和它是一模一样 的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Map&lt;TopicPartition, OffsetAndMetadata&gt; offsets = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">……</span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            ConsumerRecords&lt;String, String&gt; records = </span><br><span class="line">	consumer.poll(Duration.ofSeconds(<span class="number">1</span>));</span><br><span class="line">            <span class="keyword">for</span> (ConsumerRecord&lt;String, String&gt; record: records) &#123;</span><br><span class="line">                        process(record);  <span class="comment">// 处理消息</span></span><br><span class="line">                        offsets.put(<span class="keyword">new</span> TopicPartition(record.topic(), record.partition()),</span><br><span class="line">                                    <span class="keyword">new</span> OffsetAndMetadata(record.offset() + <span class="number">1</span>)；</span><br><span class="line">                        <span class="keyword">if</span>（count % <span class="number">100</span> == <span class="number">0</span>）</span><br><span class="line">                                    consumer.commitAsync(offsets, <span class="keyword">null</span>); <span class="comment">// 回调处理逻辑是 null</span></span><br><span class="line">                        count++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单解释一下这段代码。程序先是创建了一个 Map 对象，用于保存 Consumer 消费处理 过程中要提交的分区位移，之后开始逐条处理消息，并构造要提交的位移值。还记得之前我 说过要提交下一条消息的位移吗？这就是这里构造 OffsetAndMetadata 对象时，使用当 前消息位移加 1 的原因。代码的最后部分是做位移的提交。我在这里设置了一个计数器， 每累计 100 条消息就统一提交一次位移。与调用无参的 commitAsync 不同，这里调用了 带 Map 对象参数的 commitAsync 进行细粒度的位移提交。这样，这段代码就能够实现每 处理 100 条消息就提交一次位移，不用再受 poll 方法返回的消息总数的限制了。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/28/kafka/9 位移提交/">https://corn1ng.github.io/2019/10/28/kafka/9 位移提交/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Kafka/">Kafka</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/11/01/kafka/10 Kafka 多线程消费者/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kafka 多线程消费者</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/27/kafka/8 消费者组重平衡/">
+        <span class="next-text nav-default">Kafka 消费者组重平衡</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

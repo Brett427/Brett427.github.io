@@ -260,7 +260,7 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">Contents</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发五：管程"><span class="toc-text">并发五：管程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是管程"><span class="toc-text">什么是管程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MESA模型"><span class="toc-text">MESA模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#wait（）的正确姿势"><span class="toc-text">wait（）的正确姿势</span></a></li></ol></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并发五：管程"><span class="toc-text">并发五：管程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是管程"><span class="toc-text">什么是管程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MESA模型"><span class="toc-text">MESA模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#wait（）的正确姿势"><span class="toc-text">wait（）的正确姿势</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li></ol>
     </div>
   </div>
 
@@ -273,10 +273,10 @@
 <p>并发编程的两大问题分别是互斥（同一时刻只允许一个线程访问共享资源），同步（线程之间如何通信，协作）。这两大问题，管程都是可以解决的。</p>
 <p>管程解决互斥问题的思路很简单，<strong>就是将共享变量及其对共享变量的操作统一封装起来。</strong>在下图中，管程 X 将共享变量 queue 这个队列和相关的操作入队 enq()、出队 deq() 都封装起来了；线程 A 和线程 B 如果想访问共享变量 queue，只能通过调用管程提供的 enq()、 deq() 方法来实现；enq()、deq() 保证互斥性，只允许一个线程进入管程。不知你有没有 发现，管程模型和面向对象高度契合的。估计这也是 Java 选择管程的原因吧。而我在前面 章节介绍的互斥锁用法，其背后的模型其实就是它。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111211654.png" width="30%"></p>
-<p>管程解决互斥问题就比较复杂了，下面是MESA管程模型示意图，详细描述了MESA模型的主要组成部分。</p>
+<p>管程解决同步问题就比较复杂了，下面是MESA管程模型示意图，详细描述了MESA模型的主要组成部分。</p>
 <p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200111211845.png" width="50%"></p>
 <p>在管程模型里，共享变量和对共享变量的操作是被封装起来的，图中最外层的框就代表封装 的意思。框的上面只有一个入口，并且在入口旁边还有一个入口等待队列。当多个线程同时 试图进入管程内部时，只允许一个线程进入，其他线程则在入口等待队列中等待。这个过程 类似就医流程的分诊，只允许一个患者就诊，其他患者都在门口等待。</p>
-<p>管程里还引入了条件变量的概念，而且每个条件变量都对应有一个等待队列，如下图，条件 变量 A 和条件变量 B 分别都有自己的等待队列。</p>
+<p><strong>管程里还引入了条件变量的概念，而且每个条件变量都对应有一个等待队列</strong>，如下图，条件 变量 A 和条件变量 B 分别都有自己的等待队列。</p>
 <p>那条件变量和等待队列的作用是什么呢？其实就是解决线程同步问题。可以结合上面提到的入队出队例子加深一下理解。</p>
 <p>假设有个线程 T1 执行出队操作，不过需要注意的是执行出队操作，有个前提条件，就是队 列不能是空的，而队列不空这个前提条件就是管程里的条件变量。 如果线程 T1 进入管程 后恰好发现队列是空的，那怎么办呢？等待啊，去哪里等呢？就去条件变量对应的等待队列 里面等。此时线程 T1 就去“队列不空”这个条件变量的等待队列中等待。这个过程类似于 大夫发现你要去验个血，于是给你开了个验血的单子，你呢就去验血的队伍里排队。线程 T1 进入条件变量的等待队列后，是允许其他线程进入管程的。这和你去验血的时候，医生 可以给其他患者诊治，道理都是一样的。</p>
 <p>再假设之后另外一个线程 T2 执行入队操作，入队操作执行成功之后，“队列不空”这个条 件对于线程 T1 来说已经满足了，此时线程 T2 要通知 T1，告诉它需要的条件已经满足了。 当线程 T1 得到通知后，会从等待队列里面出来，但是出来之后不是马上执行，而是重新进 入到入口等待队列里面。这个过程类似你验血完，回来找大夫，需要重新分诊。 条件变量及其等待队列我们讲清楚了，下面再说说 wait()、notify()、notifyAll() 这三个操 作。前面提到线程 T1 发现“队列不空”这个条件不满足，需要进到对应的等待队列里等 待。这个过程就是通过调用 wait() 来实现的。如果我们用对象 A 代表“队列不空”这个条 件，那么线程 T1 需要调用 A.wait()。同理当“队列不空”这个条件满足时，线程 T2 需要 调用 A.notify() 来通知 A 等待队列中的一个线程，此时这个队列里面只有线程 T1。至于 notifyAll() 这个方法，它可以通知等待队列中的所有线程。</p>
@@ -289,6 +289,9 @@
 <li><p><strong>MESA 管程里面，T2 通知完 T1 后，T2 还是会接着执行，T1 并不立即执行，仅仅是从 条件变量的等待队列进到入口等待队列里面。这样做的好处是 notify() 不用放到代码的 最后，T2 也没有多余的阻塞唤醒操作。但是也有个副作用，就是当 T1 再次执行的时 候，可能曾经满足的条件，现在已经不满足了，所以需要以循环方式检验条件变量。</strong></p>
 </li>
 </ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Java 参考了 MESA 模型，语言内置的管程（synchronized）对 MESA 模型进行了精简。 MESA 模型中，条件变量可以有多个，Java 语言内置的管程里只有一个条件变量。具体如 下图所示。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200323155707.png" width="50%"></p>
+<p>Java 内置的管程方案（synchronized）使用简单，synchronized 关键字修饰的代码块， 在编译期会自动生成相关加锁和解锁的代码，但是仅支持一个条件变量；而 Java SDK 并发 包实现的管程支持多个条件变量，不过并发包里的锁，需要开发人员自己进行加锁和解锁操 作。</p>
 
       
     </div>

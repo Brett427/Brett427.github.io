@@ -337,7 +337,7 @@
 <li>Runnable 和 Terminated</li>
 </ul>
 <p>线程执行完 run() 方法后，会自动转换到 TERMINATED 状态，当然如果执行 run() 方法的 时候异常抛出，也会导致线程终止。有时候我们需要强制中断 run() 方法的执行，例如 run() 方法访问一个很慢的网络，我们等不下去了，想终止怎么办呢？Java 的 Thread 类里 面倒是有个 stop() 方法，不过已经标记为 @Deprecated，所以不建议使用了。正确的姿 势其实是调用 interrupt() 方法。</p>
-<p>interrupt() 方法仅仅是通知线程，线程有机会执行一些后 续操作，同时也可以无视这个通知。被 interrupt 的线程，是怎么收到通知的呢？一种是异 常，另一种是主动检测。</p>
+<p>interrupt() 方法仅仅是通知线程，线程有机会执行一些后 续操作，同时也可以无视这个通知。被 interrupt 的线程，是怎么收到通知的呢？一种是异常，另一种是主动检测。</p>
 <p>当线程 A 处于 WAITING、TIMED_WAITING 状态时，如果其他线程调用线程 A 的 interrupt() 方法，会使线程 A 返回到 RUNNABLE 状态，同时线程 A 的代码会触发 InterruptedException 异常。上面我们提到转换到 WAITING、TIMED_WAITING 状态的 触发条件，都是调用了类似 wait()、join()、sleep() 这样的方法，我们看这些方法的签名， 发现都会 throws InterruptedException 这个异常。这个异常的触发条件就是：其他线程 调用了该线程的 interrupt() 方法。</p>
 <p>当线程 A 处于 RUNNABLE 状态时，并且阻塞在 java.nio.channels.InterruptibleChannel 上时，如果其他线程调用线程 A 的 interrupt() 方法，线程 A 会触发 java.nio.channels.ClosedByInterruptException 这个异常；而阻塞在 java.nio.channels.Selector 上时，如果其他线程调用线程 A 的 interrupt() 方法，线程 A 的 java.nio.channels.Selector 会立即返回。</p>
 <p>上面这两种情况属于被中断的线程通过异常的方式获得了通知。还有一种是主动检测，如果 线程处于 RUNNABLE 状态，并且没有阻塞在某个 I/O 操作上，例如中断计算圆周率的线 程 A，这时就得依赖线程 A 主动检测中断状态了。如果其他线程调用线程 A 的 interrupt() 方法，那么线程 A 可以通过 isInterrupted() 方法，检测是不是自己被中断了。</p>

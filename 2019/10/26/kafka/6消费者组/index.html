@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Kafka 消费者组"/>
+
+
+
+
+  <meta name="keywords" content="Kafka, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/10/26/kafka/6消费者组/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Kafka 消费者组 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kafka 消费者组
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-10-26
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/中间件/">中间件</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#消费者组"><span class="toc-text">消费者组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#位移"><span class="toc-text">位移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重平衡Rebalance"><span class="toc-text">重平衡Rebalance</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="消费者组"><a href="#消费者组" class="headerlink" title="消费者组"></a>消费者组</h2><p>Consumer Group 是 Kafka 提供的<strong>可扩展且具有容错性的消费者机制</strong>。既然是一个组，那么组内必然可以有多个消费者或消费者实例（Consumer Instance），它 们共享一个公共的 ID，这个 ID 被称为 Group ID。组内的 <strong>所有消费者协调在一起来消费订阅主题（Subscribed Topics）的所有分区（Partition）</strong>。当然，<strong>每个分区只能由同一个消费者组内的一个 Consumer 实例来消费</strong>。理解 Consumer Group 记住下面这三个特性。</p>
+<ol>
+<li>Consumer Group 下可以有一个或多个 Consumer 实 例。这里的实例可以是一个单独的进程，也可以是同一进程下的线程。在实际场景中，使用进程更为常见一些。</li>
+<li>Group ID 是一个字符串，在一个 Kafka 集群中，它标识 唯一的一个 Consumer Group。</li>
+<li>Consumer Group 所有实例订阅的主题中的单个分区， 只能分配给组内的某个 Consumer 实例消费。这个分区当然也可以被其他的 Group 消费。</li>
+</ol>
+<p>理想情况下， Consumer 实例的数量应该等于该 Group 订阅主题的分区总数。</p>
+<p><strong>一个消费者可以消费一个主题的多个分区，但是反过来，一个分区不能被一个消费者组下的多个消费者消费</strong></p>
+<h3 id="位移"><a href="#位移" class="headerlink" title="位移"></a>位移</h3><p>消费者在消费的过程中需要记录自己 消费了多少数据，即消费位置信息。在 Kafka 中，这个位置 信息有个专门的术语：位移（Offset）。看上去该 Offset 就是一个数值而已，其实对于 Consumer Group 而言，它是一组 KV 对，Key 是分区，V 对应 Consumer 消费该分区的最新位移。</p>
+<p>老版本的 Consumer Group 把位移保存在 ZooKeeper 中。Apache ZooKeeper 是一个分布式的协调服务框架，Kafka 重度依赖它实现各种各样的协调管理。将位移保存在 ZooKeeper 外部系统的做法，最显而易见的好处就是减少了 Kafka Broker 端的状态保存开销。现在比较流行的提法是将服务器节点做成无状态的，这样可以自由地扩缩容，实现超强的伸缩性。Kafka 最开始也是基于这样的考虑，才将 Consumer Group 位移保存在独立于 Kafka 集群之外的框架中。</p>
+<p>在新版本的 Consumer Group 中，Kafka 社区重新 设计了 Consumer Group 的位移管理方式，采用了将位移保存在 Kafka 内部主题的方法。这个内部主题就是 __consumer_offsets。</p>
+<h3 id="重平衡Rebalance"><a href="#重平衡Rebalance" class="headerlink" title="重平衡Rebalance"></a>重平衡Rebalance</h3><p>Rebalance 本质上是一种协议，规定了一个 Consumer Group 下的所有 Consumer 如何达成一致，来分配订阅 Topic 的每个分区。比如某个 Group 下有 20 个 Consumer 实例，它订阅了一个具有 100 个分区的 Topic。正常情况下，Kafka 平均会为每个 Consumer 分配 5 个分区。这个分配的过程就叫 Rebalance。</p>
+<p>那么 Consumer Group 何时进行 Rebalance 呢？ Rebalance 的触发条件有 3 个。</p>
+<ol>
+<li>组成员数发生变更。比如有新的 Consumer 实例加入组 或者离开组，抑或是有 Consumer 实例崩溃被“踢 出”组。</li>
+<li>订阅主题数发生变更。Consumer Group 可以使用正则 表达式的方式订阅主题，比如 consumer.subscribe(Pattern.compile(“t.*c”)) 就表 明该 Group 订阅所有以字母 t 开头、字母 c 结尾的主 题。在 Consumer Group 的运行过程中，你新创建了一 个满足这样条件的主题，那么该 Group 就会发生 Rebalance。</li>
+<li>订阅主题的分区数发生变更。Kafka 当前只能允许增加一 个主题的分区数。当分区数增加时，就会触发订阅该主题 的所有 Group 开启 Rebalance。</li>
+</ol>
+<p>Rebalance 发生时，Group 下所有的 Consumer 实例都会 协调在一起共同参与。你可能会问，每个 Consumer 实例怎么知道应该消费订阅主题的哪些分区呢？这就需要分配策略的协助了。</p>
+<p>当前 Kafka 默认提供了 3 种分配策略，每种策略都有一定 的优势和劣势.</p>
+<p>Rebanlance不好的地方在于</p>
+<p>首先，Rebalance 过程对 Consumer Group 消费过程有极 大的影响。Rebalance 过程和JVM 类似，<strong>在 Rebalance 过程中，所有 Consumer 实例都会停 止消费，等待 Rebalance 完成。这是 Rebalance 为人诟病 的一个方面。</strong></p>
+<p>其次，目前 Rebalance 的设计是所有 Consumer 实例共同 参与，全部重新分配所有分区。其实更高效的做法是尽量减 少分配方案的变动。</p>
+<p>最后，Rebalance 实在是太慢了。曾经，有个国外用户的 Group 内有几百个 Consumer 实例，成功 Rebalance 一 次要几个小时！</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/10/26/kafka/6消费者组/">https://corn1ng.github.io/2019/10/26/kafka/6消费者组/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Kafka/">Kafka</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/27/kafka/8 消费者组重平衡/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kafka 消费者组重平衡</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/26/kafka/7位移主题 _consumer_offsets/">
+        <span class="next-text nav-default">Kafka 位移主题 _consumer_offsets</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
