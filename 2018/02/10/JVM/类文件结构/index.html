@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java虚拟机类文件结构概述"/>
+
+
+
+
+  <meta name="keywords" content="Java虚拟机, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/02/10/JVM/类文件结构/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java虚拟机类文件结构概述 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java虚拟机类文件结构概述
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-10
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类文件结构"><span class="toc-text">类文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#无关性的基石"><span class="toc-text">无关性的基石</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#class-类文件的结构（字节码文件的结构）"><span class="toc-text">class 类文件的结构（字节码文件的结构）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#详细分析字节码文件"><span class="toc-text">详细分析字节码文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#魔数与class文件的版本"><span class="toc-text">魔数与class文件的版本</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#常量池"><span class="toc-text">常量池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#访问标志"><span class="toc-text">访问标志</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#类索引，父类索引与接口索引集合"><span class="toc-text">类索引，父类索引与接口索引集合</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#字段表集合"><span class="toc-text">字段表集合</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#方法表集合"><span class="toc-text">方法表集合</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#属性表集合（上面表中的attribute-info）"><span class="toc-text">属性表集合（上面表中的attribute_info）</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h2><p>由于虚拟机的快速发展，编写的程序编译成二进制本地机器码已不再是唯一的选择，越来越多的程序语言选择了与操作系统和机器指令集无关的，平台中立的格式作为程序编译后的存储格式。</p>
+<h3 id="无关性的基石"><a href="#无关性的基石" class="headerlink" title="无关性的基石"></a>无关性的基石</h3><p>Java中与平台无关的理想最终实现在操作系统的应用层上，SUN公司和其他厂商发布了许多可以运行在不同平台上的虚拟机，这些虚拟机都可以载入和执行同一种平台无关的字节码，从而实现程序一次编写，到处运行。</p>
+<p>Java虚拟机不和包括Java在内的任何语言绑定，它<strong>只与class文件这种特定的二进制文件格式所关联</strong>。Class文件中包含了Java虚拟机指令集和符号表以及若干其他辅助信息。基于安全方面的考虑， Java虚拟机规范要求在Class文件中使用许多强制性的语法和结构化约束， 但任一门功能性语言都可以表示为一个能被Java虚拟机所接受的有效的Class文件。 作为一个通用的、 机器无关的执行平台， 任何其他语言的实现者都可以将Java虚拟机作为语言的产品交付媒介。 例如， 使用Java编译器可以把Java代码编译为存储字节码的Class文件， 使用JRuby等其他语言的编译器一样可以把程序代码编译成Class文件， 虚拟机并不关心Class的来源是何种语言。</p>
+<p>Java语言中的各种语法、关键字、常量变量和运算符号的语义最终都会由多条字节码指令组合来表达，这决定了字节码指令所能提供的语言描述能力必须比Java语言本身更加强大才行。因此，有一 些Java语言本身无法有效支持的语言特性并不代表在字节码中也无法有效表达出来，这为其他程序语言实现一些有别于Java的语言特性提供了发挥空间。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180209101117.png" alt=""></p>
+<h3 id="class-类文件的结构（字节码文件的结构）"><a href="#class-类文件的结构（字节码文件的结构）" class="headerlink" title="class 类文件的结构（字节码文件的结构）"></a>class 类文件的结构（字节码文件的结构）</h3><p>任何一个Class文件都对应着唯一一个类或接口的定义信息，但是反过来说，类或接口不一定都得定义在文件里，（例如类或接口也可以直接通过类加载器直接生成）</p>
+<p>Class文件是一组以8位字节为基础单位的二进制流。各个数据项目按顺序紧凑排列在Class文件中。中间没有添加任何分隔符。当遇到大于8位字节的数据项时，会按照高位在前的方式分割成若干个8位字节进行存储。</p>
+<p>Class文件采用一种类似于C语言结构体的伪结构来存储数据。这种伪结构只有两种数据类型，<strong>无符号数和表</strong>。无符号数属于基本的数据类型，以u1,u2,u4,u8 来分别代表1个字节，2个字节，4个字节，和8个字节的无符号数。<strong>无符号数可以用来描述数字，索引引用，数量值或者按照UTF8编码构成字符串值。</strong> 表是由多个无符号数或者其他表作为数据项构成的复合数据类型，所有表都习惯性的以<code>_info</code>结尾。表用于描述有层次关系的复合结构的数据，整个class文件本质上就是一张表。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180209102348.png" alt=""></p>
+<p>无论是无符号数还是表，当需要描述同一类型但是数量不定的多个数据时，经常会使用一个前置的容量计数器加若干个连续的数据项的形式，这时称这一系列连续的某一类型的数据为某一类型的结合。</p>
+<p><strong>Class的结构不像XML等描述语言，由于它没有任何分隔符号，所以在表6-1中的数据项，无论是顺序还是数量，甚至于数据存储的字节序（Byte Ordering，Class 文件中字节序为Big-Endian）这样的细节，都是被严格限定的，哪个字节代表什么含义，长度是多少， 先后顺序如何，全部都不允许改变。</strong></p>
+<h4 id="详细分析字节码文件"><a href="#详细分析字节码文件" class="headerlink" title="详细分析字节码文件"></a>详细分析字节码文件</h4><p>把字节码文件用二进制方式打开，然后根据虚拟机的规范可以确定对应的字段什么意思，具体分析如下：</p>
+<h5 id="魔数与class文件的版本"><a href="#魔数与class文件的版本" class="headerlink" title="魔数与class文件的版本"></a>魔数与class文件的版本</h5><p>每个class文件的头4个字节成为魔数，它的唯一作用是确定这个文件是否为一个能被虚拟机接受的Class文件。紧跟着魔数的4个字节存储的是class文件的版本号，第5，6字节是次版本号，7，8 字节是主版本号。</p>
+<h5 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h5><p>紧跟着主次版本号的是常量池入口，常量池可以理解为Class文件之中的资源仓库。它是class文件结构中与其他项目关联最多的数据类型，也是占空间最大的项目之一。另外还是Class文件中第一个出现的表类型数据项目。</p>
+<p>因为常量池中常量数量不固定，<strong>所以常量池的入口需要放置一项u2类型的数据</strong>。代表常量池容量计数值。容量计数是从1开始的。</p>
+<p>常量池中主要存放两大类常量，<strong>字面量和符号引用</strong>，字面量比较接近于Java语言层面的常量概念，如文本字符串，声明为final的常量值等，符号引用（编译原理方面的概念）则主要包括被模块导出或者开放的包，类和接口的全限定名、字段的名称和描述符、方法的名称和描述符，方法句柄和方法类型，动态调用点和动态常量。</p>
+<p><strong>Java代码在进行Javac编译的时候，没有连接的步骤，而是在虚拟机加载Class文件的时候进行动态连接，也就是说，在Class文件中不会保存各个方法和字段的最终内存布局，因此这些字段，方法的符号引用不经过运行期转换的话无法得到真正的内存入口地址，也就无法直接被虚拟机使用。当虚拟机运行时，需要从常量池获得对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址中。</strong></p>
+<p>常量池中每一项常量都是一个表，一共有17种类型的常量，表结构起始的第一位是个u1类型的标志位，代表着当前常量属于哪种常量类型，17种常量类型代表的具体含义如图：</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200426155016.png"></p>
+<p>每种常量都有它自己的结构，根绝它的结构把二进制的字节码往后一直翻译成对应的人可以看懂的字节码文件就好了。</p>
+<h5 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h5><p>常量池结束后，紧接着的两个字节代表访问标志access_flag，用于识别一些类或者接口层次的访问信息。包括了这个Class 是类还是接口，是否定义为public 类型，是否定位为abstract 类型，如果是类的话，是否被声明为final等。</p>
+<h5 id="类索引，父类索引与接口索引集合"><a href="#类索引，父类索引与接口索引集合" class="headerlink" title="类索引，父类索引与接口索引集合"></a>类索引，父类索引与接口索引集合</h5><p>类索引与父类索引都是一个u2类型的数据，而接口索引集合是一组u2类型的数据的集合。<strong>class文件中由这三项数据来确定该类型的继承关系</strong>。类索引用于确定这个类的全限定名，父类索引用于确定这个类的父类的全限定名。接口索引集合用来描述这个类实现了哪些接口，这些被实现的接口将按implements关键字后的接口顺序从左到右排列在接口索引集合中。</p>
+<p>类索引和父类索引用两个u2类 型的索引值表示，它们各自指向一个类型为CONSTANT_Class_info的类描述符常量，通过 CONSTANT_Class_info类型的常量中的索引值可以找到定义在CONSTANT_Utf8_info类型的常量中的 全限定名字符串。</p>
+<p>对于接口索引集合，入口的第一项是一个u2类型的接口计数器表示数量。例如类索引的u2值是0x0001,就标识类的名字就是常量池中index=1的常量名。</p>
+<h5 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h5><p>字段表（field_info）用于描述接口或者类中声明的变量。Java语言中的“字段”（Field）包括类级变量以及实例级变量，但不包括在方法内部声明的局部变量。在Java语言中描述一个 字段可以包含哪些信息。字段可以包括的修饰符有字段的作用域（public、private、protected修饰 符）、是实例变量还是类变量（static修饰符）、可变性（final）、并发可见性（volatile修饰符，是否 强制从主内存读写）、可否被序列化（transient修饰符）、字段数据类型（基本类型、对象、数组）、 字段名称。上述这些信息中，各个修饰符都是布尔值，要么有某个修饰符，要么没有，很适合使用标 志位来表示。而字段叫做什么名字、字段被定义为什么数据类型，这些都是无法固定的，只能引用常 量池中的常量来描述。表6-8中列出了字段表的最终格式。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180209122038.png" alt=""></p>
+<p>字段修饰符放在access_flags项目中，它与类中的access_flags项目是非常类似的，都是一个u2的数 据类型，其中可以设置的标志位和含义如表6-9所示。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200426161420.png"></p>
+<p>后面的name_index 和 descriptor_index, 都是对常量池项的引用。分别代表字段的简单名称以及字段和方法的描述符。</p>
+<h5 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h5><p>Class文件存储格式中对方法的描述与对字段的描述采用和字段表完全一样的描述方式。</p>
+<p>(方法的定义可以通过访问标志，名称索引，描述符索引来表达清楚，方法中的代码哪里去了，方法里的Java代码，经过javac编译器编译成字节码指令之后，存放在方法属性表集合中一个名为Code的属性里面，属性表作为Class文件格式中最具扩展性的一种数据项目)</p>
+<h5 id="属性表集合（上面表中的attribute-info）"><a href="#属性表集合（上面表中的attribute-info）" class="headerlink" title="属性表集合（上面表中的attribute_info）"></a>属性表集合（上面表中的attribute_info）</h5><p>在class文件，字段表，方法表都<em>可以</em>携带自己的属性表集合，以用于描述某些场景专有的信息。</p>
+<p>与class文件中其他的数据项目要求严格的顺序，长度和内容不同，属性表集合的限制稍微宽松一些，不再要求各个属性表具有严格顺序。并且Java虚拟机规范允许只要不与已有属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息。</p>
+<p>对于每一个属性，它的名称都要从常量池中引用一个CONSTANT_utf8_info 类型的常量来表示。而属性值的结构则是完全自定义的，只需要通过一个u4的长度属性去说明属性值所占用的位数即可。好</p>
+<p>主要的属性有Code(在方法表使用，含义是Java代码编译成的字节码指令)，ConstantValue(字段表使用，含义是final关键字定义的常量值)，Exceptions(方法表中使用，含义是方法抛出的异常)等等。</p>
+<p>比如Java程序方法体中的代码经过Javac编译器处理后，最终变为字节码指令存储在Code属性内。Code属性出现在方法表的属性集合中（前面表中的arrtibute_info）。Code属性也有自己的表结构。</p>
+<p>###字节码指令简介</p>
+<p>Java虚拟机的指令由一个字节长度的，代表着某种特定操作含义的数字以及跟随其中的0至多个代表此操作所需参数而构成。由于Java虚拟机采用面向操作数栈而不是寄存器的架构，所以大多数的指令都不包含操作数，只有一个操作码。指令参数都存放在操作栈中。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/02/10/JVM/类文件结构/">https://corn1ng.github.io/2018/02/10/JVM/类文件结构/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java虚拟机/">Java虚拟机</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/02/11/JVM/虚拟机类加载机制/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java虚拟机类加载机制</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/02/08/算法/leetcode138/">
+        <span class="next-text nav-default">138. Copy List with Random Pointer</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

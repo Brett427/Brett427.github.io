@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Java虚拟机GC与内存分配"/>
+
+
+
+
+  <meta name="keywords" content="Java虚拟机, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2018/02/07/JVM/2 垃圾收集器和内存分配策略/"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Java虚拟机GC与内存分配 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java虚拟机GC与内存分配
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2018-02-07
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器和内存分配策略"><span class="toc-text">垃圾收集器和内存分配策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的生命周期"><span class="toc-text">对象的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#引用计数器算法"><span class="toc-text">引用计数器算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可达性分析方法"><span class="toc-text">可达性分析方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#再谈引用"><span class="toc-text">再谈引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#生存还是死亡"><span class="toc-text">生存还是死亡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#回收方法区"><span class="toc-text">回收方法区</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集算法"><span class="toc-text">垃圾收集算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#标记清除算法"><span class="toc-text">标记清除算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#标记-复制算法"><span class="toc-text">标记-复制算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#标记整理算法"><span class="toc-text">标记整理算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#分代收集算法"><span class="toc-text">分代收集算法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HotSpot-的算法实现"><span class="toc-text">HotSpot 的算法实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#枚举根节点"><span class="toc-text">枚举根节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安全点"><span class="toc-text">安全点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安全区域"><span class="toc-text">安全区域</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器"><span class="toc-text">垃圾收集器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存分配与回收策略"><span class="toc-text">内存分配与回收策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#对象优先在Eden分区分配"><span class="toc-text">对象优先在Eden分区分配</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#大对象直接进入老年代"><span class="toc-text">大对象直接进入老年代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#长期存活的对象进入老年代"><span class="toc-text">长期存活的对象进入老年代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#动态对象年龄判定"><span class="toc-text">动态对象年龄判定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#空间分配担保"><span class="toc-text">空间分配担保</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h2 id="垃圾收集器和内存分配策略"><a href="#垃圾收集器和内存分配策略" class="headerlink" title="垃圾收集器和内存分配策略"></a>垃圾收集器和内存分配策略</h2><p>程序计数器、 虚拟机栈、 本地方法栈3个区域随线程而生， 随线程而灭。这几个区域的内存分配和回收都具备确定性， 在这几个区域内就不需要过多考虑回收的问题， 因为方法结束或者线程结束时， 内存自然就跟随着回收了。Java堆不一样，一个接口中的多个实现类需要的内存可能不一样， 一个方法中的多个分支需要的内存也可能不一样， 我们只有在程序处于运行期间时才能知道会创建哪些对象， 这部分内存的分配和回收都是动态的， 垃圾收集器所关注的是这部分内存。</p>
+<h3 id="对象的生命周期"><a href="#对象的生命周期" class="headerlink" title="对象的生命周期"></a>对象的生命周期</h3><h4 id="引用计数器算法"><a href="#引用计数器算法" class="headerlink" title="引用计数器算法"></a>引用计数器算法</h4><p>给对象中添加一个引用计数器，每当有一个地方引用它时，计数器就加1，引用失效时，计数器就减1，任何时刻计数器为0的对象就是不可能再被使用的。</p>
+<p>这种方法实现简单，判断效率高，但是主流虚拟机没有采用这种方法，因为它很难解决对象之间相互循环引用的问题。</p>
+<h4 id="可达性分析方法"><a href="#可达性分析方法" class="headerlink" title="可达性分析方法"></a>可达性分析方法</h4><p>这个算法的基本思路就是通过一系列的称为“GC Roots” 的对象作为起始点， 从这些节点开始向下搜索， 搜索所走过的路径称为引用链 ， 当一个对象到GC Roots没有任何引用链相连（用图论的话来说， 就是从GC Roots到这个对象不可达） 时， 则证明此对象是不可用的。 </p>
+<p>在Java中，可以作为GC roots 的对象包括以下几种。</p>
+<ul>
+<li>在虚拟机栈（栈帧中的本地变量表）中引用的对象，譬如各个线程被调用的方法堆栈中使用到的 参数、局部变量、临时变量等。</li>
+<li>在方法区中类静态属性引用的对象，譬如Java类的引用类型静态变量。</li>
+<li>在方法区中常量引用的对象，譬如字符串常量池（String Table）里的引用。</li>
+<li>本地方法栈中JNI引用的对象</li>
+<li>Java虚拟机内部的引用，如基本数据类型对应的Class对象，一些常驻的异常对象（比如 NullPointExcepiton、OutOfMemoryError）等，还有系统类加载器。</li>
+<li>所有被同步锁（synchronized关键字）持有的对象。</li>
+<li>反映Java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等。</li>
+</ul>
+<h4 id="再谈引用"><a href="#再谈引用" class="headerlink" title="再谈引用"></a>再谈引用</h4><p>在JDK 1.2以前， Java中的引用的定义很传统： 如果reference类型的数据中存储的数值代表的是另外一块内存的起始地址， 就称这块内存代表着一个引用。 这种定义很纯粹， 但是太过狭隘， 一个对象在这种定义下只有被引用或者没有被引用两种状态， 对于如何描述一些“食之无味， 弃之可惜” 的对象就显得无能为力。</p>
+<p>在JDK 1.2之后， Java对引用的概念进行了扩充， 将引用分为强引用 、 软引用 、 弱引用 、 虚引用4种， 这4种引用强度依次逐渐减弱。</p>
+<p>强引用就是程序代码中普遍存在的 new生成的对象的引用，只要强引用还存在，垃圾收集器永远不会回收掉被引用的对象。</p>
+<p>软引用是用来描述一些还有用但是非必需的对象，对于软引用关联的对象，在系统要发生内存溢出异常之前，将会把这些对象列进回收范围内进行第二次回收，如果这次回收还没有足够的内存，才会抛出内存溢出异常。</p>
+<p>弱引用也用来描述非必需对象，但是强度比软引用更弱，被弱引用关联的对象只能生存到下一次垃圾收集发生之前，垃圾收集器工作时，无论当前内存是否足够，都会回收只被弱引用关联的对象。</p>
+<p>虚引用的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。</p>
+<h4 id="生存还是死亡"><a href="#生存还是死亡" class="headerlink" title="生存还是死亡"></a>生存还是死亡</h4><p>即使在可达性分析算法中不可达的对象， 也并非是“非死不可” 的， 要真正宣告一个对象死亡， 至少要经历两次标记过程： 如果对象在进行可达性分析后发现没有与GC Roots相连接的引用链， 那它将会被第一次标记并且进行一次筛选， 筛选的条件是此对象是否有必要执行finalize()方法。 当对象没有覆盖finalize()方法， 或者finalize()方法已经被虚拟机调用过， 虚拟机将这两种情况都视为“没有必要执行” 。就直接进行GC.</p>
+<h4 id="回收方法区"><a href="#回收方法区" class="headerlink" title="回收方法区"></a>回收方法区</h4><p>方法区也就是HotSpot虚拟机中的永生代也有一定的垃圾收集，主要回收两部分内容，废弃常量和不再使用的类型。</p>
+<p>回收废弃常量与回收 Java堆中的对象非常类似。举个常量池中字面量回收的例子，假如一个字符串“java”曾经进入常量池 中，但是当前系统又没有任何一个字符串对象的值是“java”，换句话说，已经没有任何字符串对象引用 常量池中的“java”常量，且虚拟机中也没有其他地方引用这个字面量。如果在这时发生内存回收，而且 垃圾收集器判断确有必要的话，这个“java”常量就将会被系统清理出常量池。常量池中其他类（接 口）、方法、字段的符号引用也与此类似。</p>
+<p>判定一个常量是否“废弃”还是相对简单，而要判定一个类型是否属于“不再被使用的类”的条件就 比较苛刻了。需要同时满足下面三个条件：</p>
+<p>·该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例。</p>
+<p>·加载该类的类加载器已经被回收，这个条件除非是经过精心设计的可替换类加载器的场景，如 OSGi、JSP的重加载等，否则通常是很难达成的。</p>
+<p>·该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方 法。</p>
+<h3 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h3><h4 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h4><p>最基础的收集算法就是标记清除算法，分为标记和清除两个阶段，首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。主要不足有两个，一是效率，标记和清除两个过程的效率都不高，另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，会导致以后有较大对象时没有内存分配而又一次触发GC.</p>
+<h4 id="标记-复制算法"><a href="#标记-复制算法" class="headerlink" title="标记-复制算法"></a>标记-复制算法</h4><p>此方法将内存划分为相等的两块，<strong>每次使用其中的一块</strong>，当这一块用完了，就将还存活的对象复制到另一块上，然后把已使用过的内存空间一次性清理掉。这样使得每次都是对整个半区进行内存回收，分配时就不用考虑内存碎片的问题，但是代价是内存缩小为了原来的一半。</p>
+<p>现在的商用虚拟机都采用这种收集算法来<strong>回收新生代</strong>。但是进行了一定的改进，不是按照1比1进行划分。将内存划分为一块较大的Eden空间和两块较小的Survivor空间，每次使用一块eden和其中一块Survivor。当回收时，将Eden 和Survivor中还存活的对象一次性复制到另外一块Survivor 中。然后清理掉Eden和Survivor .HotSpot 虚拟机设置的默认比例是<code>8:1:1</code>.当Survivor 空间不够用时，需要依赖其他内存（老年代）进行分配担保。</p>
+<h4 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h4><p>复制收集算法在对象存活率较高时就要进行较多的复制，<strong>所以一般老年代不选用这种算法</strong></p>
+<p><strong>根据老年代特点，有另外一种标记-整理算法</strong>，标记过程和前面标记清除过程一样，但是后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
+<h4 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h4><p>根据对象的存活周期的不同将Java堆分为新生代和老年代，根据各个代的特点选择不同的收集算法。新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，所以就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集，而老年代中因为对象存活率高，没有额外的空间对他进行分配担保，就必选使用标记—清理 或者 标记 —整理算法来回收。</p>
+<h3 id="HotSpot-的算法实现"><a href="#HotSpot-的算法实现" class="headerlink" title="HotSpot 的算法实现"></a>HotSpot 的算法实现</h3><p>Hotspot虚拟机在实现上面这些算法时，必须对算法的执行效率有严格的考量，才能保证虚拟机高效运行。</p>
+<h4 id="枚举根节点"><a href="#枚举根节点" class="headerlink" title="枚举根节点"></a>枚举根节点</h4><p>当执行系统停顿下来后，并不需要一个不漏地检查完所有执行上下文和全局的引用位置，虚拟机有办法直接得知哪些地方存放着对象引用，在Hotspot虚拟机中，使用一组称为OopMap的数据结构来实现这个目的，在类加载完成的时候，Hotspot就把对象内什么偏移量上是什么类型的数据计算出来，在JIT编译过程中，也会在特定的位置记录下栈和寄存器中哪些位置是引用。这样，在GC扫描时，就直接知道这些信息了。</p>
+<h4 id="安全点"><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h4><p>Hotspot并没有为每条指令都生成oopmap,只有特定的位置记录了这些信息，这些位置称为安全点。即程序执行时并非在所有地方都能停顿下来开始GC,只有在到达安全点时才能暂停。</p>
+<h4 id="安全区域"><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h4><p>安全区域是指在一段代码片段中，引用关系不会发生变化，在这个区域的任何地方开始GC都是安全的，可以把safe region 看做是被扩展了的safepoint.</p>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>垃圾收集器是内存回收的具体实现。下面讨论的1收集器基于JDK1.7后的HotSpot虚拟机。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180207111724.png" alt=""></p>
+<ul>
+<li>Serial 收集器</li>
+</ul>
+<p>最基本，发展历史最悠久的收集器。单线程收集器。它在进行垃圾收集时，必须暂停所有其他所有的工作线程。直到它收集结束。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180207112122.png" alt=""></p>
+<p>Serial 是运行在Client 模式下的默认新生代收集器，优点是简单高效。</p>
+<ul>
+<li>ParNew 收集器</li>
+</ul>
+<p>Serial 收集器的多线程版本，除了使用多条线程进行垃圾收集外，其余和Serial几乎完全一样。是运行在Server模式下的虚拟机中首选的新生代收集器。同时，也只有Serial 和ParNew 能和CMS收集器配合工作。</p>
+<ul>
+<li>Parallel Scavenge 收集器</li>
+</ul>
+<p>使用复制算法的新生代收集器。也是并行的多线程收集器。它的设计目标是达到一个可控制的吞吐量。所以也被成为吞吐量优先的收集器。</p>
+<ul>
+<li>Serial Old 收集器</li>
+</ul>
+<p>Serial 收集器的老年代版本，是一个单线程使用标记-整理算法的收集器。主要给Client模式下的虚拟机使用。</p>
+<ul>
+<li>Parallel Old </li>
+</ul>
+<p>parallel Scaenge 收集器的老年代版本，使用多线程和标记-整理算法。</p>
+<ul>
+<li>CMS收集器(current mark sweep)</li>
+</ul>
+<p>一种以获取最短回收停顿时间为目标的收集器。基于标记清除算法实现。主要有四个步骤，初始标记，并发标记，重新标记，并发清除。其中，<strong>初始标记、 重新标记这两个步骤仍然需要“Stop The World”</strong> 。 初始标记仅仅只是标记一下GC Roots能直接关联到的对象， 速度很快， 并发标记阶段就是进行GC RootsTracing的过程， 而重新标记阶段则是为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录， 这个阶段的停顿时间一般会比初始标记阶段稍长一些， 但远比并发标记的时间短。<br>由于整个过程中耗时最长的并发标记和并发清除过程收集器线程都可以与用户线程一起工作， 所以， 从总体上来说， CMS收集器的内存回收过程是与用户线程一起并发执行的。 下图可以比较清楚地看到CMS收集器的运作步骤中并发和需要停顿的时间。</p>
+<p><img src="http://one-1252095801.cosgz.myqcloud.com/QQ%E6%88%AA%E5%9B%BE20180207121214.png" alt=""></p>
+<p>CMS也有很明显的缺点，主要是1对CPU资源非常敏感，2无法处理浮动垃圾，3，使用标记清除算法会产生大量碎片。</p>
+<ul>
+<li>G1 收集器</li>
+</ul>
+<p>一个面向服务器应用的垃圾收集器，主要有以下优点，并行与并发，分代收集，空间整合(整体上标记整理，局部是复制算法)，可预测的停顿(相比CMS的一大优势)。</p>
+<p>将堆化为多个大小相等的独立区域(region),虽然保留了新生代，老年代的概念，但是新生代老年代不再物理隔离了.它们都是一部分region的集合</p>
+<p>G1 之所以能建立可预测的停顿时间模型,是因为它可以有计划的避免在整个Java堆中进行全区域的垃圾收集,G1追踪各个region里面的垃圾堆积的价值大小,后台维护一个优先列表,每次根据允许的收集时间,优先回收价值最大的region.</p>
+<p>主要划分为四个步骤</p>
+<p>初始标记- 并发标记- 最终标记 - 筛选回收</p>
+<p>初始标记仅标记一下GC root 能关联到的对象,这个阶段需要停顿,但耗时短</p>
+<p>并发标记是从GC root 进行可达性分析 ,找出存活对象. 耗时长,但是可并发</p>
+<p>最终标记是为了修正并发标记期间因用户程序继续运作导致标记变动的记录 ,需要停顿,但是可多条线程同时执行</p>
+<p>筛选回收 根据各个region的回收价值和成本进行排序.根据用户期望的GC停顿时间来执行回收计划.这个阶段其实也可以做到与用户程序一起并发执行，但是因为只回收一部分region，时间是用户可控制的，而且停顿用户线程将大幅提高收集效率。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202018-07-06%20%E4%B8%8A%E5%8D%889.07.38.png" alt=""></p>
+<h3 id="内存分配与回收策略"><a href="#内存分配与回收策略" class="headerlink" title="内存分配与回收策略"></a>内存分配与回收策略</h3><p>对象的内存分配，其实就是往堆上分配，对象主要分配在新生代的Eden区上，如果启动了本地线程分配缓冲，将按线程优先在TLAB上分配。少数情况下也可能直接分配在老年代中。分配细节取决于当前使用的是哪一种垃圾收集器组合</p>
+<h4 id="对象优先在Eden分区分配"><a href="#对象优先在Eden分区分配" class="headerlink" title="对象优先在Eden分区分配"></a>对象优先在Eden分区分配</h4><p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配时，虚拟机将发起一次MInor GC.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Minor GC 也称为新生代GC，指发生在新生代的垃圾收集动作。因为Java对象大多具有朝生夕灭的特点，所以说新生代GC 非常频繁，一般回收速度也很快。</span><br><span class="line">Full GC(Major GC)也称为老年代GC,发生在老年代的GC，比Minor GC 慢10倍以上。基本上也会伴随新生代GC</span><br></pre></td></tr></table></figure>
+<h4 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h4><p><strong>大对象指的是需要大量连续内存空间的Java对象</strong>，最典型的大对象就是那种<strong>很长的字符串以及数组</strong>，大对象对内存分配来说就是一个坏消息，经常出现大对象容易导致内存还有不少空间时就提前触发垃圾回收以获取足够的连续空间来安置它们。</p>
+<h4 id="长期存活的对象进入老年代"><a href="#长期存活的对象进入老年代" class="headerlink" title="长期存活的对象进入老年代"></a>长期存活的对象进入老年代</h4><p>为了在回收时识别哪些对象应放在新生代，哪些应放在老年代，虚拟机给每个对象定义了一个对象年龄计数器，如果对象在Eden出生并经过第一次Minor GC 后仍然存活，并能被Survroir 容纳的话，将被移动到Survrior 空间中，并且对象年龄设置为1，对象在Survrior 中每熬过一次Minor GC 年龄就增加一岁，到达一定程度(默认15岁)就会晋升到老年代中。</p>
+<h4 id="动态对象年龄判定"><a href="#动态对象年龄判定" class="headerlink" title="动态对象年龄判定"></a>动态对象年龄判定</h4><p>为了能更好的适应不同程序的内存状况，虚拟机并不是永远地要求对象的年龄必须达到了MaxTenuringThreshold才能晋升老年代， 如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半， 年龄大于或等于该年龄的对象就可以直接进入老年代， 无须等到MaxTenuringThreshold中要求的年龄。</p>
+<h4 id="空间分配担保"><a href="#空间分配担保" class="headerlink" title="空间分配担保"></a>空间分配担保</h4><p>在发生Minor GC之前， 虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间， 如果这个条件成立， 那么Minor GC可以确保是安全的。 如果不成立， 则虚拟机会查看HandlePromotionFailure设置值是否允许担保失败。 如果允许， 那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于， 将尝试着进行一次Minor GC， 尽管这次Minor GC是有风险的； 如果小于， 或者HandlePromotionFailure设置不允许冒险， 那这时也要改为进行一次Full GC。</p>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2018/02/07/JVM/2 垃圾收集器和内存分配策略/">https://corn1ng.github.io/2018/02/07/JVM/2 垃圾收集器和内存分配策略/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Java虚拟机/">Java虚拟机</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2018/02/07/JVM/1 Java 内存区域/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java虚拟机内存区域</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2018/02/06/算法/JZoffer19/">
+        <span class="next-text nav-default">剑指offer*19正则表达式匹配</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>

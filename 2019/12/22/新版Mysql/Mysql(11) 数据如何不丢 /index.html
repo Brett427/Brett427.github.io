@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+
+  <meta name="description" content="Mysql(11) 数据如何不丢"/>
+
+
+
+
+  <meta name="keywords" content="Mysql, Corn1ng's Blog" />
+
+
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Corn1ng's Blog">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.6.0" />
+
+
+
+<link rel="canonical" href="https://corn1ng.github.io/2019/12/22/新版Mysql/Mysql(11) 数据如何不丢 /"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.6.0" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" />
+
+
+
+
+  
+
+
+
+  <script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+
+
+
+
+
+
+    <title> Mysql(11) 数据如何不丢 - Corn1ng's Blog </title>\
+    <style type="text/css">
+    .content-wrapper:{top:200px;}
+    .footer:{top:200px;}
+    </style>
+  </head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">Corn1ng's Blog</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    
+      <a href="/">
+        <li class="mobile-menu-item">
+          
+          
+            Home
+          
+        </li>
+      </a>
+    
+      <a href="/archives/">
+        <li class="mobile-menu-item">
+          
+          
+            Archives
+          
+        </li>
+      </a>
+    
+      <a href="/tags">
+        <li class="mobile-menu-item">
+          
+          
+            Tags
+          
+        </li>
+      </a>
+    
+      <a href="/categories">
+        <li class="mobile-menu-item">
+          
+          
+            Categories
+          
+        </li>
+      </a>
+    
+      <a href="/about">
+        <li class="mobile-menu-item">
+          
+          
+            About
+          
+        </li>
+      </a>
+    
+      <a href="/search">
+        <li class="mobile-menu-item">
+          
+          
+            Search
+          
+        </li>
+      </a>
+    
+  </ul>
+</nav>
+
+    <div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">Corn1ng's Blog</a>
+</div>
+
+<nav class="site-navbar">
+  
+    <ul id="menu" class="menu">
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/">
+            
+            
+              Home
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            
+            
+              Archives
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/tags">
+            
+            
+              Tags
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/categories">
+            
+            
+              Categories
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/about">
+            
+            
+              About
+            
+          </a>
+        </li>
+      
+        <li class="menu-item">
+          <a class="menu-item-link" href="/search">
+            
+            
+              Search
+            
+          </a>
+        </li>
+      
+    </ul>
+  
+</nav>
+
+      </header>
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content">
+            
+  
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Mysql(11) 数据如何不丢
+        
+      </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2019-12-22
+        </span>
+        
+          <div class="post-category">
+            
+              <a href="/categories/数据库/">数据库</a>
+            
+          </div>
+        
+        
+      </div>
+    </header>
+
+    
+    
+  <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#binlog-的写入机制"><span class="toc-text">binlog 的写入机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redo-log-的写入机制"><span class="toc-text">redo log 的写入机制</span></a></li></ol>
+    </div>
+  </div>
+
+
+    <div class="post-content">
+      
+        <h4 id="binlog-的写入机制"><a href="#binlog-的写入机制" class="headerlink" title="binlog 的写入机制"></a>binlog 的写入机制</h4><p>binlog的写入逻辑比较简单，事务执行过程中，先把日志写到binlog cache, 事务提交的时候，再把binlog cache 写到binlog 文件中。</p>
+<p>一个事务的binlog 是不能被拆开的，因此不论事务多大，也要确保一次性写入，这就涉及到了binlog cache 的保存问题。</p>
+<p>系统给binlog cache 分配了一片内存，每个线程一个，参数 binlog_cache_size 用于控制单个线程内 binlog cache 所占内存的大小。如果超过了这个参数规定的大小，就要暂存到磁盘。</p>
+<p>事务提交的时候，执行器把 binlog cache 里的完整事务写入到 binlog 中，并清空 binlog cache。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200503100113.png"></p>
+<p>可以看到，每个线程有自己 binlog cache，但是共用同一份 binlog 文件。</p>
+<p>图中的 write，指的就是指把日志写入到文件系统的 page cache，并没有把数据持久化 到磁盘，所以速度比较快。 图中的 fsync，才是将数据持久化到磁盘的操作。一般情况下，我们认为 fsync 才占磁盘 的 IOPS。</p>
+<p>write 和 fsync 的时机，是由参数 sync_binlog 控制的：</p>
+<ol>
+<li>sync_binlog=0 的时候，表示每次提交事务都只 write，不 fsync；</li>
+<li>sync_binlog=1 的时候，表示每次提交事务都会执行 fsync；</li>
+<li>sync_binlog=N(N&gt;1) 的时候，表示每次提交事务都 write，但累积 N 个事务后才 fsync。</li>
+</ol>
+<p>因此，在出现 IO 瓶颈的场景里，将 sync_binlog 设置成一个比较大的值，可以提升性能。 在实际的业务场景中，考虑到丢失日志量的可控性，一般不建议将这个参数设成 0，比较常 见的是将其设置为 100~1000 中的某个数值。</p>
+<p>但是，将 sync_binlog 设置为 N，对应的风险是：如果主机发生异常重启，会丢失最近 N 个事务的 binlog 日志。</p>
+<h4 id="redo-log-的写入机制"><a href="#redo-log-的写入机制" class="headerlink" title="redo log 的写入机制"></a>redo log 的写入机制</h4><p>事务在执行过程中，生成 的 redo log 是要先写到 redo log buffer 的。</p>
+<p>redo log buffer 里面的内容，是不是每次生成后都要直接持久化到磁 盘呢？</p>
+<p>答案是，不需要。</p>
+<p>如果事务执行期间 MySQL 发生异常重启，那这部分日志就丢了。由于事务并没有提交， 所以这时日志丢了也不会有损失。</p>
+<p>那么，另外一个问题是，事务还没提交的时候，redo log buffer 中的部分日志有没有可能 被持久化到磁盘呢？</p>
+<p>答案是，确实会有。</p>
+<p>这个问题，要从 redo log 可能存在的三种状态说起。这三种状态，对应的就是图 2 中的三 个颜色块。</p>
+<p><img src="http://four-1252095801.cosbj.myqcloud.com/img/20200503101400.png"></p>
+<p>这三种状态分别是：</p>
+<ol>
+<li><p>存在 redo log buffer 中，物理上是在 MySQL 进程内存中，就是图中的红色部分；</p>
+</li>
+<li><p>写到磁盘 (write)，但是没有持久化（fsync)，物理上是在文件系统的 page cache 里 面，也就是图中的黄色部分；</p>
+</li>
+<li><p>持久化到磁盘，对应的是 hard disk，也就是图中的绿色部分。</p>
+</li>
+</ol>
+<p>日志写到 redo log buffer 是很快的，wirte 到 page cache 也差不多，但是持久化到磁盘 的速度就慢多了。</p>
+<p>为了控制 redo log 的写入策略，InnoDB 提供了 innodb_flush_log_at_trx_commit 参 数，它有三种可能取值：</p>
+<ol>
+<li>设置为 0 的时候，表示每次事务提交时都只是把 redo log 留在 redo log buffer 中 ;</li>
+<li>设置为 1 的时候，表示每次事务提交时都将 redo log 直接持久化到磁盘；</li>
+<li>设置为 2 的时候，表示每次事务提交时都只是把 redo log 写到 page cache。</li>
+</ol>
+<p>InnoDB 有一个后台线程，每隔 1 秒，就会把 redo log buffer 中的日志，调用 write 写到 文件系统的 page cache，然后调用 fsync 持久化到磁盘。</p>
+<p>注意，事务执行中间过程的 redo log 也是直接写在 redo log buffer 中的，这些 redo log 也会被后台线程一起持久化到磁盘。也就是说，一个没有提交的事务的 redo log，也是可 能已经持久化到磁盘的。</p>
+<p>实际上，除了后台线程每秒一次的轮询操作外，还有两种场景会让一个没有提交的事务的 redo log 写入到磁盘中。</p>
+<ol>
+<li><p>一种是，redo log buffer 占用的空间即将达到 innodb_log_buffer_size 一半的时 候，后台线程会主动写盘。注意，由于这个事务并没有提交，所以这个写盘动作只是 write，而没有调用 fsync，也就是只留在了文件系统的 page cache。</p>
+</li>
+<li><p>另一种是，并行的事务提交的时候，顺带将这个事务的 redo log buffer 持久化到磁 盘。假设一个事务 A 执行到一半，已经写了一些 redo log 到 buffer 中，这时候有另外 一个线程的事务 B 提交，如果 innodb_flush_log_at_trx_commit 设置的是 1，那么按 照这个参数的逻辑，事务 B 要把 redo log buffer 里的日志全部持久化到磁盘。这时 候，就会带上事务 A 在 redo log buffer 里的日志一起持久化到磁盘。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+      
+      
+
+  <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://corn1ng.github.io">corn1ng</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://corn1ng.github.io/2019/12/22/新版Mysql/Mysql(11) 数据如何不丢 /">https://corn1ng.github.io/2019/12/22/新版Mysql/Mysql(11) 数据如何不丢 /</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span>
+      
+      <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+
+
+
+      
+      
+    
+
+    
+      <footer class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/Mysql/">Mysql</a>
+            
+          </div>
+        
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/12/23/新版Mysql/Mysql(12) 主备如何一致/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Mysql(12) 怎么保证主备一致</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/12/21/新版Mysql/Mysql(10) 幻读/">
+        <span class="next-text nav-default">Mysql(10) 幻读</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+      </footer>
+    
+
+  </article>
+
+
+          </div>
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+      </main>
+
+      <footer id="footer" class="footer">
+
+  <div class="social-links">
+    
+      
+        
+          <a href="mailto:wangkangning1@foxmail.com" class="iconfont icon-email" title="email"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="http://github.com/corn1ng" class="iconfont icon-github" title="github"></a>
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        
+          <a href="https://www.instagram.com/brett0427/" class="iconfont icon-instagram" title="instagram"></a>
+        
+      
+    
+    
+    
+      
+      <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    
+  </div>
+
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    
+    &copy; 
+     
+      2017 - 
+    
+    2020
+
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">corn1ng</span>
+  </span>
+</div>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+
+    
+  
+  
+
+  
+
+
+
+    
+  
+
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  
+
+  
+    <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  
+
+
+    <script type="text/javascript" src="/js/src/even.js?v=2.6.0"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=2.6.0"></script>
+
+    
+    <script type="text/javascript"
+    color="0,0,255" opacity='0.99' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+    
+  </body>
+</html>
